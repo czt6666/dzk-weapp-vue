@@ -41,6 +41,13 @@ export default async function () {
                     "vue-router", // 自动导入 useRouter, useRoute...
                 ],
                 resolvers: [ElementPlusResolver()],
+                dts: "src/auto-imports.d.ts", // 声明文件生成路径
+                eslintrc: {
+                    enabled: true, // 生成 .eslintrc-auto-import.json，配合 ESLint 检查
+                    filepath: "./.eslintrc-auto-import.json",
+                    globalsPropValue: true,
+                },
+                dirs: ["./src/composables"], // 自动导入自定义函数/工具
             }),
             Components({
                 resolvers: [ElementPlusResolver()],

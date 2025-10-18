@@ -8,8 +8,10 @@ export default {
     parser: "vue-eslint-parser",
     parserOptions: {
         parser: "@typescript-eslint/parser",
-        sourceType: "module", // 允许使用 ES 模块 (`import/export`)
-        ecmaVersion: 2020, // 允许最新的 ES 语法
+        project: "./tsconfig.app.json", // 指向前端 TS 配置
+        tsconfigRootDir: __dirname,
+        sourceType: "module",
+        ecmaVersion: 2020,
     },
     extends: [
         "eslint:recommended", // ESLint 官方推荐规则
@@ -20,8 +22,8 @@ export default {
     plugins: ["vue", "prettier", "@typescript-eslint"], // 启用 Prettier 插件
     rules: {
         // 🌟 代码风格
-        "no-console": ["warn", { allow: ["log", "warn", "error"] }], // 警告：不允许 `console.log`，但 `console.error` 允许
-        "no-debugger": 2, // 错误：禁止使用 `debugger`
+        "no-console": ["warn", { allow: ["warn", "error"] }], // 警告：不允许 `console.log`，但 `console.error` 允许
+        "no-debugger": "error", // 错误：禁止使用 `debugger`
         "no-undef": 2, // 错误：禁止使用未声明的变量
         "no-unused-vars": 1, // 警告：禁止声明但未使用的变量
         "no-redeclare": 2, // 错误：禁止重复声明变量
@@ -81,8 +83,6 @@ export default {
     ignorePatterns: [
         "node_modules/", // 忽略 `node_modules`
         "dist/", // 忽略 `dist` 目录（打包输出）
-        "coverage/", // 忽略 `coverage`（测试覆盖率报告）
-        "debug/", // 忽略 `debug`
         ".vscode/", // 忽略 VSCode 配置目录
         ".idea/", // 忽略 WebStorm 配置目录
         "public/", // 忽略 `public` 目录（静态资源）

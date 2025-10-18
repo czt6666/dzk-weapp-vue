@@ -1,5 +1,11 @@
-<script setup lang="ts"></script>
+<template>
+    {{ count }}
+    <button @click="count++">增加</button>
+</template>
 
-<template>11s</template>
+<script setup lang="ts">
+const count = ref(0);
+console.log(count.value);
+</script>
 
 <style scoped></style>
