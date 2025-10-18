@@ -1,0 +1,65 @@
+/* @import "element-var.scss"; */
+/* @import "element-ui/packages/theme-chalk/src/index.scss"; */
+/* @import "element-override.scss"; */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+img {
+    vertical-align: middle;
+}
+
+a {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+ul,
+ol {
+    list-style: none;
+}
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+    background: none;
+    outline: none;
+
+    &:disabled {
+        cursor: not-allowed;
+    }
+    &:focus {
+        outline: none;
+    }
+    &:active {
+        outline: none;
+    }
+}
+
+// 隐藏元素
+.visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+.no-select {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
