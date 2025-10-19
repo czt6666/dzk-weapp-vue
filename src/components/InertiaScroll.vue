@@ -5,8 +5,7 @@
             ref="scrollInner"
             :style="{
                 transform: `translateY(${bounceY}px)`,
-                // transition: `transform ${bounceTime}ms cubic-bezier(0.33, 1, 0.68, 1)`,
-                transition: `transform ${bounceTime}ms cubic-bezier(0.25, 1, 0.5, 1)`,
+                transition: isTouching ? 'none' : `transform ${bounceTime}ms cubic-bezier(0.25, 1, 0.5, 1)`,
             }"
         >
             <slot></slot>
@@ -20,6 +19,7 @@ import { ref, onMounted, onBeforeUnmount } from "vue";
 const scrollInner = ref<HTMLDivElement | null>(null);
 const bounceY = ref(0);
 const bounceTime = ref(0);
+const isTouching = ref(false);
 
 let isBouncing = false;
 let lastScrollTop = 0;
@@ -27,7 +27,11 @@ let lastTime = 0;
 let velocity = 0;
 let rafId = 0;
 
-// 模拟回弹：根据速度计算回弹幅度和时间
+let startY = 0;
+let currentY = 0;
+let overscroll = 0;
+
+// ====== 模拟回弹：根据速度计算回弹幅度和时间 ======
 const bounceUp = (v: number) => {
     if (isBouncing) return;
     isBouncing = true;
@@ -43,7 +47,44 @@ const bounceUp = (v: number) => {
     }, bounceTime.value * 1.1);
 };
 
-// 用 requestAnimationFrame 测速，性能更高
+// ====== Touch 拖动交互 ======
+const handleTouchStart = (e: TouchEvent) => {
+    const el = scrollInner.value;
+    if (!el) return;
+    isTouching.value = true;
+    startY = e.touches[0].clientY;
+    overscroll = 0;
+};
+
+const handleTouchMove = (e: TouchEvent) => {
+    const el = scrollInner.value;
+    if (!el) return;
+    currentY = e.touches[0].clientY;
+    const deltaY = currentY - startY;
+
+    // 顶部下拉 overscroll
+    if (el.scrollTop <= 0 && deltaY > 0) {
+        overscroll = Math.pow(deltaY, 0.6);
+        bounceY.value = overscroll;
+    }
+    // 底部上拉 overscroll
+    else if (el.scrollTop + el.clientHeight >= el.scrollHeight && deltaY < 0) {
+        overscroll = -Math.pow(-deltaY, 0.6);
+        bounceY.value = overscroll;
+    }
+};
+
+const handleTouchEnd = () => {
+    const h = Math.abs(overscroll);
+    bounceTime.value = 450 + Math.sqrt(h);
+    isTouching.value = false;
+
+    // 松手回弹
+    bounceY.value = 0;
+    overscroll = 0;
+};
+
+// ====== requestAnimationFrame 测速 ======
 const handleScroll = () => {
     const el = scrollInner.value;
     if (!el) return;
@@ -66,17 +107,30 @@ const handleScroll = () => {
         bounceUp(velocity);
     }
 
-    requestAnimationFrame(handleScroll);
+    rafId = requestAnimationFrame(handleScroll);
 };
 
 onMounted(() => {
     lastScrollTop = scrollInner.value?.scrollTop || 0;
     lastTime = performance.now();
+
+    const el = scrollInner.value;
+    if (!el) return;
+
+    el.addEventListener("touchstart", handleTouchStart, { passive: true });
+    el.addEventListener("touchmove", handleTouchMove, { passive: true });
+    el.addEventListener("touchend", handleTouchEnd, { passive: true });
+
     rafId = requestAnimationFrame(handleScroll);
 });
 
 onBeforeUnmount(() => {
     cancelAnimationFrame(rafId);
+    const el = scrollInner.value;
+    if (!el) return;
+    el.removeEventListener("touchstart", handleTouchStart);
+    el.removeEventListener("touchmove", handleTouchMove);
+    el.removeEventListener("touchend", handleTouchEnd);
 });
 </script>
 
@@ -85,6 +139,7 @@ onBeforeUnmount(() => {
     overflow: hidden;
     width: 100%;
     height: 100%;
+    touch-action: pan-y;
 }
 
 .scroll-inner {

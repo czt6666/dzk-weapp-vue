@@ -6,7 +6,8 @@
             </div>
         </InertiaScroll> -->
         <!-- <Desktop /> -->
-        <ScrollTest />
+        <!-- <ScrollTest /> -->
+        <RouterView />
     </div>
 </template>
 
