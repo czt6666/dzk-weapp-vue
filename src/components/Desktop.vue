@@ -19,7 +19,7 @@
     <!-- </div> -->
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import InertiaScroll from "@/components/InertiaScroll.vue";
 
 const page = ref("home");

@@ -1,10 +1,17 @@
-import { createRouter, createWebHistory, type RouteRecordRaw } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 
 const pages = import.meta.glob("../views/**/*.vue");
 
+interface RouteRecord {
+    path: string;
+    component: (() => Promise<unknown>) | undefined;
+    name: string;
+    meta?: Record<string, unknown>;
+}
+
 // 2️⃣ 生成路由数组
 function generateRoutes() {
-    const routes: RouteRecordRaw[] = [];
+    const routes: RouteRecord[] = [];
 
     Object.keys(pages).forEach((path) => {
         // 去掉开头的 "../views" 和结尾的 ".vue"
@@ -20,13 +27,13 @@ function generateRoutes() {
         });
     });
 
-    console.log(routes);
-
     return routes;
 }
 
+console.log(import.meta.env);
+
 const router = createRouter({
-    history: createWebHistory(import.meta.env.BASE_URL),
+    history: createWebHistory(import.meta.env.VITE_BASE_URL),
     routes: generateRoutes(),
 });
 
