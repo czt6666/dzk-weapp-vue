@@ -1,11 +1,24 @@
 <template>
-    {{ count }}
-    <button @click="count++">增加</button>
+    <div class="box">
+        <!-- <InertiaScroll>
+            <div>
+                <div class="item" v-for="item in 100" :key="item">{{ item }}</div>
+            </div>
+        </InertiaScroll> -->
+        <!-- <Desktop /> -->
+        <ScrollTest />
+    </div>
 </template>
 
 <script setup lang="ts">
-const count = ref(0);
-console.log(count.value);
+import Desktop from "@/components/Desktop.vue";
+import InertiaScroll from "@/components/InertiaScroll.vue";
+import ScrollTest from "@/components/ScrollTest.vue";
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+.box {
+    width: 100%;
+    height: 100vh;
+}
+</style>

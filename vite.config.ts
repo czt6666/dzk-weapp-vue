@@ -63,7 +63,6 @@ export default async function () {
         css: {
             preprocessorOptions: {
                 scss: {
-                    additionalData: `@import "./src/styles/variables.scss";`,
                     quietDeps: true,
                 },
             },
