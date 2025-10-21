@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import InertiaScroll from "@/components/InertiaScroll.vue";
+import InertiaScroll from "@/components/base/InertiaScroll.vue";
 
 const page = ref("home");
 </script>

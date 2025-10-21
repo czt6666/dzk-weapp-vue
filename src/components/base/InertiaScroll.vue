@@ -44,7 +44,7 @@ const bounceUp = (v: number) => {
     setTimeout(() => {
         bounceY.value = 0;
         isBouncing = false;
-    }, bounceTime.value * 1.1);
+    }, bounceTime.value);
 };
 
 // ====== Touch 拖动交互 ======

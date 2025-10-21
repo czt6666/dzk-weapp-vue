@@ -18,7 +18,8 @@ function generateRoutes() {
         const routePath = path
             .replace("../views", "")
             .replace(/\.vue$/, "")
-            .replace(/\/index$/, "/");
+            .replace(/\/index$/, "/")
+            .toLocaleLowerCase();
 
         routes.push({
             path: routePath === "" ? "/" : routePath, // 根路径
@@ -29,8 +30,6 @@ function generateRoutes() {
 
     return routes;
 }
-
-console.log(import.meta.env);
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.VITE_BASE_URL),

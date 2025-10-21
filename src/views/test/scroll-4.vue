@@ -4,129 +4,154 @@
         <InertiaScroll class="content">
             <div>
                 <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia consequatur ratione
-                    itaque sit, ipsum, consequuntur nemo, libero dolores cumque dignissimos? Pariatur exercitationem
-                    obcaecati minus eum quasi. Voluptas, dignissimos quibusdam.
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia
+                    consequatur ratione itaque sit, ipsum, consequuntur nemo, libero dolores cumque
+                    dignissimos? Pariatur exercitationem obcaecati minus eum quasi. Voluptas,
+                    dignissimos quibusdam.
                 </p>
                 <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia consequatur ratione
-                    itaque sit, ipsum, consequuntur nemo, libero dolores cumque dignissimos? Pariatur exercitationem
-                    obcaecati minus eum quasi. Voluptas, dignissimos quibusdam.
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia
+                    consequatur ratione itaque sit, ipsum, consequuntur nemo, libero dolores cumque
+                    dignissimos? Pariatur exercitationem obcaecati minus eum quasi. Voluptas,
+                    dignissimos quibusdam.
                 </p>
                 <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia consequatur ratione
-                    itaque sit, ipsum, consequuntur nemo, libero dolores cumque dignissimos? Pariatur exercitationem
-                    obcaecati minus eum quasi. Voluptas, dignissimos quibusdam.
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia
+                    consequatur ratione itaque sit, ipsum, consequuntur nemo, libero dolores cumque
+                    dignissimos? Pariatur exercitationem obcaecati minus eum quasi. Voluptas,
+                    dignissimos quibusdam.
                 </p>
                 <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia consequatur ratione
-                    itaque sit, ipsum, consequuntur nemo, libero dolores cumque dignissimos? Pariatur exercitationem
-                    obcaecati minus eum quasi. Voluptas, dignissimos quibusdam.
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia
+                    consequatur ratione itaque sit, ipsum, consequuntur nemo, libero dolores cumque
+                    dignissimos? Pariatur exercitationem obcaecati minus eum quasi. Voluptas,
+                    dignissimos quibusdam.
                 </p>
                 <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia consequatur ratione
-                    itaque sit, ipsum, consequuntur nemo, libero dolores cumque dignissimos? Pariatur exercitationem
-                    obcaecati minus eum quasi. Voluptas, dignissimos quibusdam.
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia
+                    consequatur ratione itaque sit, ipsum, consequuntur nemo, libero dolores cumque
+                    dignissimos? Pariatur exercitationem obcaecati minus eum quasi. Voluptas,
+                    dignissimos quibusdam.
                 </p>
                 <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia consequatur ratione
-                    itaque sit, ipsum, consequuntur nemo, libero dolores cumque dignissimos? Pariatur exercitationem
-                    obcaecati minus eum quasi. Voluptas, dignissimos quibusdam.
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia
+                    consequatur ratione itaque sit, ipsum, consequuntur nemo, libero dolores cumque
+                    dignissimos? Pariatur exercitationem obcaecati minus eum quasi. Voluptas,
+                    dignissimos quibusdam.
                 </p>
                 <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia consequatur ratione
-                    itaque sit, ipsum, consequuntur nemo, libero dolores cumque dignissimos? Pariatur exercitationem
-                    obcaecati minus eum quasi. Voluptas, dignissimos quibusdam.
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia
+                    consequatur ratione itaque sit, ipsum, consequuntur nemo, libero dolores cumque
+                    dignissimos? Pariatur exercitationem obcaecati minus eum quasi. Voluptas,
+                    dignissimos quibusdam.
                 </p>
                 <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia consequatur ratione
-                    itaque sit, ipsum, consequuntur nemo, libero dolores cumque dignissimos? Pariatur exercitationem
-                    obcaecati minus eum quasi. Voluptas, dignissimos quibusdam.
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia
+                    consequatur ratione itaque sit, ipsum, consequuntur nemo, libero dolores cumque
+                    dignissimos? Pariatur exercitationem obcaecati minus eum quasi. Voluptas,
+                    dignissimos quibusdam.
                 </p>
                 <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia consequatur ratione
-                    itaque sit, ipsum, consequuntur nemo, libero dolores cumque dignissimos? Pariatur exercitationem
-                    obcaecati minus eum quasi. Voluptas, dignissimos quibusdam.
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia
+                    consequatur ratione itaque sit, ipsum, consequuntur nemo, libero dolores cumque
+                    dignissimos? Pariatur exercitationem obcaecati minus eum quasi. Voluptas,
+                    dignissimos quibusdam.
                 </p>
                 <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia consequatur ratione
-                    itaque sit, ipsum, consequuntur nemo, libero dolores cumque dignissimos? Pariatur exercitationem
-                    obcaecati minus eum quasi. Voluptas, dignissimos quibusdam.
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia
+                    consequatur ratione itaque sit, ipsum, consequuntur nemo, libero dolores cumque
+                    dignissimos? Pariatur exercitationem obcaecati minus eum quasi. Voluptas,
+                    dignissimos quibusdam.
                 </p>
                 <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia consequatur ratione
-                    itaque sit, ipsum, consequuntur nemo, libero dolores cumque dignissimos? Pariatur exercitationem
-                    obcaecati minus eum quasi. Voluptas, dignissimos quibusdam.
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia
+                    consequatur ratione itaque sit, ipsum, consequuntur nemo, libero dolores cumque
+                    dignissimos? Pariatur exercitationem obcaecati minus eum quasi. Voluptas,
+                    dignissimos quibusdam.
                 </p>
                 <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia consequatur ratione
-                    itaque sit, ipsum, consequuntur nemo, libero dolores cumque dignissimos? Pariatur exercitationem
-                    obcaecati minus eum quasi. Voluptas, dignissimos quibusdam.
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia
+                    consequatur ratione itaque sit, ipsum, consequuntur nemo, libero dolores cumque
+                    dignissimos? Pariatur exercitationem obcaecati minus eum quasi. Voluptas,
+                    dignissimos quibusdam.
                 </p>
                 <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia consequatur ratione
-                    itaque sit, ipsum, consequuntur nemo, libero dolores cumque dignissimos? Pariatur exercitationem
-                    obcaecati minus eum quasi. Voluptas, dignissimos quibusdam.
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia
+                    consequatur ratione itaque sit, ipsum, consequuntur nemo, libero dolores cumque
+                    dignissimos? Pariatur exercitationem obcaecati minus eum quasi. Voluptas,
+                    dignissimos quibusdam.
                 </p>
                 <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia consequatur ratione
-                    itaque sit, ipsum, consequuntur nemo, libero dolores cumque dignissimos? Pariatur exercitationem
-                    obcaecati minus eum quasi. Voluptas, dignissimos quibusdam.
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia
+                    consequatur ratione itaque sit, ipsum, consequuntur nemo, libero dolores cumque
+                    dignissimos? Pariatur exercitationem obcaecati minus eum quasi. Voluptas,
+                    dignissimos quibusdam.
                 </p>
                 <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia consequatur ratione
-                    itaque sit, ipsum, consequuntur nemo, libero dolores cumque dignissimos? Pariatur exercitationem
-                    obcaecati minus eum quasi. Voluptas, dignissimos quibusdam.
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia
+                    consequatur ratione itaque sit, ipsum, consequuntur nemo, libero dolores cumque
+                    dignissimos? Pariatur exercitationem obcaecati minus eum quasi. Voluptas,
+                    dignissimos quibusdam.
                 </p>
                 <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia consequatur ratione
-                    itaque sit, ipsum, consequuntur nemo, libero dolores cumque dignissimos? Pariatur exercitationem
-                    obcaecati minus eum quasi. Voluptas, dignissimos quibusdam.
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia
+                    consequatur ratione itaque sit, ipsum, consequuntur nemo, libero dolores cumque
+                    dignissimos? Pariatur exercitationem obcaecati minus eum quasi. Voluptas,
+                    dignissimos quibusdam.
                 </p>
                 <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia consequatur ratione
-                    itaque sit, ipsum, consequuntur nemo, libero dolores cumque dignissimos? Pariatur exercitationem
-                    obcaecati minus eum quasi. Voluptas, dignissimos quibusdam.
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia
+                    consequatur ratione itaque sit, ipsum, consequuntur nemo, libero dolores cumque
+                    dignissimos? Pariatur exercitationem obcaecati minus eum quasi. Voluptas,
+                    dignissimos quibusdam.
                 </p>
                 <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia consequatur ratione
-                    itaque sit, ipsum, consequuntur nemo, libero dolores cumque dignissimos? Pariatur exercitationem
-                    obcaecati minus eum quasi. Voluptas, dignissimos quibusdam.
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia
+                    consequatur ratione itaque sit, ipsum, consequuntur nemo, libero dolores cumque
+                    dignissimos? Pariatur exercitationem obcaecati minus eum quasi. Voluptas,
+                    dignissimos quibusdam.
                 </p>
                 <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia consequatur ratione
-                    itaque sit, ipsum, consequuntur nemo, libero dolores cumque dignissimos? Pariatur exercitationem
-                    obcaecati minus eum quasi. Voluptas, dignissimos quibusdam.
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia
+                    consequatur ratione itaque sit, ipsum, consequuntur nemo, libero dolores cumque
+                    dignissimos? Pariatur exercitationem obcaecati minus eum quasi. Voluptas,
+                    dignissimos quibusdam.
                 </p>
                 <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia consequatur ratione
-                    itaque sit, ipsum, consequuntur nemo, libero dolores cumque dignissimos? Pariatur exercitationem
-                    obcaecati minus eum quasi. Voluptas, dignissimos quibusdam.
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia
+                    consequatur ratione itaque sit, ipsum, consequuntur nemo, libero dolores cumque
+                    dignissimos? Pariatur exercitationem obcaecati minus eum quasi. Voluptas,
+                    dignissimos quibusdam.
                 </p>
                 <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia consequatur ratione
-                    itaque sit, ipsum, consequuntur nemo, libero dolores cumque dignissimos? Pariatur exercitationem
-                    obcaecati minus eum quasi. Voluptas, dignissimos quibusdam.
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia
+                    consequatur ratione itaque sit, ipsum, consequuntur nemo, libero dolores cumque
+                    dignissimos? Pariatur exercitationem obcaecati minus eum quasi. Voluptas,
+                    dignissimos quibusdam.
                 </p>
                 <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia consequatur ratione
-                    itaque sit, ipsum, consequuntur nemo, libero dolores cumque dignissimos? Pariatur exercitationem
-                    obcaecati minus eum quasi. Voluptas, dignissimos quibusdam.
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia
+                    consequatur ratione itaque sit, ipsum, consequuntur nemo, libero dolores cumque
+                    dignissimos? Pariatur exercitationem obcaecati minus eum quasi. Voluptas,
+                    dignissimos quibusdam.
                 </p>
                 <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia consequatur ratione
-                    itaque sit, ipsum, consequuntur nemo, libero dolores cumque dignissimos? Pariatur exercitationem
-                    obcaecati minus eum quasi. Voluptas, dignissimos quibusdam.
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia
+                    consequatur ratione itaque sit, ipsum, consequuntur nemo, libero dolores cumque
+                    dignissimos? Pariatur exercitationem obcaecati minus eum quasi. Voluptas,
+                    dignissimos quibusdam.
                 </p>
                 <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia consequatur ratione
-                    itaque sit, ipsum, consequuntur nemo, libero dolores cumque dignissimos? Pariatur exercitationem
-                    obcaecati minus eum quasi. Voluptas, dignissimos quibusdam.
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia
+                    consequatur ratione itaque sit, ipsum, consequuntur nemo, libero dolores cumque
+                    dignissimos? Pariatur exercitationem obcaecati minus eum quasi. Voluptas,
+                    dignissimos quibusdam.
                 </p>
                 <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia consequatur ratione
-                    itaque sit, ipsum, consequuntur nemo, libero dolores cumque dignissimos? Pariatur exercitationem
-                    obcaecati minus eum quasi. Voluptas, dignissimos quibusdam.
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia
+                    consequatur ratione itaque sit, ipsum, consequuntur nemo, libero dolores cumque
+                    dignissimos? Pariatur exercitationem obcaecati minus eum quasi. Voluptas,
+                    dignissimos quibusdam.
                 </p>
             </div>
         </InertiaScroll>
@@ -135,7 +160,7 @@
 </template>
 
 <script setup>
-import InertiaScroll from "@/components/InertiaScroll.vue";
+import InertiaScroll from "@/components/base/InertiaScroll.vue";
 
 const page = ref("home");
 </script>

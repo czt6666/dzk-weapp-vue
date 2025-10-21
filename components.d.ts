@@ -9,9 +9,8 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     Desktop: typeof import('./src/components/Desktop.vue')['default']
-    InertiaScroll: typeof import('./src/components/InertiaScroll.vue')['default']
+    InertiaScroll: typeof import('./src/components/base/InertiaScroll.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    ScrollTest: typeof import('./src/components/ScrollTest.vue')['default']
   }
 }

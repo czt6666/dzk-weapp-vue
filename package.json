@@ -17,10 +17,13 @@
   },
   "dependencies": {
     "axios": "^1.12.2",
+    "better-scroll": "^2.5.1",
     "element-plus": "^2.11.5",
     "pinia": "^3.0.3",
+    "swiper": "^12.0.2",
     "vue": "^3.5.22",
-    "vue-router": "^4.5.1"
+    "vue-router": "^4.5.1",
+    "vue3-virtual-scroll-list": "^0.2.1"
   },
   "devDependencies": {
     "@tsconfig/node22": "^22.0.2",
