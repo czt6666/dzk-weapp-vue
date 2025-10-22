@@ -1,6 +1,6 @@
 <template>
     <div class="scroll-container">
-        <div ref="bsWrapper" class="scroll-wrapper">
+        <div v-loading="initLoading" ref="bsWrapper" class="scroll-wrapper">
             <div class="scroll-scroller">
                 <!-- 下拉刷新提示 -->
                 <div class="pull-tip" v-html="tipHtml"></div>
@@ -12,7 +12,7 @@
                         :key="itemKey(item, idx)"
                         class="scroll-list-item"
                     >
-                        <slot name="item" :item="item" :index="idx"></slot>
+                        <slot name="item" :itemData="item" :index="idx">{{ item }}</slot>
                     </li>
                 </ul>
 
@@ -178,14 +178,14 @@ onMounted(async () => {
     // 先做一次数据获取（不通过 pull-down 事件）
     try {
         isFetching = true;
-        // initLoading.value = true;
+        initLoading.value = true;
         const initial = await props.fetchData(page, pageSize, "refresh");
         list.value = Array.isArray(initial) ? initial : [];
     } catch (e) {
         console.error("initial fetch error", e);
     } finally {
         isFetching = false;
-        // initLoading.value = false;
+        initLoading.value = false;
     }
     await nextTick();
     initBScroll();

@@ -5,26 +5,33 @@
         </div>
         <div class="news-list">
             <SmartScrollList ref="listRef" :fetchData="fetchData" :pageSize="10">
-                <template #item="{ item }">
-                    <div>
-                        <!-- 自定义项渲染 -->
-                        我是第 {{ item }} 条
-                    </div>
+                <template #item="{ itemData }">
+                    <NewsListItem :info="itemData" />
                 </template>
             </SmartScrollList>
         </div>
     </div>
 </template>
 <script lang="ts" setup name="NewsList">
-import { ref, reactive } from "vue";
+import NewsListItem from "@/components/news/NewsListItem.vue";
 
 function generateData(page: number, pageSize: number) {
-    const BASE = 10;
-    const begin = BASE * (page - 1);
-    const end = BASE * page;
-    const ret: number[] = [];
-    for (let i = end; i > begin; i--) ret.unshift(i);
-    return ret;
+    const list = [];
+    const start = (page - 1) * pageSize;
+
+    for (let i = 0; i < pageSize; i++) {
+        const id = start + i + 1;
+        list.push({
+            id,
+            title: `这是第 ${id} 条新闻标题`,
+            date: `2024-08-${((id % 30) + 1).toString().padStart(2, "0")}`,
+            views: 1000 + id * 3,
+            likes: Math.floor(Math.random() * 100),
+            image: `https://picsum.photos/seed/${id}/200/120`,
+        });
+    }
+
+    return list;
 }
 
 async function fetchData(page: number, pageSize: number, type: string) {
@@ -58,6 +65,5 @@ async function fetchData(page: number, pageSize: number, type: string) {
 .news-list {
     flex: 1;
     height: 500px; // ?
-    background-color: pink;
 }
 </style>

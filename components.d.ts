@@ -10,10 +10,14 @@ declare module 'vue' {
   export interface GlobalComponents {
     Desktop: typeof import('./src/components/Desktop.vue')['default']
     InertiaScroll: typeof import('./src/components/base/InertiaScroll.vue')['default']
+    NewsListItem: typeof import('./src/components/news/NewsListItem.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ScrollPull: typeof import('./src/components/base/ScrollPull.vue')['default']
     SmartScrollList: typeof import('./src/components/base/SmartScrollList.vue')['default']
     SmoothScroll: typeof import('./src/components/base/SmoothScroll.vue')['default']
+  }
+  export interface GlobalDirectives {
+    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }
