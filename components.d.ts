@@ -12,5 +12,8 @@ declare module 'vue' {
     InertiaScroll: typeof import('./src/components/base/InertiaScroll.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    ScrollPull: typeof import('./src/components/base/ScrollPull.vue')['default']
+    SmartScrollList: typeof import('./src/components/base/SmartScrollList.vue')['default']
+    SmoothScroll: typeof import('./src/components/base/SmoothScroll.vue')['default']
   }
 }

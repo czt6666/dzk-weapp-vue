@@ -33,13 +33,13 @@ onMounted(() => {
     });
 
     // 可选：监听滚动事件
-    scroll.on("scroll", (position) => {
-        console.log(position.x, position.y);
-    });
+    // scroll.on("scroll", (position) => {
+    //     console.log(position.x, position.y);
+    // });
 
-    scroll.on("scrollEnd", () => {
-        console.log("滚动结束");
-    });
+    // scroll.on("scrollEnd", () => {
+    //     console.log("滚动结束");
+    // });
 });
 
 onUnmounted(() => {

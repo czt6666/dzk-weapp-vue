@@ -1,12 +1,5 @@
 <template>
-    <div class="box">
-        <!-- <InertiaScroll>
-            <div>
-                <div class="item" v-for="item in 100" :key="item">{{ item }}</div>
-            </div>
-        </InertiaScroll> -->
-        <!-- <Desktop /> -->
-        <!-- <ScrollTest /> -->
+    <div class="app">
         <RouterView />
     </div>
 </template>
@@ -18,8 +11,9 @@ import ScrollTest from "@/components/ScrollTest.vue";
 </script>
 
 <style lang="scss" scoped>
-.box {
-    width: 100%;
+.app {
+    overflow: hidden;
+    width: 100vw;
     height: 100vh;
 }
 </style>
