@@ -31,7 +31,7 @@ export default async function () {
     const port = await getPort();
 
     return defineConfig({
-        base: "/ec-weapp-vue/",
+        base: "/dzk-weapp-vue/",
         plugins: [
             vue(),
             vueDevTools(),
