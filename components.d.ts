@@ -9,6 +9,11 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     Desktop: typeof import('./src/components/Desktop.vue')['default']
+    ElDropdown: typeof import('element-plus/es')['ElDropdown']
+    ElDropdownItem: typeof import('element-plus/es')['ElDropdownItem']
+    ElDropdownMenu: typeof import('element-plus/es')['ElDropdownMenu']
+    ElIcon: typeof import('element-plus/es')['ElIcon']
+    ElPageHeader: typeof import('element-plus/es')['ElPageHeader']
     InertiaScroll: typeof import('./src/components/base/InertiaScroll.vue')['default']
     NewsListItem: typeof import('./src/components/news/NewsListItem.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

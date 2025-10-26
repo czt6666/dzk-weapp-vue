@@ -32,11 +32,6 @@
 
 <script setup lang="ts">
 import BScroll from "better-scroll";
-// import PullDown from "better-scroll";
-// import PullUp from "better-scroll";
-
-// BScroll.use(PullDown);
-// BScroll.use(PullUp);
 
 // ---------- props ----------
 const props = defineProps({
@@ -205,7 +200,6 @@ onBeforeUnmount(() => {
         position: relative;
         height: 100%;
         padding: 0 10px;
-        border: 1px solid #ccc;
         overflow: hidden;
 
         .scroll-scroller {

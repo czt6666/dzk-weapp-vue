@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from "vue-router";
 
-const pages = import.meta.glob("../views/**/*.vue");
+const pages = import.meta.glob("../views/test/**/*.vue");
 
 // 生成路由数组
 function generateRoutes() {
@@ -23,9 +23,27 @@ function generateRoutes() {
     return routes;
 }
 
+const routes = [
+    {
+        path: "/news",
+        name: "NewsList",
+        component: () => import("../views/NewsList.vue"),
+    },
+    {
+        path: "/news/:id",
+        name: "NewsInfo",
+        component: () => import("../views/NewsInfo.vue"),
+        props: true,
+    },
+    {
+        path: "/test",
+        children: generateRoutes(),
+    },
+];
+
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
-    routes: generateRoutes(),
+    routes: routes,
 });
 
 export default router;
