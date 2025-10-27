@@ -6,15 +6,7 @@
                 <div class="pull-tip" v-html="tipHtml"></div>
 
                 <!-- 列表 -->
-                <ul class="scroll-list">
-                    <li
-                        v-for="(item, idx) in list"
-                        :key="itemKey(item, idx)"
-                        class="scroll-list-item"
-                    >
-                        <slot name="item" :itemData="item" :index="idx">{{ item }}</slot>
-                    </li>
-                </ul>
+                <slot></slot>
 
                 <!-- 上拉加载提示 -->
                 <div class="pullup-tips">
@@ -33,11 +25,11 @@
 <script setup lang="ts">
 import BScroll from "better-scroll";
 
-// ---------- props ----------
 const props = defineProps({
-    fetchData: { type: Function, required: true },
-    pageSize: { type: Number, default: 15 },
-    itemKey: { type: Function, default: (item: any, idx: number) => idx },
+    pullDown: { type: Boolean, default: true },
+    pullUp: { type: Boolean, default: true },
+    onRefresh: { type: Function, required: true },
+    onLoadMore: { type: Function, required: true },
 });
 
 // ---------- constants & svg ----------
@@ -51,16 +43,11 @@ const ARROW_UP =
     '<svg width="16" height="16" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M390.624 150.625L256 16L121.376 150.625l22.628 22.627l95.997-95.998v417.982h32V77.257l95.995 95.995l22.628-22.627z"/></svg>';
 
 // ---------- reactive state ----------
-const list = ref<any[]>([]);
 const tipHtml = ref<string>(`${ARROW_BOTTOM} 下拉刷新`);
 const isPullUpLoad = ref(false);
 const bsWrapper = ref<HTMLElement | null>(null);
 const initLoading = ref(false);
 let bscroll: BScroll | null = null;
-
-// page 管理
-let page = 1;
-const pageSize = props.pageSize || 15;
 
 // small helper to set tip text
 function setTip(phase: "enter" | "leave" | "fetching" | "succeed" | "idle") {
@@ -77,19 +64,15 @@ function setTip(phase: "enter" | "leave" | "fetching" | "succeed" | "idle") {
 // ---------- fetch wrappers ----------
 let isFetching = false;
 
-// 下拉刷新：重置 page 到 initialPage 并请求
 async function doRefresh() {
     if (isFetching) return;
     isFetching = true;
     try {
         setTip("fetching");
-        page = 1;
-        const newData = await props.fetchData(page, pageSize, "refresh");
-        // 父组件返回完整列表或新的一页都接受：我们把它当作新的列表（父端更灵活）
-        list.value = Array.isArray(newData) ? newData : [];
+        await props.onRefresh();
         setTip("succeed");
-        // 通知 better-scroll 完成下拉（如果存在）
         bscroll?.finishPullDown();
+
         // refresh after a small delay to allow bounce animation
         setTimeout(() => {
             bscroll?.refresh();
@@ -106,25 +89,18 @@ async function doRefresh() {
     }
 }
 
-// 上拉加载：page +1 并请求，追加结果
 async function doLoadMore() {
     if (isFetching) return;
     isFetching = true;
     try {
         isPullUpLoad.value = true;
-        page += 1;
-        const more = await props.fetchData(page, pageSize, "load");
-        if (Array.isArray(more) && more.length > 0) {
-            list.value = [...list.value, ...more];
-        } else {
-            // 如果没有更多数据，回退 page
-            page = Math.max(1, page - 1);
-        }
+
+        await props.onLoadMore();
+        await nextTick();
         bscroll?.finishPullUp();
         bscroll?.refresh();
     } catch (e) {
         console.error("doLoadMore error", e);
-        page = Math.max(1, page - 1);
         bscroll?.finishPullUp();
         bscroll?.refresh();
     } finally {
@@ -139,51 +115,49 @@ function initBScroll() {
 
     bscroll = new BScroll(bsWrapper.value, {
         scrollY: true,
-        // scrollbar: true,
+        scrollbar: true,
         probeType: 3,
         click: true,
         bounceTime: TIME_BOUNCE,
-        pullDownRefresh: {
-            threshold: THRESHOLD,
-            stop: STOP,
-        },
-        pullUpLoad: true,
+        pullDownRefresh: props.pullDown
+            ? {
+                  threshold: THRESHOLD,
+                  stop: STOP,
+              }
+            : false,
+        pullUpLoad: props.pullUp,
         observeDOM: true,
-        // test
-        disableTouch: false,
-        stopPropagation: true,
     });
 
-    bscroll.on("pullingDown", async () => {
-        await doRefresh();
-    });
+    if (props.pullDown) {
+        bscroll.on("pullingDown", async () => {
+            await doRefresh();
+        });
+    }
 
-    bscroll.on("pullingUp", async () => {
-        await doLoadMore();
-    });
+    if (props.pullUp) {
+        bscroll.on("pullingUp", async () => {
+            await doLoadMore();
+        });
+    }
 
     bscroll.on("enterThreshold", () => setTip("enter"));
     bscroll.on("leaveThreshold", () => setTip("leave"));
-    bscroll.on("scrollEnd", () => {
-        // 保持兼容：应用可以监听滚动 end（如果需要可以 emit）
-    });
+    // bscroll.on("scrollEnd", () => {});
 }
 
 onMounted(async () => {
-    // 先做一次数据获取（不通过 pull-down 事件）
+    initBScroll();
+
     try {
-        isFetching = true;
         initLoading.value = true;
-        const initial = await props.fetchData(page, pageSize, "refresh");
-        list.value = Array.isArray(initial) ? initial : [];
+        await doRefresh();
     } catch (e) {
         console.error("initial fetch error", e);
     } finally {
-        isFetching = false;
         initLoading.value = false;
     }
     await nextTick();
-    initBScroll();
 });
 
 onBeforeUnmount(() => {
@@ -215,12 +189,6 @@ onBeforeUnmount(() => {
 
             .scroll-list {
                 padding: 0;
-
-                .scroll-list-item {
-                    padding: 10px 0;
-                    list-style: none;
-                    border-bottom: 1px solid #ccc;
-                }
             }
 
             .pullup-tips {

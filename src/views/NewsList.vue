@@ -21,10 +21,12 @@
         </div>
 
         <div class="news-list">
-            <SmartScrollList ref="listRef" :fetchData="fetchData" :pageSize="10">
-                <template #item="{ itemData }">
-                    <NewsListItem :info="itemData" @click="goDetail(itemData.id)" />
-                </template>
+            <SmartScrollList ref="listRef" :onRefresh="onRefresh" :onLoadMore="onLoadMore">
+                <ul class="scroll-list">
+                    <li v-for="item in list" :key="item.id" class="scroll-list-item">
+                        <NewsListItem :info="item" @click="goDetail(item.id)" />
+                    </li>
+                </ul>
             </SmartScrollList>
         </div>
     </div>
@@ -37,7 +39,12 @@ import { useRouter } from "vue-router";
 const currentSort = ref("latest");
 const router = useRouter();
 
-function generateData(page: number, pageSize: number) {
+let page = 1;
+const pageSize = 10;
+const list = ref<any[]>([]);
+
+async function generateData(page: number, pageSize: number) {
+    await new Promise((r) => setTimeout(r, 800));
     const list = [];
     const start = (page - 1) * pageSize;
 
@@ -45,26 +52,31 @@ function generateData(page: number, pageSize: number) {
         const id = start + i + 1;
         list.push({
             id,
-            title: `这是第 ${id} 条新闻标题`,
+            title: `这是第 ${id} 条 ${currentSort.value} 新闻标题`,
             date: `2024-08-${((id % 30) + 1).toString().padStart(2, "0")}`,
             views: 1000 + id * 3,
             likes: Math.floor(Math.random() * 100),
             image: `https://picsum.photos/seed/${id}/200/120`,
         });
     }
+    console.log(list);
 
     return list;
 }
 
-async function fetchData(page: number, pageSize: number, type: string) {
-    console.log("fetchData", page, pageSize, type);
+async function onRefresh() {
+    page = 1;
+    list.value = await generateData(page, pageSize);
 
-    await new Promise((r) => setTimeout(r, 800));
-    if (type === "refresh") {
-        return generateData(page, pageSize);
-    } else {
-        return generateData(page, pageSize);
-    }
+    return list.value;
+}
+
+async function onLoadMore() {
+    page++;
+    const newList = await generateData(page, pageSize);
+    list.value.push(...newList);
+
+    return list.value;
 }
 
 function goDetail(id: number) {
@@ -106,13 +118,19 @@ function getSortName(type: string) {
         object-fit: cover;
     }
 }
-.news-list {
-    flex: 1;
-    height: 500px; // ?
-}
 .sort-dropdown {
+    height: 31px;
     padding: 8px 12px;
     display: flex;
     align-items: center;
+}
+.news-list {
+    flex: 1;
+    height: 500px; // ?
+    // background-color: pink;
+
+    .scroll-list-item {
+        margin-bottom: 8px;
+    }
 }
 </style>
