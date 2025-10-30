@@ -3,27 +3,43 @@
         <div class="news-content">
             <h3 class="news-title">{{ info.title }}</h3>
             <div class="news-meta">
-                <span class="date">{{ info.date }}</span>
-                <span class="views"> <i class="iconfont">&#128065;</i> {{ info.views }} </span>
-                <span class="likes"> <i class="iconfont">&#128077;</i> {{ info.likes }} </span>
+                <!-- <span class="date">{{ info.date }}</span> -->
+                <span class="views"> <i class="iconfont"></i> {{ publishTime }} </span>
+                <span class="likes"> <i class="iconfont"></i> {{ info.themeName }} </span>
             </div>
         </div>
         <div class="news-image">
-            <img :src="info.image" alt="新闻图片" />
+            <img :src="titleImg" alt="新闻图片" />
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
 interface INewsListItem {
+    author: string;
+    content: string;
+    createTime: string;
+    id: number;
+    imageUrl: string;
+    publishStatus: number;
+    themeName: string;
     title: string;
-    date: string;
-    views: number;
-    likes: number;
-    image: string;
+    villageName: string;
 }
 
 const props = defineProps<{ info: INewsListItem }>();
+
+const titleImg = computed(() => import.meta.env.VITE_API_BASE_URL + props.info.imageUrl);
+
+const publishTime = computed(() => {
+    const date = new Date(props.info.createTime);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // 月份从0开始
+    const day = String(date.getDate()).padStart(2, "0");
+
+    const formatted = `${year}-${month}-${day}`;
+    return formatted;
+});
 </script>
 
 <style lang="scss" scoped>

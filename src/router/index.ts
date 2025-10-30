@@ -36,6 +36,17 @@ const routes = [
         props: true,
     },
     {
+        path: "/hotel",
+        name: "HotelList",
+        component: () => import("../views/HotelList.vue"),
+    },
+    {
+        path: "/hotel/:id",
+        name: "HotelInfo",
+        component: () => import("../views/HotelInfo.vue"),
+        props: true,
+    },
+    {
         path: "/test",
         children: generateRoutes(),
     },

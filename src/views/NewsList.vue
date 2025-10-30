@@ -19,6 +19,7 @@
                 </template>
             </el-dropdown>
         </div>
+        <!-- {{ list }} -->
 
         <div class="news-list">
             <SmartScrollList ref="listRef" :onRefresh="onRefresh" :onLoadMore="onLoadMore">
@@ -35,6 +36,7 @@
 import NewsListItem from "@/components/news/NewsListItem.vue";
 import { ArrowDown } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
+import { getNewsList } from "@/apis/news";
 
 const currentSort = ref("latest");
 const router = useRouter();
@@ -44,24 +46,13 @@ const pageSize = 10;
 const list = ref<any[]>([]);
 
 async function generateData(page: number, pageSize: number) {
-    await new Promise((r) => setTimeout(r, 800));
-    const list = [];
-    const start = (page - 1) * pageSize;
-
-    for (let i = 0; i < pageSize; i++) {
-        const id = start + i + 1;
-        list.push({
-            id,
-            title: `这是第 ${id} 条 ${currentSort.value} 新闻标题`,
-            date: `2024-08-${((id % 30) + 1).toString().padStart(2, "0")}`,
-            views: 1000 + id * 3,
-            likes: Math.floor(Math.random() * 100),
-            image: `https://picsum.photos/seed/${id}/200/120`,
-        });
+    const res = await getNewsList({ page, pageSize });
+    if (list.value.length + res.info.list.length > res.info.totalCount) {
+        return [];
     }
-    console.log(list);
+    const resList = res?.info?.list || [];
 
-    return list;
+    return resList;
 }
 
 async function onRefresh() {
@@ -74,6 +65,11 @@ async function onRefresh() {
 async function onLoadMore() {
     page++;
     const newList = await generateData(page, pageSize);
+    if (newList.length === 0) {
+        ElMessage.success("没有更多数据了");
+        page--;
+        return list.value;
+    }
     list.value.push(...newList);
 
     return list.value;

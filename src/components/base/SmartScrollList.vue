@@ -83,7 +83,7 @@ async function doRefresh() {
         setTip("idle");
         bscroll?.finishPullDown();
         bscroll?.refresh();
-        console.error("doRefresh error", e);
+        // console.error("doRefresh error", e);
     } finally {
         isFetching = false;
     }

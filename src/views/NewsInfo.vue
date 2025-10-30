@@ -25,7 +25,7 @@ const loading = ref(true);
 
 // 模拟请求
 async function fetchNewsDetail(id: number) {
-    await new Promise((r) => setTimeout(r, 800));
+    const res = await getNewsList({ page: 1, pageSize: 1, id });
     return {
         id,
         title: `这是第 ${id} 条新闻标题`,

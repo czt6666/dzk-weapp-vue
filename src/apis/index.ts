@@ -26,7 +26,7 @@ service.interceptors.response.use(
     (response: AxiosResponse) => {
         const res = response.data;
         // 统一处理 code
-        if (res.code && res.code !== 200) {
+        if (res.code && res.code !== "200") {
             // 可以弹框提示错误
             return Promise.reject(res);
         }
