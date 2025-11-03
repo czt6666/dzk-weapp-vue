@@ -5,9 +5,9 @@
         <div v-if="loading" class="loading">加载中...</div>
         <div v-else class="content">
             <h2>{{ info.title }}</h2>
-            <p class="meta">发布日期：{{ info.date }}　浏览量：{{ info.views }}</p>
-            <img :src="info.image" alt="封面" class="cover" />
-            <p class="body">{{ info.content }}</p>
+            <p class="meta">发布日期：{{ publishDate }}　浏览量：{{ info.views }}</p>
+            <img :src="imgUrl(info.imageUrl)" alt="封面" class="cover" />
+            <div class="body" v-html="transHtml(info.content)"></div>
         </div>
     </div>
 </template>
@@ -16,6 +16,8 @@
 import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { getNewsItem } from "@/apis/news";
+import { imgUrl } from "@/utils/index";
+import { transHtml } from "@/utils/transHtml";
 
 const route = useRoute();
 const router = useRouter();
@@ -26,17 +28,28 @@ const loading = ref(true);
 
 // 模拟请求
 async function fetchNewsDetail(id: number) {
-    const res = await getNewsItem({ id: 1 });
-    return {
-        id,
-        title: `这是第 ${id} 条新闻标题`,
-        date: `2024-08-${((id % 30) + 1).toString().padStart(2, "0")}`,
-        views: 1000 + id * 3,
-        image: `https://picsum.photos/seed/${id}/600/400`,
-        content:
-            "这是一条模拟的新闻内容，展示新闻的详情内容部分。你可以将这里替换为后端接口返回的真实数据。",
-    };
+    try {
+        const params = route.params;
+        const id = Number(params.id);
+        if (!id) return console.error("id未传入");
+
+        const res = await getNewsItem({ id });
+        if (!res.info) {
+            return ElMessage.error("新闻获取失败");
+        }
+        return res.info;
+    } catch {
+        return ElMessage.error("新闻获取失败");
+    }
 }
+
+const publishDate = computed(() => {
+    if (!info.value.date) {
+        return "";
+    }
+    const date = new Date(info.value.createTime);
+    return date.toLocaleDateString();
+});
 
 onMounted(async () => {
     info.value = await fetchNewsDetail(id);
@@ -44,7 +57,9 @@ onMounted(async () => {
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+// @use "../styles/htmlNews.scss";
+
 .news-info {
     padding: 20px;
 }
@@ -64,8 +79,6 @@ onMounted(async () => {
     margin-top: 5px;
 }
 .body {
-    font-size: 16px;
-    line-height: 1.8;
-    color: #333;
+    //
 }
 </style>

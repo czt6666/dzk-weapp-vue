@@ -1,6 +1,10 @@
 import axios from "axios";
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
-
+export interface ApiResponse {
+    info: any;
+    msg: string;
+    code: string;
+}
 const service: AxiosInstance = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL || "", // 配置在 .env
     timeout: 10000, // 10秒超时

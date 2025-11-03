@@ -23,7 +23,11 @@
 
         <!-- 瀑布流容器 -->
         <div class="waterfall-list">
-            <SmartScrollList ref="listRef" :onRefresh="onRefresh" :onLoadMore="onLoadMore">
+            <SmartScrollList
+                ref="listRef"
+                :onRefresh="onRefresh"
+                :onLoadMore="debounce(onLoadMore)"
+            >
                 <div class="columns">
                     <div class="column" v-for="(col, i) in columns" :key="i">
                         <WaterfallItem
@@ -55,6 +59,7 @@ import { useRouter } from "vue-router";
 import { ArrowDown } from "@element-plus/icons-vue";
 import WaterfallItem from "@/components/hotel/HotelItem.vue";
 import { getHotelList } from "@/apis/hotel";
+import { debounce } from "@/utils/index";
 
 const router = useRouter();
 const currentSort = ref("latest");

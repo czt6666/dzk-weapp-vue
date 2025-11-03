@@ -21,7 +21,11 @@
         </div>
 
         <div class="news-list">
-            <SmartScrollList ref="listRef" :onRefresh="onRefresh" :onLoadMore="onLoadMore">
+            <SmartScrollList
+                ref="listRef"
+                :onRefresh="onRefresh"
+                :onLoadMore="debounce(onLoadMore)"
+            >
                 <ul class="scroll-list">
                     <li v-for="item in list" :key="item.id" class="scroll-list-item">
                         <NewsListItem :info="item" @click="goDetail(item.id)" />
@@ -36,6 +40,7 @@ import NewsListItem from "@/components/news/NewsListItem.vue";
 import { ArrowDown } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 import { getNewsList } from "@/apis/news";
+import { debounce } from "@/utils/index";
 
 const currentSort = ref("latest");
 const router = useRouter();
@@ -44,7 +49,7 @@ let page = 1;
 const pageSize = 10;
 const list = ref<any[]>([]);
 
-async function generateData(page: number, pageSize: number) {
+async function fetchData(page: number, pageSize: number) {
     const res = await getNewsList({ page, pageSize });
     if (list.value.length + res.info.list.length > res.info.totalCount) {
         return [];
@@ -55,23 +60,35 @@ async function generateData(page: number, pageSize: number) {
 }
 
 async function onRefresh() {
-    page = 1;
-    list.value = await generateData(page, pageSize);
+    try {
+        page = 1;
+        list.value = [];
+        list.value = await fetchData(page, pageSize);
 
-    return list.value;
+        return list.value;
+    } catch (err) {
+        ElMessage.error(err.msg || "获取新闻列表失败");
+        return list.value;
+    }
 }
 
 async function onLoadMore() {
-    page++;
-    const newList = await generateData(page, pageSize);
-    if (newList.length === 0) {
-        ElMessage.success("没有更多数据了");
+    try {
+        page++;
+        const newList = await fetchData(page, pageSize);
+        if (newList.length === 0) {
+            ElMessage.success("没有更多数据了");
+            page--;
+            return list.value;
+        }
+        list.value.push(...newList);
+
+        return list.value;
+    } catch (err) {
+        ElMessage.error(err.msg);
         page--;
         return list.value;
     }
-    list.value.push(...newList);
-
-    return list.value;
 }
 
 function goDetail(id: number) {
