@@ -15,6 +15,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { getNewsItem } from "@/apis/news";
 
 const route = useRoute();
 const router = useRouter();
@@ -25,7 +26,7 @@ const loading = ref(true);
 
 // 模拟请求
 async function fetchNewsDetail(id: number) {
-    const res = await getNewsList({ page: 1, pageSize: 1, id });
+    const res = await getNewsItem({ id: 1 });
     return {
         id,
         title: `这是第 ${id} 条新闻标题`,

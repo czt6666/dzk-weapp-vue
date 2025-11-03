@@ -48,12 +48,30 @@ defineProps<{ info: any }>();
             font-size: 15px;
             font-weight: 600;
             margin-bottom: 4px;
+
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.4;
+            max-height: calc(1.4em * 2);
+            word-break: break-word;
         }
 
         .desc {
             font-size: 13px;
             color: #666;
             margin-bottom: 6px;
+
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.4;
+            max-height: calc(1.4em * 2);
+            word-break: break-word;
         }
 
         .bottom {

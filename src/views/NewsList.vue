@@ -19,7 +19,6 @@
                 </template>
             </el-dropdown>
         </div>
-        <!-- {{ list }} -->
 
         <div class="news-list">
             <SmartScrollList ref="listRef" :onRefresh="onRefresh" :onLoadMore="onLoadMore">

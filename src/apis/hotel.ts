@@ -1,9 +1,9 @@
 import service from "./index";
 
-export function getNewsList(params: { page: number; pageSize: number }) {
+export function getHotelList(params: { page: number; pageSize: number }) {
     return service.get("/village/news/list", { params });
 }
 
-export function getNewsItem(params: { id: number }) {
+export function getHotelItem(params: { id: number }) {
     return service.get("/village/news/detail", { params });
 }

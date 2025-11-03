@@ -36,6 +36,16 @@
                 </div>
             </SmartScrollList>
         </div>
+
+        <!-- item 暂存区 -->
+        <div class="waterfall-item-temp">
+            <WaterfallItem
+                v-for="item in tempList"
+                :info="item"
+                @click="goDetail(item.id)"
+                :data-waterfall-id="item.id"
+            />
+        </div>
     </div>
 </template>
 
@@ -44,6 +54,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { ArrowDown } from "@element-plus/icons-vue";
 import WaterfallItem from "@/components/hotel/HotelItem.vue";
+import { getHotelList } from "@/apis/hotel";
 
 const router = useRouter();
 const currentSort = ref("latest");
@@ -53,23 +64,38 @@ const pageSize = 10;
 
 // 原始数据 + 分两列
 const list = ref<any[]>([]);
+const tempList = ref<any[]>([]);
 const columns = ref<any[][]>([[], []]);
 
 // 模拟异步加载数据
 async function generateData(page: number, pageSize: number) {
+    // const res = await getHotelList({ page, pageSize });
+    // if (list.value.length + res.info.list.length > res.info.totalCount) {
+    //     return [];
+    // }
+    // const resList = res?.info?.list || [];
+
+    // return resList;
+
     await new Promise((r) => setTimeout(r, 800));
     const list: any[] = [];
     const start = (page - 1) * pageSize;
+
+    const imgs = [
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvcbx2Qo8tFV2Cmh-TXeZj9OJsl7iCKhU_0g&amp;s",
+        "https://czt666.cn/upload/article/202208250130-IMG_6346.jpg.jpeg",
+        "https://czt666.cn/upload/article/202208250130-IMG_6608.JPG.jpeg",
+    ];
 
     for (let i = 0; i < pageSize; i++) {
         const id = start + i + 1;
         list.push({
             id,
-            title: `第 ${id} 条 ${currentSort.value} 数据`,
+            title: `第 ${id} 条 ${currentSort.value} 数据，${"标题".repeat(Math.floor(Math.random() * 10) + 1)}`,
             desc: "环境优美，舒适安静~",
             views: 2000 + id,
             likes: Math.floor(Math.random() * 100),
-            image: `https://picsum.photos/seed/${id}/300/${200 + (id % 100)}`, // 高度随机
+            image: imgs[Math.floor(Math.random() * imgs.length)],
         });
     }
 
@@ -85,18 +111,41 @@ async function onRefresh() {
 async function onLoadMore() {
     page++;
     const newList = await generateData(page, pageSize);
+    if (newList.length === 0) {
+        ElMessage.success("没有更多数据了");
+        page--;
+        return list.value;
+    }
     list.value.push(...newList);
-    splitToColumns(list.value);
+
+    splitToColumns(newList);
 }
 
-function splitToColumns(items: any[]) {
-    const left: any[] = [];
-    const right: any[] = [];
-    let leftHeight = 0;
-    let rightHeight = 0;
+const left: any[] = [];
+const right: any[] = [];
+let leftHeight = 0;
+let rightHeight = 0;
+async function splitToColumns(items: any[]) {
+    tempList.value = items;
+    // 等待DOM挂载（渲染完成）
+    await nextTick();
 
-    items.forEach((item) => {
-        const estHeight = item.image.includes("/300/") ? Number(item.image.split("/300/")[1]) : 200;
+    // 等待所有图片加载完成
+    await waitForAllImagesLoaded();
+
+    // 获取所有 item 的真实 DOM 高度
+    const itemElements = Array.from(document.querySelectorAll("[data-waterfall-id]"));
+    const heightMap = new Map<string, number>();
+    itemElements.forEach((el) => {
+        const id = el.getAttribute("data-waterfall-id");
+
+        if (id) heightMap.set(id, el.clientHeight);
+    });
+
+    items.forEach((item, index) => {
+        const estHeight = (heightMap.get(item.id.toString()) || 200) + 12; // 12px vertical gap
+        // console.log(item.id, leftHeight, rightHeight, estHeight);
+
         if (leftHeight <= rightHeight) {
             left.push(item);
             leftHeight += estHeight;
@@ -107,81 +156,24 @@ function splitToColumns(items: any[]) {
     });
 
     columns.value = [left, right];
+    tempList.value = [];
 }
 
-// /**
-//  * 根据真实图片高度计算瀑布流布局
-//  * @param items  图片列表
-//  */
-// async function splitToColumns(items: any[]) {
-//     const left: any[] = [];
-//     const right: any[] = [];
-//     let leftHeight = 0;
-//     let rightHeight = 0;
+function waitForAllImagesLoaded(): Promise<void> {
+    const images = Array.from(document.images);
+    if (images.length === 0) return Promise.resolve();
 
-//     // 等待所有图片加载完毕后再计算布局
-//     const withHeights = await Promise.all(
-//         items.map(async (item) => {
-//             try {
-//                 const height = await getImageHeight(item.image);
-//                 console.log(item, height);
+    const loadingPromises = images.map(
+        (img) =>
+            new Promise<void>((resolve) => {
+                if (img.complete) return resolve();
+                img.addEventListener("load", () => resolve(), { once: true });
+                img.addEventListener("error", () => resolve(), { once: true });
+            }),
+    );
 
-//                 return { ...item, _height: height };
-//             } catch {
-//                 return { ...item, _height: 100 }; // 加载失败默认高度
-//             }
-//         }),
-//     );
-
-//     // 分配到两列
-//     withHeights.forEach((item) => {
-//         if (leftHeight <= rightHeight) {
-//             left.push(item);
-//             leftHeight += item._height;
-//         } else {
-//             right.push(item);
-//             rightHeight += item._height;
-//         }
-//     });
-
-//     columns.value = [left, right];
-// }
-
-// /**
-//  * 异步获取图片实际高度
-//  * @param url 图片链接
-//  * @returns 图片高度（像素）
-//  */
-// function getImageHeight(url: string): Promise<number> {
-//     return new Promise((resolve, reject) => {
-//         const img = new Image();
-//         let resolved = false;
-
-//         img.onload = () => {
-//             if (!resolved) {
-//                 resolved = true;
-//                 resolve(img.height);
-//             }
-//         };
-
-//         img.onerror = () => {
-//             if (!resolved) {
-//                 resolved = true;
-//                 reject(new Error("图片加载失败"));
-//             }
-//         };
-
-//         // 超时处理（防止网络太慢卡死）
-//         setTimeout(() => {
-//             if (!resolved) {
-//                 resolved = true;
-//                 reject(new Error("图片加载超时"));
-//             }
-//         }, 5000);
-
-//         img.src = url;
-//     });
-// }
+    return Promise.all(loadingPromises).then(() => void 0);
+}
 
 function goDetail(id: number) {
     router.push(`/detail/${id}`);
@@ -205,8 +197,6 @@ function getSortName(type: string) {
             return "未知";
     }
 }
-
-onRefresh();
 </script>
 
 <style lang="scss" scoped>
@@ -234,7 +224,6 @@ onRefresh();
 .waterfall-list {
     flex: 1;
     overflow-y: auto;
-    padding: 10px;
 
     .columns {
         display: flex;
@@ -247,5 +236,15 @@ onRefresh();
             gap: 12px;
         }
     }
+}
+
+.waterfall-item-temp {
+    width: 50%;
+    padding-left: 16px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -999;
+    opacity: 0;
 }
 </style>
