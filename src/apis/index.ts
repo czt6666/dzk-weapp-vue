@@ -27,13 +27,21 @@ service.interceptors.request.use(
 
 // 响应拦截器
 service.interceptors.response.use(
-    (response: AxiosResponse) => {
+    (response: AxiosResponse): any => {
+        console.log(response);
         const res = response.data;
         // 统一处理 code
-        if (res.code && res.code !== "200") {
-            // 可以弹框提示错误
+        if (res.code === undefined) {
+            console.error("响应缺少 code 字段:", res);
             return Promise.reject(res);
         }
+
+        if (res.code !== "200" && res.code !== 200 && res.code !== 1) {
+            if (res.code === 1) console.warn("响应码为 1");
+
+            return Promise.reject(res);
+        }
+
         return res;
     },
     (error) => {

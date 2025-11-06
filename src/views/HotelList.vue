@@ -73,49 +73,27 @@ const tempList = ref<any[]>([]);
 const columns = ref<any[][]>([[], []]);
 
 // 模拟异步加载数据
-async function generateData(page: number, pageSize: number) {
-    // const res = await getHotelList({ page, pageSize });
-    // if (list.value.length + res.info.list.length > res.info.totalCount) {
-    //     return [];
-    // }
-    // const resList = res?.info?.list || [];
+async function fetchData(page: number, pageSize: number) {
+    const res = await getHotelList({ page, pageSize });
 
-    // return resList;
-
-    await new Promise((r) => setTimeout(r, 800));
-    const list: any[] = [];
-    const start = (page - 1) * pageSize;
-
-    const imgs = [
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvcbx2Qo8tFV2Cmh-TXeZj9OJsl7iCKhU_0g&amp;s",
-        "https://czt666.cn/upload/article/202208250130-IMG_6346.jpg.jpeg",
-        "https://czt666.cn/upload/article/202208250130-IMG_6608.JPG.jpeg",
-    ];
-
-    for (let i = 0; i < pageSize; i++) {
-        const id = start + i + 1;
-        list.push({
-            id,
-            title: `第 ${id} 条 ${currentSort.value} 数据，${"标题".repeat(Math.floor(Math.random() * 10) + 1)}`,
-            desc: "环境优美，舒适安静~",
-            views: 2000 + id,
-            likes: Math.floor(Math.random() * 100),
-            image: imgs[Math.floor(Math.random() * imgs.length)],
-        });
+    if (list.value.length + res.data.records.length > res.data.total) {
+        return [];
     }
+    const resList = res?.data?.records || [];
 
-    return list;
+    return resList;
 }
 
 async function onRefresh() {
     page = 1;
-    list.value = await generateData(page, pageSize);
+    list.value = [];
+    list.value = await fetchData(page, pageSize);
     splitToColumns(list.value);
 }
 
 async function onLoadMore() {
     page++;
-    const newList = await generateData(page, pageSize);
+    const newList = await fetchData(page, pageSize);
     if (newList.length === 0) {
         ElMessage.success("没有更多数据了");
         page--;
@@ -181,7 +159,7 @@ function waitForAllImagesLoaded(): Promise<void> {
 }
 
 function goDetail(id: number) {
-    router.push(`/detail/${id}`);
+    router.push(`/hotel/${id}`);
 }
 
 function handleSortChange(command: string) {

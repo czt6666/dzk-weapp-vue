@@ -1,14 +1,14 @@
 <template>
     <div class="item-card" @click="$emit('click')">
         <div class="image-wrapper">
-            <img :src="info.image" alt="img" loading="lazy" />
+            <img :src="info.coverImage" alt="img" loading="lazy" />
         </div>
         <div class="info">
-            <h3 class="title">{{ info.title }}</h3>
-            <p class="desc">{{ info.desc }}</p>
+            <h3 class="title">{{ info.description }}</h3>
+            <p class="desc">{{ info.address }}</p>
             <div class="bottom">
-                <span>👁️ {{ info.views }}</span>
-                <span>❤️ {{ info.likes }}</span>
+                <span>👁️ {{ info.maxCapacity }}</span>
+                <span>❤️ {{ info.starLevel }}</span>
             </div>
         </div>
     </div>

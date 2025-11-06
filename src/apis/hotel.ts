@@ -1,9 +1,15 @@
 import service from "./index";
 
-export function getHotelList(params: { page: number; pageSize: number }) {
-    return service.get("/village/news/list", { params });
+export interface ApiResponse {
+    info: any;
+    msg: string;
+    code: string;
 }
 
-export function getHotelItem(params: { id: number }) {
-    return service.get("/village/news/detail", { params });
+export function getHotelList(params: { page: number; pageSize: number }) {
+    return service.get("/admin/ecadmin/village-homestay/page", { params });
+}
+
+export function getHotelItem(id: number) {
+    return service.get(`/admin/ecadmin/village-homestay/${id}`);
 }

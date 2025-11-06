@@ -6,7 +6,7 @@
         <div v-else class="content">
             <h2>{{ info.title }}</h2>
             <p class="meta">发布日期：{{ publishDate }}　浏览量：{{ info.views }}</p>
-            <img :src="imgUrl(info.imageUrl)" alt="封面" class="cover" />
+            <!-- <img :src="imgUrl(info.imageUrl)" alt="封面" class="cover" /> -->
             <div class="body" v-html="transHtml(info.content)"></div>
         </div>
     </div>
@@ -26,7 +26,6 @@ const id = Number(route.params.id);
 const info = ref<any>({});
 const loading = ref(true);
 
-// 模拟请求
 async function fetchNewsDetail(id: number) {
     try {
         const params = route.params;
@@ -67,6 +66,11 @@ onMounted(async () => {
     text-align: center;
     padding: 40px 0;
     color: #666;
+}
+.content {
+    .new-title {
+        font-size: 20px;
+    }
 }
 .cover {
     width: 100%;
