@@ -1,14 +1,23 @@
 import axios from "axios";
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
+
 export interface ApiResponse {
-    info: any;
+    code: string | number;
+    data: any;
     msg: string;
-    code: string;
 }
-const service: AxiosInstance = axios.create({
+
+export interface CustomAxiosInstance extends AxiosInstance {
+    get<T = ApiResponse>(url: string, config?: AxiosRequestConfig): Promise<T>;
+    post<T = ApiResponse>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T>;
+    put<T = ApiResponse>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T>;
+    delete<T = ApiResponse>(url: string, config?: AxiosRequestConfig): Promise<T>;
+}
+
+const service = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL || "", // 配置在 .env
     timeout: 10000, // 10秒超时
-});
+}) as CustomAxiosInstance;
 
 // 请求拦截器
 service.interceptors.request.use(
@@ -36,11 +45,14 @@ service.interceptors.response.use(
             return Promise.reject(res);
         }
 
-        if (res.code !== "200" && res.code !== 200 && res.code !== 1) {
-            if (res.code === 1) console.warn("响应码为 1");
+        if (res.code !== "200" && res.code !== 200 && res.code !== "1" && res.code !== 1) {
+            if (res.code == 1) console.warn("响应码为 1");
 
             return Promise.reject(res);
         }
+
+        // 归一化 data 字段
+        res.data = res.data ? res.data : res.info || {};
 
         return res;
     },

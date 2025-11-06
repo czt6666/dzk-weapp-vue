@@ -33,10 +33,10 @@ async function fetchNewsDetail(id: number) {
         if (!id) return console.error("id未传入");
 
         const res = await getNewsItem({ id });
-        if (!res.info) {
+        if (!res.data) {
             return ElMessage.error("新闻获取失败");
         }
-        return res.info;
+        return res.data;
     } catch {
         return ElMessage.error("新闻获取失败");
     }

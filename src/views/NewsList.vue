@@ -51,10 +51,10 @@ const list = ref<any[]>([]);
 
 async function fetchData(page: number, pageSize: number) {
     const res = await getNewsList({ page, pageSize });
-    if (list.value.length + res.info.list.length > res.info.totalCount) {
+    if (list.value.length + res.data.list.length > res.data.totalCount) {
         return [];
     }
-    const resList = res?.info?.list || [];
+    const resList = res?.data?.list || [];
 
     return resList;
 }
