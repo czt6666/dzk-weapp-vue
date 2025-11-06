@@ -21,11 +21,7 @@
         </div>
 
         <div class="news-list">
-            <SmartScrollList
-                ref="listRef"
-                :onRefresh="onRefresh"
-                :onLoadMore="debounce(onLoadMore)"
-            >
+            <SmartScrollList :onRefresh="onRefresh" :onLoadMore="debounce(onLoadMore)">
                 <ul class="scroll-list">
                     <li v-for="item in list" :key="item.id" class="scroll-list-item">
                         <NewsListItem :info="item" @click="goDetail(item.id)" />
@@ -37,6 +33,7 @@
 </template>
 <script lang="ts" setup name="NewsList">
 import NewsListItem from "@/components/news/NewsListItem.vue";
+import SmartScrollList from "@/components/base/SmartScrollList.vue";
 import { ArrowDown } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 import { getNewsList } from "@/apis/news";
@@ -139,7 +136,6 @@ function getSortName(type: string) {
 .news-list {
     flex: 1;
     height: 500px; // ?
-    // background-color: pink;
 
     .scroll-list-item {
         margin-bottom: 8px;

@@ -16,6 +16,7 @@ declare module 'vue' {
     HotelItem: typeof import('./src/components/hotel/HotelItem.vue')['default']
     InertiaScroll: typeof import('./src/components/base/InertiaScroll.vue')['default']
     NewsListItem: typeof import('./src/components/news/NewsListItem.vue')['default']
+    ProductCard: typeof import('./src/components/shop/ProductCard.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ScrollPull: typeof import('./src/components/base/ScrollPull.vue')['default']

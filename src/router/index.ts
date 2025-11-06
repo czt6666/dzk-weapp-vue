@@ -53,6 +53,17 @@ const routes = [
         props: true,
     },
     {
+        path: "/shop",
+        name: "ShopList",
+        component: () => import("../views/shop/ShopList.vue"),
+    },
+    {
+        path: "/shop/:id",
+        name: "ShopInfo",
+        component: () => import("../views/shop/ShopInfo.vue"),
+        props: true,
+    },
+    {
         path: "/test",
         children: generateRoutes(),
     },
