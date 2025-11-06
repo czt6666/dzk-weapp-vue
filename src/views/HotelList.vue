@@ -159,7 +159,7 @@ function waitForAllImagesLoaded(): Promise<void> {
 }
 
 function goDetail(id: number) {
-    router.push(`/hotel/${id}`);
+    router.push(`/hotels/${id}`);
 }
 
 function handleSortChange(command: string) {

@@ -9,7 +9,7 @@ import Components from "unplugin-vue-components/vite";
 import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 
 function getPort(): Promise<number> {
-    let port = 5173; // 默认端口
+    const port = 5173; // 默认端口
     return new Promise((resolve) => {
         function tryPort(currentPort: number) {
             const server = new Server();

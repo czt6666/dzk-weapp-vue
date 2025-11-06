@@ -66,7 +66,7 @@ async function onRefresh() {
         list.value = await fetchData(page, pageSize);
 
         return list.value;
-    } catch (err) {
+    } catch (err: any) {
         ElMessage.error(err.msg || "获取新闻列表失败");
         return list.value;
     }
@@ -84,7 +84,7 @@ async function onLoadMore() {
         list.value.push(...newList);
 
         return list.value;
-    } catch (err) {
+    } catch (err: any) {
         ElMessage.error(err.msg);
         page--;
         return list.value;

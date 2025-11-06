@@ -4,11 +4,7 @@
     </div>
 </template>
 
-<script setup lang="ts">
-import Desktop from "@/components/Desktop.vue";
-import InertiaScroll from "@/components/base/InertiaScroll.vue";
-import ScrollTest from "@/components/ScrollTest.vue";
-</script>
+<script setup lang="ts"></script>
 
 <style lang="scss" scoped>
 .app {

@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from "vue-router";
+import HomePage from "@/views/HomePage.vue";
 
 const pages = import.meta.glob("../views/test/**/*.vue");
 
@@ -25,6 +26,11 @@ function generateRoutes() {
 
 const routes = [
     {
+        path: "/",
+        name: "HomePage",
+        component: HomePage,
+    },
+    {
         path: "/news",
         name: "NewsList",
         component: () => import("../views/NewsList.vue"),
@@ -36,12 +42,12 @@ const routes = [
         props: true,
     },
     {
-        path: "/hotel",
+        path: "/hotels",
         name: "HotelList",
         component: () => import("../views/HotelList.vue"),
     },
     {
-        path: "/hotel/:id",
+        path: "/hotels/:id",
         name: "HotelInfo",
         component: () => import("../views/HotelInfo.vue"),
         props: true,

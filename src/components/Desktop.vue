@@ -1,27 +1,21 @@
 <template>
-    <!-- <div class="app-container">
+    <div class="app-container">
         <transition name="page-fade" mode="out-in">
             <div v-if="page === 'home'" key="home" class="page page-home">
                 <button class="open-btn" @click="page = 'list'">打开页面</button>
             </div>
 
             <div v-else key="list" class="page page-list">
-                <button class="back-btn" @click="page = 'home'">返回</button> -->
-    <div class="block"></div>
-    <InertiaScroll class="content">
-        <div class="card-list">
-            <div v-for="n in 100" :key="n" class="card">Card {{ n }}</div>
-        </div>
-    </InertiaScroll>
-    <div class="block"></div>
-    <!-- </div> -->
-    <!-- </transition> -->
-    <!-- </div> -->
+                <button class="back-btn" @click="page = 'home'">返回</button>
+                <div class="block"></div>
+                112233
+                <div class="block"></div>
+            </div>
+        </transition>
+    </div>
 </template>
 
 <script lang="ts" setup>
-import InertiaScroll from "@/components/InertiaScroll.vue";
-
 const page = ref("home");
 </script>
 
