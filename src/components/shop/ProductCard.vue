@@ -1,81 +1,56 @@
 <template>
-    <article class="product-card" @click="onClick">
+    <article class="product-card" @click="openDetail">
         <div class="thumb">
-            <img :src="firstImage" alt="预览" />
-            <span class="status" :class="item.status">
-                {{ item.status === "on" ? "已上架" : "已下架" }}
-            </span>
+            <img :src="imgUrl(firstImage)" alt="预览" />
+            <span v-if="item.status !== 1" class="status" :class="item.status"> 已下架 </span>
         </div>
 
         <div class="meta">
-            <h3 class="title" :title="item.title">{{ item.title }}</h3>
-            <p class="desc" :title="item.desc">{{ item.desc }}</p>
+            <h3 class="title">{{ item.title }}</h3>
+            <p class="desc">{{ item.description }}</p>
 
-            <div class="specs" v-if="item.specs?.length">
-                <span v-for="(s, idx) in item.specs" :key="idx" class="spec">
-                    {{ s.name }} · ¥{{ s.price.toFixed(2) }}
+            <!-- <div class="specs" v-if="item.specifications?.length">
+                <span v-for="(s, i) in item.specifications" :key="i" class="spec">
+                    {{ s.specName }} · ¥{{ s.price.toFixed(2) }}
                 </span>
-            </div>
+            </div> -->
 
             <div class="foot">
-                <a
-                    v-if="item.link"
-                    :href="item.link"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="buy-link"
-                    @click.stop
-                >
-                    购买链接
-                </a>
-                <button class="btn" @click.stop="openDetail">详情</button>
+                <!-- <button class="btn cart" @click.stop="addCart">🛒 加入购物车</button> -->
+                <button class="btn detail" @click.stop="openDetail">查看详情</button>
             </div>
         </div>
     </article>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed } from "vue";
+<script setup lang="ts">
+import { computed } from "vue";
 import type { Product } from "@/views/shop/types";
+import { imgUrl } from "@/utils";
 
-export default defineComponent({
-    name: "ProductCard",
-    props: {
-        item: {
-            type: Object as () => Product,
-            required: true,
-        },
-    },
-    emits: ["open"],
-    setup(props, { emit }) {
-        /** SVG占位图（防止无图报错） **/
-        const placeholder =
-            'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300"><rect width="100%" height="100%" fill="#f4efe3"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#b5a688">无图</text></svg>';
+const props = defineProps<{ item: Product }>();
+const emit = defineEmits(["open", "add-cart"]);
 
-        /** 优雅处理图片预览：优先使用 item.preview，其次使用 item.cover，最后用占位图 **/
-        const firstImage = computed(() => {
-            const imgs = props.item.preview ?? [];
-            if (imgs.length > 0) return imgs[0];
-            if ((props.item as any).cover) return (props.item as any).cover;
-            return placeholder;
-        });
+const placeholder =
+    'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300"><rect width="100%" height="100%" fill="#f4efe3"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#b5a688">无图</text></svg>';
 
-        /** 打开详情（冒泡给父组件） **/
-        function openDetail() {
-            emit("open", props.item);
-        }
-
-        /** 整卡点击打开详情 **/
-        function onClick() {
-            openDetail();
-        }
-
-        return { placeholder, openDetail, onClick, firstImage };
-    },
+const firstImage = computed(() => {
+    const imgs = props.item.previewImages ?? [];
+    if (imgs.length > 0) return imgs[0];
+    if ((props.item as any).cover) return (props.item as any).cover;
+    return placeholder;
 });
+
+function openDetail() {
+    emit("open", props.item);
+}
+
+function addCart() {
+    emit("add-cart", props.item);
+}
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 .product-card {
     background: #fff;
     border-radius: 12px;
@@ -84,16 +59,13 @@ export default defineComponent({
     cursor: pointer;
     display: flex;
     flex-direction: column;
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
+    transition: all 0.2s ease;
 
     &:hover {
         transform: translateY(-3px);
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
     }
 }
-
 .thumb {
     position: relative;
     height: 170px;
@@ -102,7 +74,6 @@ export default defineComponent({
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: transform 0.3s ease;
     }
     .status {
         position: absolute;
@@ -113,9 +84,6 @@ export default defineComponent({
         color: #fff;
         font-size: 12px;
         font-weight: 500;
-    }
-    &:hover img {
-        transform: scale(1.03);
     }
 }
 .status.on {
@@ -130,17 +98,11 @@ export default defineComponent({
     display: flex;
     flex-direction: column;
     flex: 1;
-
     .title {
-        margin: 0 0 6px;
-        color: #2f2a1f;
         font-size: 16px;
         font-weight: 600;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        color: #2f2a1f;
     }
-
     .desc {
         font-size: 13px;
         color: #6f5e44;
@@ -148,9 +110,8 @@ export default defineComponent({
         height: 36px;
         overflow: hidden;
     }
-
     .specs {
-        margin-top: 8px;
+        margin-top: 6px;
     }
     .spec {
         display: inline-block;
@@ -160,34 +121,34 @@ export default defineComponent({
     }
 
     .foot {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
         margin-top: auto;
         padding-top: 8px;
-    }
-
-    .buy-link {
-        font-size: 13px;
-        color: #7fb069;
-        text-decoration: underline;
-        &:hover {
-            color: #668d57;
-        }
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
     }
 
     .btn {
-        padding: 6px 10px;
-        border-radius: 8px;
+        flex: 1;
         border: none;
-        background: #8aa64b;
-        color: #fff;
-        cursor: pointer;
-        transition: background 0.2s ease;
+        border-radius: 8px;
+        padding: 6px 10px;
         font-size: 13px;
-
-        &:hover {
-            background: #79913e;
+        cursor: pointer;
+        transition: 0.2s ease;
+        &.cart {
+            background: #7fb069;
+            color: #fff;
+            &:hover {
+                background: #6a945c;
+            }
+        }
+        &.detail {
+            background: #ece8de;
+            color: #333;
+            &:hover {
+                background: #ddd5c5;
+            }
         }
     }
 }

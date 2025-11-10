@@ -19,39 +19,16 @@
             <SmartScrollList :onRefresh="onRefresh" :onLoadMore="debounce(onLoadMore)">
                 <ul class="scroll-list">
                     <li v-for="item in list" :key="item.id">
-                        <ProductCard :item="item" @open="openProduct" />
+                        <ProductCard :item="item" @open="openProduct" @add-cart="addToCart" />
                     </li>
                 </ul>
             </SmartScrollList>
         </div>
-
-        <!-- 商品详情弹窗 -->
-        <transition name="page-fade" mode="out-in">
-            <div v-if="showDetail" class="overlay" @click.self="showDetail = false">
-                <div class="dialog">
-                    <h3>{{ current?.title }}</h3>
-                    <div class="images">
-                        <img v-for="(d, i) in current?.details" :key="i" :src="d" alt="detail" />
-                    </div>
-                    <p class="desc">{{ current?.desc }}</p>
-                    <div class="specs">
-                        <div v-for="s in current?.specs" :key="s.name" class="spec-row">
-                            {{ s.name }} — ¥{{ s.price }} · 库存 {{ s.stock }}
-                        </div>
-                    </div>
-                    <div class="actions">
-                        <a
-                            v-if="current?.link"
-                            :href="current.link"
-                            target="_blank"
-                            class="btn primary"
-                            >去购买</a
-                        >
-                        <button class="btn" @click="showDetail = false">关闭</button>
-                    </div>
-                </div>
-            </div>
-        </transition>
+        <!-- 底部购物车图标 -->
+        <div class="cart-float" @click="goFavorites">
+            <span>⭐</span>
+            <span class="cart-count">{{ cart.list.length }}</span>
+        </div>
     </section>
 </template>
 
@@ -59,32 +36,47 @@
 import { ref, onMounted } from "vue";
 import ProductCard from "@/components/shop/ProductCard.vue";
 import SmartScrollList from "@/components/base/SmartScrollList.vue";
-import type { Product } from "./types";
+import type { Product } from "@/views/shop/types";
+import { getShopList } from "@/apis/shop";
 import { debounce } from "@/utils/index";
 import { ElMessage } from "element-plus";
+import { useCartStore } from "@/stores/cart";
 
 let page = 1;
 const pageSize = 6;
 const q = ref("");
 const list = ref<Product[]>([]);
-const showDetail = ref(false);
-const current = ref<Product | null>(null);
+const cart = useCartStore();
+const router = useRouter();
 
 /** 模拟商品数据 **/
 const allMockData: any[] = Array.from({ length: 100 }, (_, i) => ({
     id: i + 1,
     title: `乡村好物 ${i + 1}`,
-    desc: "这是一件来自乡村的纯天然农产或手工制品。",
-    cover: `https://picsum.photos/seed/${i + 1}/300/200`,
-    details: [
-        `https://picsum.photos/seed/detail${i + 1}a/400/300`,
-        `https://picsum.photos/seed/detail${i + 1}b/400/300`,
-    ],
-    specs: [
-        { name: "标准款", price: 29.9 + i, stock: 100 - i },
-        { name: "礼盒装", price: 49.9 + i, stock: 50 - i },
+    description: "这是一件来自乡村的纯天然农产或手工制品。",
+    previewImages: [
+        `https://picsum.photos/seed/preview${i + 1}a/300/200`,
+        `https://picsum.photos/seed/preview${i + 1}b/300/200`,
     ],
     link: "https://example.com",
+    createTime: "2025-11-06T08:18:37.000+00:00",
+    detailImages: [
+        "/uploads/e3c7d9b2-34a5-4d15-9b4e-edb7cd1ef500.png",
+        "/uploads/93ce033c-1fb7-4d1f-9698-a8a05cf204b3.png",
+    ],
+    updateTime: "2025-11-06T08:18:37.000+00:00",
+    cartCount: 0,
+    viewCount: 0,
+    productUrl: "123",
+    specifications: [
+        {
+            specName: "123",
+            price: 123,
+            id: 1,
+            stock: 123,
+        },
+    ],
+    status: 1,
 }));
 console.log(allMockData);
 
@@ -95,6 +87,17 @@ async function fetchData(page: number, pageSize: number, q: string) {
     const end = start + pageSize;
     return allMockData.slice(start, end);
 }
+
+// async function fetchData(page: number, pageSize: number, q: string) {
+//     const res = await getShopList({ page, pageSize });
+
+//     if (list.value.length + res.data.records.length > res.data.total) {
+//         return [];
+//     }
+//     const resList = res?.data?.records || [];
+
+//     return resList;
+// }
 
 /** 搜索 **/
 async function onSearch() {
@@ -134,10 +137,24 @@ async function onLoadMore() {
     }
 }
 
-/** 打开商品详情 **/
+/** 打开详情页 **/
 function openProduct(item: Product) {
-    current.value = item;
-    showDetail.value = true;
+    router.push(`/shop/${item.id}`);
+}
+
+function addToCart(item: Product) {
+    const exist = cart.value.find((p) => p.id === item.id);
+    if (!exist) {
+        cart.value.push(item);
+        ElMessage.success(`已添加「${item.title}」到购物车`);
+    } else {
+        ElMessage.info("该商品已在购物车中");
+    }
+}
+
+/** 进入收藏夹页 **/
+function goFavorites() {
+    router.push("/shop/favorites");
 }
 </script>
 
@@ -262,5 +279,31 @@ function openProduct(item: Product) {
 .primary {
     background: #7fb069;
     color: #fff;
+}
+.cart-float {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+
+    .cart-count {
+        position: absolute;
+        top: -2px;
+        right: -4px;
+        background: #db4437;
+        color: #fff;
+        font-size: 12px;
+        padding: 2px 6px;
+        border-radius: 12px;
+    }
 }
 </style>
