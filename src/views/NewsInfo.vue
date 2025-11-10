@@ -4,8 +4,10 @@
 
         <div v-if="loading" class="loading">加载中...</div>
         <div v-else class="content">
-            <h2>{{ info.title }}</h2>
-            <p class="meta">发布日期：{{ publishDate }}　浏览量：{{ info.views }}</p>
+            <h2 class="news-title">{{ info.title }}</h2>
+            <p class="meta">
+                发布日期：{{ publishDate || "--" }}　浏览量：{{ info.views || "--" }}
+            </p>
             <!-- <img :src="imgUrl(info.imageUrl)" alt="封面" class="cover" /> -->
             <div class="body" v-html="transHtml(info.content)"></div>
         </div>
@@ -68,7 +70,7 @@ onMounted(async () => {
     color: #666;
 }
 .content {
-    .new-title {
+    .news-title {
         font-size: 20px;
     }
 }
