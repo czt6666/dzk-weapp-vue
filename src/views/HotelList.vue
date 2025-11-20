@@ -4,31 +4,57 @@
             <img src="@/assets/banner/qiufen.jpg" alt="banner" />
         </div>
 
-        <!-- 排序按钮 -->
-        <div class="sort-dropdown">
-            <el-dropdown trigger="click" @command="handleSortChange">
-                <span class="el-dropdown-link">
-                    排序
-                    <el-icon class="el-icon--right"><ArrowDown /></el-icon>
-                </span>
-                <template #dropdown>
-                    <el-dropdown-menu>
-                        <el-dropdown-item command="latest">最新</el-dropdown-item>
-                        <el-dropdown-item command="hot">最热</el-dropdown-item>
-                        <el-dropdown-item command="recommend">推荐</el-dropdown-item>
-                    </el-dropdown-menu>
-                </template>
-            </el-dropdown>
+        <div class="toolbar">
+            <div class="search-bar">
+                <el-input
+                    v-model="keyword"
+                    placeholder="搜索民宿名称"
+                    clearable
+                    @keyup.enter="handleSearch"
+                    @clear="handleResetSearch"
+                >
+                    <template #append>
+                        <el-button type="primary" :loading="isSearching" @click="handleSearch">
+                            搜索
+                        </el-button>
+                    </template>
+                </el-input>
+                <el-button v-if="searchKeyword" class="clear-search" text @click="handleResetSearch">
+                    清除搜索
+                </el-button>
+            </div>
+
+            <div class="sort-dropdown">
+                <el-dropdown trigger="click" @command="handleSortChange">
+                    <span class="el-dropdown-link">
+                        排序
+                        <el-icon class="el-icon--right"><ArrowDown /></el-icon>
+                    </span>
+                    <template #dropdown>
+                        <el-dropdown-menu>
+                            <el-dropdown-item command="latest">最新</el-dropdown-item>
+                            <el-dropdown-item command="hot">最热</el-dropdown-item>
+                            <el-dropdown-item command="recommend">推荐</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </template>
+                </el-dropdown>
+            </div>
         </div>
 
-        <!-- 瀑布流容器 -->
+        <div v-if="searchKeyword" class="search-hint">
+            正在查看与
+            <span class="keyword">{{ searchKeyword }}</span>
+            相关的民宿
+        </div>
+
         <div class="waterfall-list">
             <SmartScrollList
                 ref="listRef"
                 :onRefresh="onRefresh"
                 :onLoadMore="debounce(onLoadMore)"
             >
-                <div class="columns">
+                <div v-if="showEmptyState" class="empty-tip">暂无相关民宿，换个关键词试试吧～</div>
+                <div v-else class="columns">
                     <div class="column" v-for="(col, i) in columns" :key="i">
                         <WaterfallItem
                             v-for="item in col"
@@ -41,7 +67,6 @@
             </SmartScrollList>
         </div>
 
-        <!-- item 暂存区 -->
         <div class="waterfall-item-temp">
             <WaterfallItem
                 v-for="item in tempList"
@@ -54,32 +79,45 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { computed, nextTick, ref } from "vue";
 import { useRouter } from "vue-router";
 import { ArrowDown } from "@element-plus/icons-vue";
+import SmartScrollList from "@/components/base/SmartScrollList.vue";
 import WaterfallItem from "@/components/hotel/HotelItem.vue";
 import { getHotelList } from "@/apis/hotel";
 import { debounce } from "@/utils/index";
 
 const router = useRouter();
 const currentSort = ref("latest");
+const keyword = ref("");
+const searchKeyword = ref("");
+const isSearching = ref(false);
+const listRef = ref<InstanceType<typeof SmartScrollList> | null>(null);
 
 let page = 1;
 const pageSize = 10;
 
-// 原始数据 + 分两列
 const list = ref<any[]>([]);
 const tempList = ref<any[]>([]);
 const columns = ref<any[][]>([[], []]);
+const hasFetchedOnce = ref(false);
+const isEmptyResult = computed(
+    () => columns.value.every((col) => col.length === 0) && tempList.value.length === 0 && list.value.length === 0,
+);
+const showEmptyState = computed(() => hasFetchedOnce.value && isEmptyResult.value);
 
-// 模拟异步加载数据
 async function fetchData(page: number, pageSize: number) {
-    const res = await getHotelList({ page, pageSize });
+    const params = {
+        page,
+        pageSize,
+        homestayName: searchKeyword.value || undefined,
+    };
+    const res = await getHotelList(params);
 
     if (list.value.length + res.data.records.length > res.data.total) {
         return [];
     }
-    const resList = res?.data?.records || [];
+    const resList = filterByKeyword(res?.data?.records || []);
 
     return resList;
 }
@@ -87,8 +125,13 @@ async function fetchData(page: number, pageSize: number) {
 async function onRefresh() {
     page = 1;
     list.value = [];
+    resetColumnsState();
     list.value = await fetchData(page, pageSize);
-    splitToColumns(list.value);
+    await splitToColumns(list.value);
+    hasFetchedOnce.value = true;
+    if (!list.value.length && searchKeyword.value) {
+        ElMessage.info("没有查询到相关民宿，试试其他关键词吧");
+    }
 }
 
 async function onLoadMore() {
@@ -104,19 +147,37 @@ async function onLoadMore() {
     splitToColumns(newList);
 }
 
-const left: any[] = [];
-const right: any[] = [];
+let left: any[] = [];
+let right: any[] = [];
 let leftHeight = 0;
 let rightHeight = 0;
+
+function resetColumnsState() {
+    left = [];
+    right = [];
+    leftHeight = 0;
+    rightHeight = 0;
+    columns.value = [left, right];
+}
+
+function filterByKeyword(items: any[]) {
+    if (!searchKeyword.value) return items;
+    const kw = searchKeyword.value.toLowerCase();
+    return items.filter((item) => {
+        const name = String(item?.homestayName || item?.name || "").toLowerCase();
+        if (name) {
+            return name.includes(kw);
+        }
+        const fallback = String(item?.title || item?.description || "").toLowerCase();
+        return fallback.includes(kw);
+    });
+}
+
 async function splitToColumns(items: any[]) {
     tempList.value = items;
-    // 等待DOM挂载（渲染完成）
     await nextTick();
-
-    // 等待所有图片加载完成
     await waitForAllImagesLoaded();
 
-    // 获取所有 item 的真实 DOM 高度
     const itemElements = Array.from(document.querySelectorAll("[data-waterfall-id]"));
     const heightMap = new Map<string, number>();
     itemElements.forEach((el) => {
@@ -125,9 +186,8 @@ async function splitToColumns(items: any[]) {
         if (id) heightMap.set(id, el.clientHeight);
     });
 
-    items.forEach((item, index) => {
-        const estHeight = (heightMap.get(item.id.toString()) || 200) + 12; // 12px vertical gap
-        // console.log(item.id, leftHeight, rightHeight, estHeight);
+    items.forEach((item) => {
+        const estHeight = (heightMap.get(item.id.toString()) || 200) + 12;
 
         if (leftHeight <= rightHeight) {
             left.push(item);
@@ -168,6 +228,24 @@ function handleSortChange(command: string) {
     onRefresh();
 }
 
+async function handleSearch() {
+    if (isSearching.value) return;
+    isSearching.value = true;
+    try {
+        searchKeyword.value = keyword.value.trim();
+        await onRefresh();
+    } finally {
+        isSearching.value = false;
+    }
+}
+
+async function handleResetSearch() {
+    keyword.value = "";
+    if (!searchKeyword.value) return;
+    searchKeyword.value = "";
+    await onRefresh();
+}
+
 function getSortName(type: string) {
     switch (type) {
         case "latest":
@@ -198,11 +276,40 @@ function getSortName(type: string) {
         object-fit: cover;
     }
 }
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 12px 16px;
+    align-items: center;
+}
+.search-bar {
+    flex: 1;
+    min-width: 280px;
+    display: flex;
+    gap: 8px;
+    .el-input {
+        flex: 1;
+    }
+    .clear-search {
+        padding: 0 8px;
+    }
+}
 .sort-dropdown {
     height: 40px;
-    padding: 8px 12px;
+    padding: 8px 0;
     display: flex;
     align-items: center;
+}
+.search-hint {
+    padding: 0 16px 8px;
+    font-size: 14px;
+    color: #666;
+    .keyword {
+        margin: 0 4px;
+        color: #409eff;
+        font-weight: 500;
+    }
 }
 .waterfall-list {
     flex: 1;
@@ -229,5 +336,11 @@ function getSortName(type: string) {
     left: 0;
     z-index: -999;
     opacity: 0;
+}
+.empty-tip {
+    padding: 80px 0;
+    text-align: center;
+    color: #999;
+    font-size: 14px;
 }
 </style>
