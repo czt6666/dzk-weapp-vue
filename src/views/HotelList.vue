@@ -6,22 +6,19 @@
 
         <div class="toolbar">
             <div class="search-bar">
-                <el-input
-                    v-model="keyword"
-                    placeholder="搜索民宿名称"
-                    clearable
-                    @keyup.enter="handleSearch"
-                    @clear="handleResetSearch"
-                >
-                    <template #append>
-                        <el-button type="primary" :loading="isSearching" @click="handleSearch">
-                            搜索
-                        </el-button>
-                    </template>
-                </el-input>
-                <el-button v-if="searchKeyword" class="clear-search" text @click="handleResetSearch">
-                    清除搜索
-                </el-button>
+                <div class="search-input">
+                    <i class="icon icon-search"></i>
+                    <input
+                        v-model="keyword"
+                        type="text"
+                        placeholder="搜索民宿名称..."
+                        @keyup.enter="handleSearch"
+                    />
+                    <button v-if="keyword" class="clear-btn" type="button" @click="handleResetSearch">×</button>
+                </div>
+                <button class="search-btn" type="button" :disabled="isSearching" @click="handleSearch">
+                    {{ isSearching ? "搜索中..." : "搜索" }}
+                </button>
             </div>
 
             <div class="sort-dropdown">
@@ -287,13 +284,58 @@ function getSortName(type: string) {
     flex: 1;
     min-width: 280px;
     display: flex;
-    gap: 8px;
-    .el-input {
-        flex: 1;
-    }
-    .clear-search {
-        padding: 0 8px;
-    }
+    gap: 10px;
+    align-items: center;
+}
+.search-input {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border-radius: 28px;
+    border: 1px solid #d4d4d4;
+    padding: 6px 14px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+.search-input input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 14px;
+    color: #333;
+}
+.icon-search {
+    width: 18px;
+    height: 18px;
+    margin-right: 6px;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="%2383b266" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.5 6.5 0 1016 9.5a6.5 6.5 0 00-1.22 3.79l.27.28h.79l5 5-1.5 1.5-5-5zm-5 0A4.5 4.5 0 1111 5a4.5 4.5 0 01-.5 9z"/></svg>')
+        no-repeat center/contain;
+}
+.clear-btn {
+    border: none;
+    background: transparent;
+    font-size: 18px;
+    line-height: 1;
+    color: #bbb;
+    cursor: pointer;
+}
+.search-btn {
+    border: none;
+    background: linear-gradient(135deg, #7fb069, #6da757);
+    color: #fff;
+    border-radius: 24px;
+    padding: 8px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+.search-btn:hover:not(:disabled) {
+    opacity: 0.9;
+}
+.search-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
 }
 .sort-dropdown {
     height: 40px;
