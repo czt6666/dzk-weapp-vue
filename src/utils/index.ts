@@ -63,8 +63,9 @@ export function throttle<T extends (...args: any[]) => void>(
 
 export const imgUrl = (url: string) => {
     if (!url) return "";
-    const base = import.meta.env.VITE_API_BASE_URL;
     if (url.startsWith("http")) return url;
+    if (url.startsWith("data:")) return url;
+    const base = import.meta.env.VITE_API_BASE_URL;
     const newUrl = url.startsWith("/api") ? url.slice(4) : url;
     return base + newUrl;
 };

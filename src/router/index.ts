@@ -79,6 +79,11 @@ const routes = [
         component: () => import("../views/shop/Favorites.vue"),
     },
     {
+        path: "/shop/home/:id",
+        name: "ShopHome",
+        component: () => import("../views/shop/ShopHome.vue"),
+    },
+    {
         path: "/test",
         children: generateRoutes(),
     },
