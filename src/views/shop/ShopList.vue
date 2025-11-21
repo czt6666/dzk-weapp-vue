@@ -80,12 +80,25 @@ const allMockData: any[] = Array.from({ length: 100 }, (_, i) => ({
 }));
 console.log(allMockData);
 
-/** 模拟接口 **/
+
+/** 接口（带搜索能力） **/
 async function fetchData(page: number, pageSize: number, q: string) {
     await new Promise((r) => setTimeout(r, 400)); // 模拟延迟
+    const keyword = q.trim().toLowerCase();
+
+    // 先在全部 mock 商品里按标题 / 描述过滤
+    const source = keyword
+        ? allMockData.filter((item) => {
+            const title = String(item.title || "").toLowerCase();
+            const desc = String(item.description || "").toLowerCase();
+            return title.includes(keyword) || desc.includes(keyword);
+        })
+        : allMockData;
+
+    // 再做分页
     const start = (page - 1) * pageSize;
     const end = start + pageSize;
-    return allMockData.slice(start, end);
+    return source.slice(start, end);
 }
 
 // async function fetchData(page: number, pageSize: number, q: string) {
