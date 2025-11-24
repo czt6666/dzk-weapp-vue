@@ -37,7 +37,7 @@ import { ref, onMounted } from "vue";
 import ProductCard from "@/components/shop/ProductCard.vue";
 import SmartScrollList from "@/components/base/SmartScrollList.vue";
 import type { Product } from "@/views/shop/types";
-import { getShopList } from "@/apis/shop";
+import { getProductList } from "@/apis/shop";
 import { debounce } from "@/utils/index";
 import { ElMessage } from "element-plus";
 import { useCartStore } from "@/stores/cart";
@@ -50,35 +50,35 @@ const cart = useCartStore();
 const router = useRouter();
 
 /** 模拟商品数据 **/
-const allMockData: any[] = Array.from({ length: 100 }, (_, i) => ({
-    id: i + 1,
-    title: `乡村好物 ${i + 1}`,
-    description: "这是一件来自乡村的纯天然农产或手工制品。",
-    previewImages: [
-        `https://picsum.photos/seed/preview${i + 1}a/300/200`,
-        `https://picsum.photos/seed/preview${i + 1}b/300/200`,
-    ],
-    link: "https://example.com",
-    createTime: "2025-11-06T08:18:37.000+00:00",
-    detailImages: [
-        "/uploads/e3c7d9b2-34a5-4d15-9b4e-edb7cd1ef500.png",
-        "/uploads/93ce033c-1fb7-4d1f-9698-a8a05cf204b3.png",
-    ],
-    updateTime: "2025-11-06T08:18:37.000+00:00",
-    cartCount: 0,
-    viewCount: 0,
-    productUrl: "123",
-    specifications: [
-        {
-            specName: "123",
-            price: 123,
-            id: 1,
-            stock: 123,
-        },
-    ],
-    status: 1,
-}));
-console.log(allMockData);
+// const allMockData: any[] = Array.from({ length: 100 }, (_, i) => ({
+//     id: i + 1,
+//     title: `乡村好物 ${i + 1}`,
+//     description: "这是一件来自乡村的纯天然农产或手工制品。",
+//     previewImages: [
+//         `https://picsum.photos/seed/preview${i + 1}a/300/200`,
+//         `https://picsum.photos/seed/preview${i + 1}b/300/200`,
+//     ],
+//     link: "https://example.com",
+//     createTime: "2025-11-06T08:18:37.000+00:00",
+//     detailImages: [
+//         "/uploads/e3c7d9b2-34a5-4d15-9b4e-edb7cd1ef500.png",
+//         "/uploads/93ce033c-1fb7-4d1f-9698-a8a05cf204b3.png",
+//     ],
+//     updateTime: "2025-11-06T08:18:37.000+00:00",
+//     cartCount: 0,
+//     viewCount: 0,
+//     productUrl: "123",
+//     specifications: [
+//         {
+//             specName: "123",
+//             price: 123,
+//             id: 1,
+//             stock: 123,
+//         },
+//     ],
+//     status: 1,
+// }));
+// console.log(allMockData);
 
 /** 接口（带搜索能力） **/
 // async function fetchData(page: number, pageSize: number, q: string) {
@@ -101,7 +101,7 @@ console.log(allMockData);
 // }
 
 async function fetchData(page: number, pageSize: number, q: string) {
-    const res = await getShopList({ page, pageSize });
+    const res = await getProductList({ page, pageSize });
 
     if (list.value.length + res.data.records.length > res.data.total) {
         return [];

@@ -61,11 +61,15 @@ export function throttle<T extends (...args: any[]) => void>(
     };
 }
 
-export const imgUrl = (url: string) => {
+export const imgUrl = (url: string | null | undefined) => {
     if (!url) return "";
     if (url.startsWith("http")) return url;
     if (url.startsWith("data:")) return url;
     const base = import.meta.env.VITE_API_BASE_URL;
     const newUrl = url.startsWith("/api") ? url.slice(4) : url;
-    return base + newUrl;
+    return joinUrl(base, newUrl);
+};
+
+const joinUrl = (base: string, path: string) => {
+    return base.replace(/\/+$/, "") + "/" + path.replace(/^\/+/, "");
 };

@@ -20,3 +20,8 @@ export interface Product {
     specifications: SpecItem[]; // 后台规格列表
     status: number; // 状态（如 1=上架，0=下架）
 }
+
+export interface ProductDetail extends Product {
+    avatar: string; // 商铺头像
+    nickname: string; // 商铺名称
+}

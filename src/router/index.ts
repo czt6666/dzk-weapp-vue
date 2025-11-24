@@ -60,12 +60,12 @@ const routes = [
     {
         path: "/shop",
         name: "ShopList",
-        component: () => import("../views/shop/ShopList.vue"),
+        component: () => import("../views/shop/ProductList.vue"),
     },
     {
         path: "/shop/:id",
         name: "ShopInfo",
-        component: () => import("../views/shop/ShopInfo.vue"),
+        component: () => import("../views/shop/ProductInfo.vue"),
         props: true,
     },
     {

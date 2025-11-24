@@ -1,7 +1,7 @@
 <template>
     <div class="item-card" @click="$emit('click')">
         <div class="image-wrapper">
-            <img :src="info.coverImage" alt="img" loading="lazy" />
+            <img :src="imgUrl(info.coverImage)" alt="img" loading="lazy" />
         </div>
         <div class="info">
             <h3 class="title">{{ info.description }}</h3>
@@ -15,6 +15,8 @@
 </template>
 
 <script setup lang="ts">
+import { imgUrl } from "@/utils";
+
 defineProps<{ info: any }>();
 </script>
 

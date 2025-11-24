@@ -89,6 +89,7 @@ const publishTime = computed(() => {
         flex-shrink: 0;
 
         img {
+            display: block;
             width: 120px;
             height: 80px;
             object-fit: cover;

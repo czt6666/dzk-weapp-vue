@@ -1,6 +1,7 @@
 import service from "./index";
 
-export function getShopList(params: {
+// 商品相关
+export function getProductList(params: {
     page: number;
     pageSize: number;
     q?: string;
@@ -9,8 +10,8 @@ export function getShopList(params: {
     return service.get("/products/subject/list", { params });
 }
 
-export function getShopItem(params: { id: number }) {
-    return service.get("/products/subject/detail", { params });
+export function getProductItem(id: number) {
+    return service.get("/products/subject/detail", { params: { id } });
 }
 
 interface CartAddDTO {
@@ -18,19 +19,33 @@ interface CartAddDTO {
     skuId: number;
 }
 
-// 收藏商品（其实是加入购物车）
+// 收藏商品
 export function addToCart(data: CartAddDTO) {
     return service.post("/admin/ecadmin/cart/add", data);
 }
 
-// 获取收藏列表
 export function getCartList(userId: number) {
     return service.get("/admin/ecadmin/cart/list", { params: { userId } });
 }
 
-// 删除收藏商品
 export function removeCartItem(userId: number, skuId: number) {
     return service.delete(`/admin/ecadmin/cart/${skuId}`, {
         params: { userId },
     });
+}
+
+// 商铺相关
+export function getShopInfo(id: number) {
+    return service.get("/admin/ecadmin/shop/info", { params: { id } });
+}
+
+export function getShopList(params: {
+    ref?: string;
+    pageNum: number;
+    pageSize: number;
+    productType?: string;
+    shopName?: string;
+    village: string;
+}) {
+    return service.get("/admin/ecadmin/shop/list", { params });
 }

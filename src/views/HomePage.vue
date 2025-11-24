@@ -1,11 +1,13 @@
 <template>
-    <div class="">
-        HomePage
+    <div class="home">
+        <h1>我是首页</h1>
 
-        <button @click="goNewsList">去新闻列表</button>
-        <button @click="goHotelList">去民宿列表</button>
-        <button @click="goShopList">去商品列表</button>
-        <button @click="goLogin">去登录</button>
+        <div class="btns">
+            <button @click="goNewsList">去新闻列表</button>
+            <button @click="goHotelList">去民宿列表</button>
+            <button @click="goShopList">去商品列表</button>
+            <button @click="goLogin">去登录</button>
+        </div>
     </div>
 </template>
 <script lang="ts" setup>
@@ -33,4 +35,17 @@ function goLogin() {
     router.push("/login");
 }
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.home {
+    h1 {
+        font-size: 125px;
+    }
+
+    .btns {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+}
+</style>

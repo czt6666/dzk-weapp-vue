@@ -2,10 +2,10 @@
     <div class="product-detail">
         <!-- 左侧商品预览 -->
         <div class="preview">
-            <img :src="currentImage" class="main-img" />
+            <img :src="imgUrl(currentImage)" class="main-img" />
             <div class="thumbs">
                 <img
-                    v-for="(img, idx) in props.product.previewImages"
+                    v-for="(img, idx) in product.previewImages"
                     :key="idx"
                     :src="imgUrl(img)"
                     :class="{ active: idx === currentIndex }"
@@ -16,14 +16,14 @@
 
         <!-- 右侧信息 -->
         <div class="info">
-            <h1>{{ props.product.title }}</h1>
-            <p class="desc">{{ props.product.description }}</p>
+            <h1>{{ product.title }}</h1>
+            <p class="desc">{{ product.description }}</p>
 
             <div class="specs">
                 <h3>商品规格与售价</h3>
                 <div class="spec-list">
                     <button
-                        v-for="spec in props.product.specifications"
+                        v-for="spec in product.specifications"
                         :key="spec.id"
                         :class="{ active: selectedSpec?.id === spec.id }"
                         :disabled="spec.stock <= 0"
@@ -35,14 +35,19 @@
             </div>
 
             <div class="meta">
-                <p>浏览量：{{ props.product.viewCount }}</p>
-                <p>上架时间：{{ new Date(props.product.createTime).toLocaleDateString() }}</p>
+                <p>浏览量：{{ product.viewCount }}</p>
+                <p>上架时间：{{ new Date(product.createTime).toLocaleDateString() }}</p>
             </div>
+        </div>
+
+        <div class="merchant">
+            <img :src="imgUrl(product.avatar)" alt="" @click="goToShopInfo" />
+            <span @click="goToShopInfo">{{ product.nickname }}</span>
         </div>
 
         <div class="detail">
             <img
-                v-for="(img, idx) in props.product.detailImages"
+                v-for="(img, idx) in product.detailImages"
                 :key="idx"
                 :src="imgUrl(img)"
                 class="detail-img"
@@ -63,7 +68,7 @@
             <div class="modal-content">
                 <h3>前往购买</h3>
                 <p>点击下方链接前往官方销售页：</p>
-                <a :href="props.product.link" target="_blank">{{ props.product.link }}</a>
+                <a :href="product.link" target="_blank">{{ product.link }}</a>
                 <div class="modal-actions">
                     <button @click="showBuyModal = false">关闭</button>
                 </div>
@@ -74,60 +79,53 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from "vue";
-import type { Product, SpecItem } from "@/views/shop/types";
+import type { ProductDetail, SpecItem } from "@/views/shop/types";
 import { useCartStore } from "@/stores/cart";
 import { imgUrl } from "@/utils";
+import { getProductItem } from "@/apis/shop";
 
-const props = {
-    product: {
-        id: 1,
-        title: `乡村好物 ${1}`,
-        description: "这是一件来自乡村的纯天然农产或手工制品。",
-        previewImages: [
-            `https://picsum.photos/seed/preview${1}a/600/400`,
-            `https://picsum.photos/seed/preview${1}b/600/400`,
-            `https://picsum.photos/seed/preview${1}c/600/400`,
-        ],
-        link: "https://example.com",
-        createTime: "2025-11-06T08:18:37.000+00:00",
-        detailImages: [
-            "/uploads/e3c7d9b2-34a5-4d15-9b4e-edb7cd1ef500.png",
-            "/uploads/93ce033c-1fb7-4d1f-9698-a8a05cf204b3.png",
-        ],
-        updateTime: "2025-11-06T08:18:37.000+00:00",
-        cartCount: 0,
-        viewCount: 12,
-        productUrl: "123",
-        specifications: [
-            { specName: "标准装", price: 99, id: 1, stock: 123 },
-            { specName: "豪华装", price: 199, id: 2, stock: 12 },
-        ],
-        status: 1,
-    },
-};
-
-const selectedSpec = ref<SpecItem | null>(props.product.specifications[0] || null);
 const cart = useCartStore();
 const showBuyModal = ref(false);
 const loading = ref(false);
+const product = ref<ProductDetail>({
+    id: 0,
+    title: "",
+    description: "",
+    previewImages: [],
+    link: "",
+    createTime: "",
+    detailImages: [],
+    updateTime: "",
+    cartCount: 0,
+    viewCount: 0,
+    productUrl: "",
+    specifications: [],
+    status: 0,
+    avatar: "",
+    nickname: "",
+});
+const selectedSpec = ref<SpecItem | null>(product.value.specifications[0] || null);
+const route = useRoute();
+const router = useRouter();
+const id = Number(route.params.id);
 
 // ========== 图片切换逻辑 ==========
 const currentIndex = ref(0);
-const currentImage = ref(props.product.previewImages[0]);
+const currentImage = ref(product.value.previewImages[0]);
 let timer: number | null = null;
 
 // 点击切换主图
 function setCurrentImage(index: number) {
     currentIndex.value = index;
-    currentImage.value = props.product.previewImages[index];
+    currentImage.value = product.value.previewImages[index];
     resetAutoPlay();
 }
 
 // 自动播放（3秒切换一张）
 function startAutoPlay() {
     timer = setInterval(() => {
-        currentIndex.value = (currentIndex.value + 1) % props.product.previewImages.length;
-        currentImage.value = props.product.previewImages[currentIndex.value];
+        currentIndex.value = (currentIndex.value + 1) % product.value.previewImages.length;
+        currentImage.value = product.value.previewImages[currentIndex.value];
     }, 3000);
 }
 
@@ -148,29 +146,44 @@ async function onCollect() {
     if (!selectedSpec.value) return alert("请选择规格");
     loading.value = true;
     try {
-        await cart.add(props.product, selectedSpec.value);
+        await cart.add(product.value, selectedSpec.value);
     } catch (err: any) {
         alert(err.message);
     } finally {
         loading.value = false;
     }
 }
+
+function goToShopInfo() {
+    router.push({ name: "ShopHome", params: { id: product.value.id } });
+}
+
+onMounted(async () => {
+    try {
+        const res = await getProductItem(id);
+
+        if (!res.data) return ElMessage.error("商品获取失败");
+        product.value = res.data;
+    } catch {
+        ElMessage.error("商品获取失败");
+    }
+
+    loading.value = false;
+});
 </script>
 
 <style scoped>
 .product-detail {
-    overflow-y: auto;
-    height: 100%;
     display: flex;
-    gap: 2rem;
-    padding: 1rem 1rem 80px;
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px;
     flex-wrap: wrap;
 }
 
 /* 左侧图片区 */
 .preview {
-    flex: 1;
-    min-width: 320px;
+    width: 100%;
     position: relative;
 }
 .main-img {
@@ -205,8 +218,7 @@ async function onCollect() {
 
 /* 右侧信息区 */
 .info {
-    flex: 1;
-    min-width: 300px;
+    width: 100%;
 }
 .spec-list {
     margin-top: 0.5rem;
@@ -231,6 +243,26 @@ async function onCollect() {
     color: #ff5a5f;
     font-size: 1rem;
     cursor: pointer;
+}
+
+.merchant {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+
+    img {
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        cursor: pointer;
+    }
+
+    span {
+        font-size: 14px;
+        color: #333;
+        cursor: pointer;
+    }
 }
 
 /* 底部操作栏 */
