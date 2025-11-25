@@ -14,9 +14,21 @@
                         placeholder="搜索民宿名称..."
                         @keyup.enter="handleSearch"
                     />
-                    <button v-if="keyword" class="clear-btn" type="button" @click="handleResetSearch">×</button>
+                    <button
+                        v-if="keyword"
+                        class="clear-btn"
+                        type="button"
+                        @click="handleResetSearch"
+                    >
+                        ×
+                    </button>
                 </div>
-                <button class="search-btn" type="button" :disabled="isSearching" @click="handleSearch">
+                <button
+                    class="search-btn"
+                    type="button"
+                    :disabled="isSearching"
+                    @click="handleSearch"
+                >
                     {{ isSearching ? "搜索中..." : "搜索" }}
                 </button>
             </div>
@@ -38,20 +50,14 @@
             </div>
         </div>
 
-        <div v-if="searchKeyword" class="search-hint">
-            正在查看与
-            <span class="keyword">{{ searchKeyword }}</span>
-            相关的民宿
-        </div>
-
+        <!-- 瀑布流容器 -->
         <div class="waterfall-list">
             <SmartScrollList
                 ref="listRef"
                 :onRefresh="onRefresh"
                 :onLoadMore="debounce(onLoadMore)"
             >
-                <div v-if="showEmptyState" class="empty-tip">暂无相关民宿，换个关键词试试吧～</div>
-                <div v-else class="columns">
+                <div class="columns">
                     <div class="column" v-for="(col, i) in columns" :key="i">
                         <WaterfallItem
                             v-for="item in col"
@@ -64,6 +70,7 @@
             </SmartScrollList>
         </div>
 
+        <!-- item 暂存区 -->
         <div class="waterfall-item-temp">
             <WaterfallItem
                 v-for="item in tempList"
@@ -76,45 +83,32 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, nextTick, ref } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { ArrowDown } from "@element-plus/icons-vue";
-import SmartScrollList from "@/components/base/SmartScrollList.vue";
 import WaterfallItem from "@/components/hotel/HotelItem.vue";
 import { getHotelList } from "@/apis/hotel";
 import { debounce } from "@/utils/index";
 
 const router = useRouter();
 const currentSort = ref("latest");
-const keyword = ref("");
-const searchKeyword = ref("");
-const isSearching = ref(false);
-const listRef = ref<InstanceType<typeof SmartScrollList> | null>(null);
 
 let page = 1;
 const pageSize = 10;
 
+// 原始数据 + 分两列
 const list = ref<any[]>([]);
 const tempList = ref<any[]>([]);
 const columns = ref<any[][]>([[], []]);
-const hasFetchedOnce = ref(false);
-const isEmptyResult = computed(
-    () => columns.value.every((col) => col.length === 0) && tempList.value.length === 0 && list.value.length === 0,
-);
-const showEmptyState = computed(() => hasFetchedOnce.value && isEmptyResult.value);
 
+// 模拟异步加载数据
 async function fetchData(page: number, pageSize: number) {
-    const params = {
-        page,
-        pageSize,
-        homestayName: searchKeyword.value || undefined,
-    };
-    const res = await getHotelList(params);
+    const res = await getHotelList({ page, pageSize });
 
     if (list.value.length + res.data.records.length > res.data.total) {
         return [];
     }
-    const resList = filterByKeyword(res?.data?.records || []);
+    const resList = res?.data?.records || [];
 
     return resList;
 }
@@ -122,13 +116,8 @@ async function fetchData(page: number, pageSize: number) {
 async function onRefresh() {
     page = 1;
     list.value = [];
-    resetColumnsState();
     list.value = await fetchData(page, pageSize);
-    await splitToColumns(list.value);
-    hasFetchedOnce.value = true;
-    if (!list.value.length && searchKeyword.value) {
-        ElMessage.info("没有查询到相关民宿，试试其他关键词吧");
-    }
+    splitToColumns(list.value);
 }
 
 async function onLoadMore() {
@@ -144,37 +133,19 @@ async function onLoadMore() {
     splitToColumns(newList);
 }
 
-let left: any[] = [];
-let right: any[] = [];
+const left: any[] = [];
+const right: any[] = [];
 let leftHeight = 0;
 let rightHeight = 0;
-
-function resetColumnsState() {
-    left = [];
-    right = [];
-    leftHeight = 0;
-    rightHeight = 0;
-    columns.value = [left, right];
-}
-
-function filterByKeyword(items: any[]) {
-    if (!searchKeyword.value) return items;
-    const kw = searchKeyword.value.toLowerCase();
-    return items.filter((item) => {
-        const name = String(item?.homestayName || item?.name || "").toLowerCase();
-        if (name) {
-            return name.includes(kw);
-        }
-        const fallback = String(item?.title || item?.description || "").toLowerCase();
-        return fallback.includes(kw);
-    });
-}
-
 async function splitToColumns(items: any[]) {
     tempList.value = items;
+    // 等待DOM挂载（渲染完成）
     await nextTick();
+
+    // 等待所有图片加载完成
     await waitForAllImagesLoaded();
 
+    // 获取所有 item 的真实 DOM 高度
     const itemElements = Array.from(document.querySelectorAll("[data-waterfall-id]"));
     const heightMap = new Map<string, number>();
     itemElements.forEach((el) => {
@@ -183,8 +154,9 @@ async function splitToColumns(items: any[]) {
         if (id) heightMap.set(id, el.clientHeight);
     });
 
-    items.forEach((item) => {
-        const estHeight = (heightMap.get(item.id.toString()) || 200) + 12;
+    items.forEach((item, index) => {
+        const estHeight = (heightMap.get(item.id.toString()) || 200) + 12; // 12px vertical gap
+        // console.log(item.id, leftHeight, rightHeight, estHeight);
 
         if (leftHeight <= rightHeight) {
             left.push(item);
@@ -223,24 +195,6 @@ function handleSortChange(command: string) {
     currentSort.value = command;
     ElMessage.success(`已切换排序：${getSortName(command)}`);
     onRefresh();
-}
-
-async function handleSearch() {
-    if (isSearching.value) return;
-    isSearching.value = true;
-    try {
-        searchKeyword.value = keyword.value.trim();
-        await onRefresh();
-    } finally {
-        isSearching.value = false;
-    }
-}
-
-async function handleResetSearch() {
-    keyword.value = "";
-    if (!searchKeyword.value) return;
-    searchKeyword.value = "";
-    await onRefresh();
 }
 
 function getSortName(type: string) {
@@ -339,19 +293,9 @@ function getSortName(type: string) {
 }
 .sort-dropdown {
     height: 40px;
-    padding: 8px 0;
+    padding: 8px 12px;
     display: flex;
     align-items: center;
-}
-.search-hint {
-    padding: 0 16px 8px;
-    font-size: 14px;
-    color: #666;
-    .keyword {
-        margin: 0 4px;
-        color: #409eff;
-        font-weight: 500;
-    }
 }
 .waterfall-list {
     flex: 1;
@@ -378,11 +322,5 @@ function getSortName(type: string) {
     left: 0;
     z-index: -999;
     opacity: 0;
-}
-.empty-tip {
-    padding: 80px 0;
-    text-align: center;
-    color: #999;
-    font-size: 14px;
 }
 </style>

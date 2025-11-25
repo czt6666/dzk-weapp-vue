@@ -1,12 +1,6 @@
 import service from "./index";
 
-export interface HotelListParams {
-    page: number;
-    pageSize: number;
-    homestayName?: string;
-}
-
-export function getHotelList(params: HotelListParams) {
+export function getHotelList(params: { page: number; pageSize: number }) {
     return service.get("/admin/ecadmin/village-homestay/page", { params });
 }
 
