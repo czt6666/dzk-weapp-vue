@@ -1,6 +1,6 @@
 import service from "./index";
 
-export function getNewsList(params: { page: number; pageSize: number }) {
+export function getNewsList(params: { page: number; pageSize: number; keyword?: string }) {
     return service.get("/village/news/list", { params });
 }
 
