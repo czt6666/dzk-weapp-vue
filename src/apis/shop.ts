@@ -4,7 +4,7 @@ import service from "./index";
 export function getProductList(params: {
     page: number;
     pageSize: number;
-    q?: string;
+    keyword?: string;
     status?: string;
 }) {
     return service.get("/products/subject/list", { params });

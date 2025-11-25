@@ -7,6 +7,7 @@
         <div class="toolbar">
             <SearchInput
                 v-model="keyword"
+                placeholder="搜索酒店名称 / 地址..."
                 @handleSearch="handleSearch"
                 @handleReset="handleReset"
             />
@@ -105,8 +106,6 @@ async function handleSearch() {
 
 async function handleReset() {
     keyword.value = "";
-    page = 1;
-    list.value = [];
     onRefresh();
 }
 

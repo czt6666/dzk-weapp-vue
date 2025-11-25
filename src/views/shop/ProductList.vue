@@ -6,11 +6,12 @@
 
             <!-- 搜索框 -->
             <div class="controls">
-                <div class="search-box">
-                    <i class="icon-search"></i>
-                    <input v-model="q" placeholder="搜索商品名称..." @keyup.enter="onSearch" />
-                </div>
-                <button class="btn primary" @click="onSearch">搜索</button>
+                <SearchInput
+                    v-model="keyword"
+                    placeholder="搜索商品名称..."
+                    @handleSearch="handleSearch"
+                    @handleReset="handleReset"
+                />
             </div>
         </header>
 
@@ -41,89 +42,48 @@ import { getProductList } from "@/apis/shop";
 import { debounce } from "@/utils/index";
 import { ElMessage } from "element-plus";
 import { useCartStore } from "@/stores/cart";
+import SearchInput from "@/components/input/SearchInput.vue";
 
 let page = 1;
 const pageSize = 6;
-const q = ref("");
+const keyword = ref("");
 const list = ref<Product[]>([]);
 const cart = useCartStore();
 const router = useRouter();
 
-/** 模拟商品数据 **/
-// const allMockData: any[] = Array.from({ length: 100 }, (_, i) => ({
-//     id: i + 1,
-//     title: `乡村好物 ${i + 1}`,
-//     description: "这是一件来自乡村的纯天然农产或手工制品。",
-//     previewImages: [
-//         `https://picsum.photos/seed/preview${i + 1}a/300/200`,
-//         `https://picsum.photos/seed/preview${i + 1}b/300/200`,
-//     ],
-//     link: "https://example.com",
-//     createTime: "2025-11-06T08:18:37.000+00:00",
-//     detailImages: [
-//         "/uploads/e3c7d9b2-34a5-4d15-9b4e-edb7cd1ef500.png",
-//         "/uploads/93ce033c-1fb7-4d1f-9698-a8a05cf204b3.png",
-//     ],
-//     updateTime: "2025-11-06T08:18:37.000+00:00",
-//     cartCount: 0,
-//     viewCount: 0,
-//     productUrl: "123",
-//     specifications: [
-//         {
-//             specName: "123",
-//             price: 123,
-//             id: 1,
-//             stock: 123,
-//         },
-//     ],
-//     status: 1,
-// }));
-// console.log(allMockData);
+async function fetchData(page: number, pageSize: number, keyword: string) {
+    try {
+        const res = await getProductList({ page, pageSize, keyword });
 
-/** 接口（带搜索能力） **/
-// async function fetchData(page: number, pageSize: number, q: string) {
-//     await new Promise((r) => setTimeout(r, 400)); // 模拟延迟
-//     const keyword = q.trim().toLowerCase();
+        if (list.value.length + res.data.records.length > res.data.total) {
+            return [];
+        }
+        const resList = res?.data?.records || [];
 
-//     // 先在全部 mock 商品里按标题 / 描述过滤
-//     const source = keyword
-//         ? allMockData.filter((item) => {
-//             const title = String(item.title || "").toLowerCase();
-//             const desc = String(item.description || "").toLowerCase();
-//             return title.includes(keyword) || desc.includes(keyword);
-//         })
-//         : allMockData;
-
-//     // 再做分页
-//     const start = (page - 1) * pageSize;
-//     const end = start + pageSize;
-//     return source.slice(start, end);
-// }
-
-async function fetchData(page: number, pageSize: number, q: string) {
-    const res = await getProductList({ page, pageSize });
-
-    if (list.value.length + res.data.records.length > res.data.total) {
+        return resList;
+    } catch (err: any) {
+        ElMessage.error(err.msg || "获取商品列表失败");
         return [];
     }
-    const resList = res?.data?.records || [];
-
-    return resList;
 }
 
-/** 搜索 **/
-async function onSearch() {
+async function handleSearch() {
     page = 1;
     list.value = [];
-    list.value = await fetchData(page, pageSize, q.value);
+    list.value = await fetchData(page, pageSize, keyword.value);
     if (!list.value.length) ElMessage.warning("没有找到相关商品");
+}
+
+async function handleReset() {
+    keyword.value = "";
+    onRefresh();
 }
 
 async function onRefresh() {
     try {
         page = 1;
         list.value = [];
-        list.value = await fetchData(page, pageSize, q.value);
+        list.value = await fetchData(page, pageSize, keyword.value);
         return list.value;
     } catch (err: any) {
         ElMessage.error(err.msg || "获取商品列表失败");
@@ -134,7 +94,7 @@ async function onRefresh() {
 async function onLoadMore() {
     try {
         page++;
-        const newList = await fetchData(page, pageSize, q.value);
+        const newList = await fetchData(page, pageSize, keyword.value);
         if (!newList.length) {
             ElMessage.success("没有更多数据了");
             page--;
@@ -202,39 +162,6 @@ function goFavorites() {
         display: flex;
         gap: 8px;
         align-items: center;
-    }
-
-    .search-box {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        background: #fff;
-        border-radius: 24px;
-        padding: 6px 12px;
-        border: 1px solid #ccc;
-        transition: all 0.2s ease;
-
-        &:focus-within {
-            border-color: #7fb069;
-            box-shadow: 0 0 4px rgba(127, 176, 105, 0.3);
-        }
-
-        .icon-search {
-            width: 16px;
-            height: 16px;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="%237fb069" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zM10 14a4 4 0 110-8 4 4 0 010 8z"/></svg>')
-                no-repeat center/contain;
-            margin-right: 6px;
-        }
-
-        input {
-            flex: 1;
-            border: none;
-            outline: none;
-            background: transparent;
-            font-size: 14px;
-            padding: 4px 0;
-        }
     }
 
     .btn.primary {

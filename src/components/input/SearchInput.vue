@@ -5,7 +5,7 @@
             <input
                 v-model="keyword"
                 type="text"
-                placeholder="搜索新闻标题 / 关键词..."
+                :placeholder="placeholder"
                 @keyup.enter="handleSearch"
             />
             <button v-if="keyword" class="clear-btn" @click="handleReset">×</button>
@@ -21,6 +21,10 @@ const props = defineProps({
     modelValue: {
         type: String,
         default: "",
+    },
+    placeholder: {
+        type: String,
+        default: "搜索...",
     },
 });
 
