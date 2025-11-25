@@ -23,6 +23,7 @@ declare module 'vue' {
     ScrollPull: typeof import('./src/components/base/ScrollPull.vue')['default']
     SmartScrollList: typeof import('./src/components/base/SmartScrollList.vue')['default']
     SmoothScroll: typeof import('./src/components/base/SmoothScroll.vue')['default']
+    TopBar: typeof import('./src/components/TopBar.vue')['default']
   }
   export interface GlobalDirectives {
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']
