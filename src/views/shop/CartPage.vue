@@ -37,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { useCartStore } from "@/stores/cart";
+import { useCartStore } from "@/stores/shopFavorite";
 const cart = useCartStore();
 </script>
 

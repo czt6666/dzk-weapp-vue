@@ -1,8 +1,11 @@
 <template>
     <div class="product-detail">
-        <!-- 左侧商品预览 -->
+        <!-- 预览区：轮播主图 + 缩略图 -->
         <div class="preview">
-            <img :src="imgUrl(currentImage)" class="main-img" />
+            <div class="main-img-box">
+                <img :src="imgUrl(currentImage)" class="main-img" />
+            </div>
+
             <div class="thumbs">
                 <img
                     v-for="(img, idx) in product.previewImages"
@@ -14,37 +17,14 @@
             </div>
         </div>
 
-        <!-- 右侧信息 -->
+        <!-- 商品标题 & 描述 -->
         <div class="info">
             <h1>{{ product.title }}</h1>
             <p class="desc">{{ product.description }}</p>
-
-            <div class="specs">
-                <h3>商品规格与售价</h3>
-                <div class="spec-list">
-                    <button
-                        v-for="spec in product.specifications"
-                        :key="spec.id"
-                        :class="{ active: selectedSpec?.id === spec.id }"
-                        :disabled="spec.stock <= 0"
-                        @click="selectedSpec = spec"
-                    >
-                        {{ spec.specName }}（¥{{ spec.price }}）
-                    </button>
-                </div>
-            </div>
-
-            <div class="meta">
-                <p>浏览量：{{ product.viewCount }}</p>
-                <p>上架时间：{{ new Date(product.createTime).toLocaleDateString() }}</p>
-            </div>
+            <p>上架时间：{{ new Date(product.createTime).toLocaleDateString() }}</p>
         </div>
 
-        <div class="merchant">
-            <img :src="imgUrl(product.avatar)" alt="" @click="goToShopInfo" />
-            <span @click="goToShopInfo">{{ product.nickname }}</span>
-        </div>
-
+        <!-- 详情长图 -->
         <div class="detail">
             <img
                 v-for="(img, idx) in product.detailImages"
@@ -53,40 +33,67 @@
                 class="detail-img"
             />
         </div>
-
-        <!-- 底部操作区 -->
-        <div class="bottom-bar">
-            <!-- 收藏按钮 -->
-            <button class="add-btn" :disabled="!selectedSpec || loading" @click="onCollect">
-                {{ loading ? "处理中..." : "收藏商品" }}
-            </button>
-            <button class="buy" @click="showBuyModal = true">去购买</button>
+    </div>
+    <!-- 底部操作栏 -->
+    <div class="bottom-bar">
+        <div class="merchant" @click="goToShopInfo">
+            <img :src="imgUrl(product.shopAvatar)" />
+            <span>{{ product.storeName }}</span>
         </div>
 
-        <!-- 弹出购买链接 -->
-        <div v-if="showBuyModal" class="buy-modal">
-            <div class="modal-content">
-                <h3>前往购买</h3>
-                <p>点击下方链接前往官方销售页：</p>
-                <a :href="product.link" target="_blank">{{ product.link }}</a>
-                <div class="modal-actions">
-                    <button @click="showBuyModal = false">关闭</button>
+        <button class="collect-btn" @click="showCollect = true">收藏</button>
+        <button class="buy-btn" @click="showBuyModal = true">购买</button>
+    </div>
+
+    <!-- 收藏滑上弹窗 -->
+    <transition name="slideup">
+        <div v-if="showCollect" class="collect-popup">
+            <div class="popup-header">
+                <span>收藏商品</span>
+                <button class="close-btn" @click="showCollect = false">×</button>
+            </div>
+
+            <div class="popup-body">
+                <p>规格</p>
+                <div class="collect-list">
+                    <button
+                        v-for="(item, idx) in product.specifications"
+                        :key="idx"
+                        class="item"
+                        @click="handleAddToCollect(item)"
+                    >
+                        {{ item.specName }}: {{ item.price }}元
+                    </button>
                 </div>
             </div>
         </div>
-    </div>
+    </transition>
+
+    <!-- 购买弹窗 -->
+    <transition name="fade">
+        <div v-if="showBuyModal" class="buy-modal">
+            <div class="modal-content">
+                <h3>前往购买</h3>
+                <a :href="product.link" target="_blank">{{ product.link }}</a>
+                <button class="close" @click="showBuyModal = false">关闭</button>
+            </div>
+        </div>
+    </transition>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import type { ProductDetail, SpecItem } from "@/views/shop/types";
-import { useCartStore } from "@/stores/cart";
 import { imgUrl } from "@/utils";
 import { getProductItem } from "@/apis/shop";
+import { useShopFavoriteStore } from "@/stores/shopFavorite";
 
-const cart = useCartStore();
-const showBuyModal = ref(false);
-const loading = ref(false);
+const route = useRoute();
+const router = useRouter();
+const favorite = useShopFavoriteStore();
+const id = Number(route.params.id);
+
 const product = ref<ProductDetail>({
     id: 0,
     title: "",
@@ -101,28 +108,22 @@ const product = ref<ProductDetail>({
     productUrl: "",
     specifications: [],
     status: 0,
-    avatar: "",
-    nickname: "",
+    shopAvatar: "",
+    storeName: "",
 });
-const selectedSpec = ref<SpecItem | null>(product.value.specifications[0] || null);
-const route = useRoute();
-const router = useRouter();
-const id = Number(route.params.id);
 
-// ========== 图片切换逻辑 ==========
 const currentIndex = ref(0);
-const currentImage = ref(product.value.previewImages[0]);
+const currentImage = ref<string | undefined>("");
 let timer: number | null = null;
 
-// 点击切换主图
 function setCurrentImage(index: number) {
     currentIndex.value = index;
     currentImage.value = product.value.previewImages[index];
     resetAutoPlay();
 }
 
-// 自动播放（3秒切换一张）
 function startAutoPlay() {
+    if (!product.value.previewImages.length) return;
     timer = setInterval(() => {
         currentIndex.value = (currentIndex.value + 1) % product.value.previewImages.length;
         currentImage.value = product.value.previewImages[currentIndex.value];
@@ -138,198 +139,277 @@ function resetAutoPlay() {
     startAutoPlay();
 }
 
-onMounted(startAutoPlay);
-onBeforeUnmount(stopAutoPlay);
-
-// 收藏逻辑（调用购物车逻辑）
-async function onCollect() {
-    if (!selectedSpec.value) return alert("请选择规格");
-    loading.value = true;
-    try {
-        await cart.add(product.value, selectedSpec.value);
-    } catch (err: any) {
-        alert(err.message);
-    } finally {
-        loading.value = false;
-    }
-}
-
-function goToShopInfo() {
-    router.push({ name: "ShopHome", params: { id: product.value.id } });
+async function handleAddToCollect(selectedSpec: SpecItem) {
+    await favorite.add(selectedSpec);
 }
 
 onMounted(async () => {
     try {
         const res = await getProductItem(id);
-
-        if (!res.data) return ElMessage.error("商品获取失败");
         product.value = res.data;
-    } catch {
-        ElMessage.error("商品获取失败");
+        currentImage.value = product.value.previewImages[0] || "";
+        startAutoPlay();
+    } catch (err: any) {
+        ElMessage.error(err.msg || "获取商品详情失败");
     }
-
-    loading.value = false;
 });
+
+onBeforeUnmount(stopAutoPlay);
+
+const showCollect = ref(false);
+const showBuyModal = ref(false);
+
+function goToShopInfo() {
+    router.push({ name: "ShopHome", params: { id: product.value.id } });
+}
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .product-detail {
+    overflow-y: auto;
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
     padding: 12px;
-    flex-wrap: wrap;
-}
+    padding-bottom: 66px;
 
-/* 左侧图片区 */
-.preview {
-    width: 100%;
-    position: relative;
-}
-.main-img {
-    width: 100%;
-    border-radius: 12px;
-    object-fit: cover;
-    transition: opacity 0.5s ease;
-}
-.thumbs {
-    display: flex;
-    gap: 8px;
-    margin-top: 8px;
-    justify-content: center;
-}
-.thumbs img {
-    width: 80px;
-    height: 80px;
-    cursor: pointer;
-    border-radius: 8px;
-    object-fit: cover;
-    border: 2px solid transparent;
-    opacity: 0.7;
-    transition: all 0.3s;
-}
-.thumbs img:hover {
-    opacity: 1;
-}
-.thumbs img.active {
-    border-color: #42b983;
-    opacity: 1;
-}
+    /* 预览区 */
+    .preview {
+        .main-img-box {
+            position: relative;
+            width: 100%;
+            padding-top: 100%;
+            background: #f6f6f6;
+            border-radius: 12px;
 
-/* 右侧信息区 */
-.info {
-    width: 100%;
-}
-.spec-list {
-    margin-top: 0.5rem;
-}
-.spec-list button {
-    margin: 0.4rem;
-    padding: 0.6rem 1rem;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    cursor: pointer;
-    background: white;
-}
-.spec-list .active {
-    border-color: #42b983;
-    color: #42b983;
-    background: #e8f5ee;
-}
-.fav-btn {
-    margin-top: 1rem;
-    background: none;
-    border: none;
-    color: #ff5a5f;
-    font-size: 1rem;
-    cursor: pointer;
-}
+            .main-img {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                border-radius: 12px;
+            }
+        }
 
-.merchant {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 12px;
+        .thumbs {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
 
-    img {
-        border-radius: 50%;
-        width: 32px;
-        height: 32px;
-        cursor: pointer;
+            img {
+                width: 70px;
+                height: 70px;
+                border-radius: 8px;
+                object-fit: cover;
+                opacity: 0.6;
+                cursor: pointer;
+                transition: 0.2s;
+                border: 2px solid transparent;
+
+                &.active {
+                    opacity: 1;
+                    border-color: #42b983;
+                }
+                &:hover {
+                    opacity: 1;
+                }
+            }
+        }
     }
 
-    span {
-        font-size: 14px;
-        color: #333;
-        cursor: pointer;
+    /* 文本信息 */
+    .info {
+        h1 {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+        .desc {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+    }
+
+    /* 商品长图 */
+    .detail {
+        .detail-img {
+            width: 100%;
+            border-radius: 8px;
+            background: #f7f7f7;
+            margin-bottom: 12px;
+            object-fit: contain;
+        }
     }
 }
 
-/* 底部操作栏 */
+/* 底部栏 */
 .bottom-bar {
     position: fixed;
-    bottom: 0;
     left: 0;
     right: 0;
-    height: 60px;
-    background: white;
-    border-top: 1px solid #eee;
+    bottom: 0;
+    background: #fff;
+    height: 72px;
     display: flex;
-    justify-content: space-around;
     align-items: center;
-    z-index: 10;
-}
-.bottom-bar button {
-    flex: 1;
-    margin: 0 10px;
-    border-radius: 8px;
-    padding: 0.6rem 1rem;
-    border: none;
-    cursor: pointer;
-    font-size: 1rem;
-}
-.favorite {
-    background: #f7f7f7;
-}
-.buy {
-    background: #42b983;
-    color: white;
-}
-.detail-img {
-    width: 100%;
-    margin-bottom: 12px;
+    padding: 0 12px;
+    border-top: 1px solid #ccc;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    gap: 10px;
+    z-index: 20;
+
+    .merchant {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        flex: 1;
+
+        img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+        }
+        span {
+            font-size: 14px;
+        }
+    }
+
+    .collect-btn,
+    .buy-btn {
+        flex: 1;
+        padding: 10px 0;
+        border-radius: 8px;
+        border: none;
+        font-size: 15px;
+        cursor: pointer;
+    }
+
+    .collect-btn {
+        background: #f2f2f2;
+    }
+
+    .buy-btn {
+        background: #42b983;
+        color: #fff;
+    }
 }
 
-/* 弹窗样式 */
-.buy-modal {
+/* 收藏弹窗 */
+.collect-popup {
     position: fixed;
-    top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
+    height: 75vh;
+    background: #fff;
+    border-radius: 16px 16px 0 0;
+    padding: 16px;
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.1);
+    z-index: 30;
+
+    .popup-header {
+        display: flex;
+        justify-content: space-between;
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 12px;
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+        }
+    }
+
+    .popup-body {
+        font-size: 14px;
+        color: #333;
+
+        .collect-list {
+            margin-top: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+
+            .item {
+                padding: 12px;
+                border-radius: 10px;
+                background: #f7f7f7;
+                border: none;
+                text-align: left;
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+.slideup-enter-active {
+    animation: slideUp 0.25s;
+}
+.slideup-leave-active {
+    animation: slideUp 0.25s reverse;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+/* 购买弹窗 */
+.buy-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 40;
+
+    .modal-content {
+        background: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        width: 80%;
+        text-align: center;
+
+        h3 {
+            margin-bottom: 10px;
+        }
+
+        a {
+            display: block;
+            margin: 12px 0;
+            color: #42b983;
+        }
+
+        .close {
+            padding: 8px 16px;
+            background: #f2f2f2;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+    }
 }
-.modal-content {
-    background: white;
-    border-radius: 12px;
-    padding: 1.5rem;
-    width: 300px;
-    text-align: center;
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.25s ease;
 }
-.modal-content a {
-    display: block;
-    margin: 1rem 0;
-    color: #42b983;
-    word-break: break-all;
-}
-.modal-actions button {
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-    background: #eee;
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
 }
 </style>

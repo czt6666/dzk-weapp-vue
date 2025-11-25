@@ -9,14 +9,7 @@
             <h3 class="title">{{ item.title }}</h3>
             <p class="desc">{{ item.description }}</p>
 
-            <!-- <div class="specs" v-if="item.specifications?.length">
-                <span v-for="(s, i) in item.specifications" :key="i" class="spec">
-                    {{ s.specName }} · ¥{{ s.price.toFixed(2) }}
-                </span>
-            </div> -->
-
             <div class="foot">
-                <!-- <button class="btn cart" @click.stop="addCart">🛒 加入购物车</button> -->
                 <button class="btn detail" @click.stop="openDetail">查看详情</button>
             </div>
         </div>
@@ -29,7 +22,7 @@ import type { Product } from "@/views/shop/types";
 import { imgUrl } from "@/utils";
 
 const props = defineProps<{ item: Product }>();
-const emit = defineEmits(["open", "add-cart"]);
+const emit = defineEmits(["open"]);
 
 const placeholder =
     'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300"><rect width="100%" height="100%" fill="#f4efe3"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#b5a688">无图</text></svg>';
@@ -43,10 +36,6 @@ const firstImage = computed(() => {
 
 function openDetail() {
     emit("open", props.item);
-}
-
-function addCart() {
-    emit("add-cart", props.item);
 }
 </script>
 
@@ -107,7 +96,6 @@ function addCart() {
         font-size: 13px;
         color: #6f5e44;
         line-height: 1.4;
-        height: 36px;
         overflow: hidden;
     }
     .specs {

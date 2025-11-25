@@ -20,7 +20,7 @@
             <SmartScrollList :onRefresh="onRefresh" :onLoadMore="debounce(onLoadMore)">
                 <ul class="scroll-list">
                     <li v-for="item in list" :key="item.id">
-                        <ProductCard :item="item" @open="openProduct" @add-cart="addToCart" />
+                        <ProductCard :item="item" @open="openProduct" />
                     </li>
                 </ul>
             </SmartScrollList>
@@ -28,7 +28,7 @@
         <!-- 底部购物车图标 -->
         <div class="cart-float" @click="goFavorites">
             <span>⭐</span>
-            <span class="cart-count">{{ cart.list.length }}</span>
+            <span class="cart-count">{{ favorite.list.length }}</span>
         </div>
     </section>
 </template>
@@ -41,14 +41,14 @@ import type { Product } from "@/views/shop/types";
 import { getProductList } from "@/apis/shop";
 import { debounce } from "@/utils/index";
 import { ElMessage } from "element-plus";
-import { useCartStore } from "@/stores/cart";
+import { useShopFavoriteStore } from "@/stores/shopFavorite";
 import SearchInput from "@/components/input/SearchInput.vue";
 
 let page = 1;
 const pageSize = 6;
 const keyword = ref("");
 const list = ref<Product[]>([]);
-const cart = useCartStore();
+const favorite = useShopFavoriteStore();
 const router = useRouter();
 
 async function fetchData(page: number, pageSize: number, keyword: string) {
@@ -109,22 +109,10 @@ async function onLoadMore() {
     }
 }
 
-/** 打开详情页 **/
 function openProduct(item: Product) {
     router.push(`/shop/${item.id}`);
 }
 
-function addToCart(item: Product) {
-    const exist = cart.value.find((p) => p.id === item.id);
-    if (!exist) {
-        cart.value.push(item);
-        ElMessage.success(`已添加「${item.title}」到购物车`);
-    } else {
-        ElMessage.info("该商品已在购物车中");
-    }
-}
-
-/** 进入收藏夹页 **/
 function goFavorites() {
     router.push("/shop/favorites");
 }

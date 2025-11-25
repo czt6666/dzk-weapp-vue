@@ -22,6 +22,6 @@ export interface Product {
 }
 
 export interface ProductDetail extends Product {
-    avatar: string; // 商铺头像
-    nickname: string; // 商铺名称
+    shopAvatar: string; // 商铺头像
+    storeName: string; // 商铺名称
 }

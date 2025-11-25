@@ -6,8 +6,8 @@
         </header>
 
         <!-- 收藏列表 -->
-        <section v-if="cart.list.length" class="favorites-grid">
-            <div v-for="item in cart.list" :key="item.id" class="favorite-card">
+        <section v-if="favorite.list.length" class="favorites-grid">
+            <div v-for="item in favorite.list" :key="item.id" class="favorite-card">
                 <div class="thumb" @click="goDetail(item)">
                     <img :src="imgUrl(item.previewImage)" alt="商品图片" />
                 </div>
@@ -34,22 +34,22 @@
 
 <script setup lang="ts">
 import { onMounted } from "vue";
-import { useCartStore } from "@/stores/cart";
+import { useShopFavoriteStore } from "@/stores/shopFavorite";
 import { useRouter } from "vue-router";
 import { imgUrl } from "@/utils";
 
-const cart = useCartStore();
+const favorite = useShopFavoriteStore();
 const router = useRouter();
 
 // 页面挂载时获取收藏列表
 onMounted(() => {
-    cart.fetchCart();
+    favorite.fetchFavorites();
 });
 
 // 取消收藏
 function remove(skuId: number) {
     if (confirm("确定要取消收藏吗？")) {
-        cart.remove(skuId);
+        favorite.remove(skuId);
     }
 }
 
