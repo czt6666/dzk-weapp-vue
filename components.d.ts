@@ -23,6 +23,7 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ScrollPull: typeof import('./src/components/base/ScrollPull.vue')['default']
+    SearchInput: typeof import('./src/components/input/SearchInput.vue')['default']
     SmartScrollList: typeof import('./src/components/base/SmartScrollList.vue')['default']
     SmoothScroll: typeof import('./src/components/base/SmoothScroll.vue')['default']
     TopBar: typeof import('./src/components/TopBar.vue')['default']

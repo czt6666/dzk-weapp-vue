@@ -5,31 +5,13 @@
         </div>
 
         <div class="toolbar">
-            <div class="search-bar">
-                <el-input
-                    v-model="keyword"
-                    placeholder="搜索民宿名称"
-                    clearable
-                    @keyup.enter="handleSearch"
-                    @clear="handleResetSearch"
-                >
-                    <template #append>
-                        <el-button type="primary" :loading="isSearching" @click="handleSearch">
-                            搜索
-                        </el-button>
-                    </template>
-                </el-input>
-                <el-button
-                    v-if="searchKeyword"
-                    class="clear-search"
-                    text
-                    @click="handleResetSearch"
-                >
-                    清除搜索
-                </el-button>
-            </div>
+            <SearchInput
+                v-model="keyword"
+                @handleSearch="handleSearch"
+                @handleReset="handleReset"
+            />
 
-            <div class="sort-dropdown">
+            <!-- <div class="sort-dropdown">
                 <el-dropdown trigger="click" @command="handleSortChange">
                     <span class="el-dropdown-link">
                         排序
@@ -43,7 +25,7 @@
                         </el-dropdown-menu>
                     </template>
                 </el-dropdown>
-            </div>
+            </div> -->
         </div>
 
         <!-- 瀑布流容器 -->
@@ -81,13 +63,13 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { ArrowDown } from "@element-plus/icons-vue";
+import SearchInput from "@/components/input/SearchInput.vue";
 import WaterfallItem from "@/components/hotel/HotelItem.vue";
 import { getHotelList } from "@/apis/hotel";
 import { debounce } from "@/utils/index";
 
 const router = useRouter();
-const currentSort = ref("latest");
+// const currentSort = ref("latest");
 
 let page = 1;
 const pageSize = 10;
@@ -96,33 +78,52 @@ const pageSize = 10;
 const list = ref<any[]>([]);
 const tempList = ref<any[]>([]);
 const columns = ref<any[][]>([[], []]);
+const keyword = ref("");
 
-// 模拟异步加载数据
-async function fetchData(page: number, pageSize: number) {
-    const res = await getHotelList({ page, pageSize });
+async function fetchData(page: number, pageSize: number, keyword?: string) {
+    try {
+        const res = await getHotelList({ page, pageSize, keyword });
 
-    if (list.value.length + res.data.records.length > res.data.total) {
+        if (list.value.length + res.data.records.length > res.data.totalCount) {
+            return [];
+        }
+        const resList = res?.data?.records || [];
+        return resList;
+    } catch (err: any) {
+        ElMessage.error(err.msg || "获取民宿列表失败");
         return [];
     }
-    const resList = res?.data?.records || [];
+}
 
-    return resList;
+async function handleSearch() {
+    if (!keyword.value.trim()) {
+        ElMessage.warning("请输入搜索关键词");
+        return;
+    }
+    onRefresh();
+}
+
+async function handleReset() {
+    keyword.value = "";
+    page = 1;
+    list.value = [];
+    onRefresh();
 }
 
 async function onRefresh() {
     page = 1;
     list.value = [];
-    list.value = await fetchData(page, pageSize);
+    list.value = await fetchData(page, pageSize, keyword.value);
     splitToColumns(list.value);
 }
 
 async function onLoadMore() {
     page++;
-    const newList = await fetchData(page, pageSize);
-    if (newList.length === 0) {
+    const newList = await fetchData(page, pageSize, keyword.value);
+    if (!newList.length) {
         ElMessage.success("没有更多数据了");
         page--;
-        return list.value;
+        return;
     }
     list.value.push(...newList);
 
@@ -187,24 +188,24 @@ function goDetail(id: number) {
     router.push(`/hotels/${id}`);
 }
 
-function handleSortChange(command: string) {
-    currentSort.value = command;
-    ElMessage.success(`已切换排序：${getSortName(command)}`);
-    onRefresh();
-}
+// function handleSortChange(command: string) {
+//     currentSort.value = command;
+//     ElMessage.success(`已切换排序：${getSortName(command)}`);
+//     onRefresh();
+// }
 
-function getSortName(type: string) {
-    switch (type) {
-        case "latest":
-            return "最新";
-        case "hot":
-            return "最热";
-        case "recommend":
-            return "推荐";
-        default:
-            return "未知";
-    }
-}
+// function getSortName(type: string) {
+//     switch (type) {
+//         case "latest":
+//             return "最新";
+//         case "hot":
+//             return "最热";
+//         case "recommend":
+//             return "推荐";
+//         default:
+//             return "未知";
+//     }
+// }
 </script>
 
 <style lang="scss" scoped>

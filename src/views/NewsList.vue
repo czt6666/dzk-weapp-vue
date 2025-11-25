@@ -5,19 +5,11 @@
         </div>
 
         <div class="toolbar">
-            <div class="search-bar">
-                <div class="search-input">
-                    <el-icon><Search style="margin-right: 5px" /></el-icon>
-                    <input
-                        v-model="keyword"
-                        type="text"
-                        placeholder="搜索新闻标题 / 关键词..."
-                        @keyup.enter="handleSearch"
-                    />
-                    <button v-if="keyword" class="clear-btn" @click="handleReset">×</button>
-                </div>
-                <button class="search-btn" @click="handleSearch">搜索</button>
-            </div>
+            <SearchInput
+                v-model="keyword"
+                @handleSearch="handleSearch"
+                @handleReset="handleReset"
+            />
         </div>
 
         <div class="news-list">
@@ -36,7 +28,7 @@
 import { ref } from "vue";
 import NewsListItem from "@/components/news/NewsListItem.vue";
 import SmartScrollList from "@/components/base/SmartScrollList.vue";
-import { Search } from "@element-plus/icons-vue";
+import SearchInput from "@/components/input/SearchInput.vue";
 import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
 import { getNewsList } from "@/apis/news";
@@ -80,6 +72,7 @@ async function handleReset() {
 
 async function onRefresh() {
     page = 1;
+    list.value = [];
     list.value = await fetchData(page, pageSize, keyword.value);
 }
 
@@ -122,57 +115,6 @@ function goDetail(id: number) {
         gap: 12px;
         padding: 8px 12px;
         align-items: center;
-
-        .search-bar {
-            flex: 1;
-            display: flex;
-            gap: 10px;
-            align-items: center;
-
-            .search-input {
-                flex: 1;
-                display: flex;
-                align-items: center;
-                background: #fff;
-                border-radius: 28px;
-                border: 1px solid #d4d4d4;
-                padding: 6px 14px;
-                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08) inset;
-
-                input {
-                    flex: 1;
-                    border: none;
-                    outline: none;
-                    background: transparent;
-                    font-size: 14px;
-                    color: #333;
-                }
-
-                .clear-btn {
-                    border: none;
-                    background: transparent;
-                    font-size: 18px;
-                    line-height: 1;
-                    color: #bbb;
-                    cursor: pointer;
-                }
-            }
-
-            .search-btn {
-                border: none;
-                background: linear-gradient(135deg, #7fb069, #6da757);
-                color: #fff;
-                border-radius: 24px;
-                padding: 8px 20px;
-                font-size: 14px;
-                cursor: pointer;
-                transition: opacity 0.2s;
-
-                &:hover {
-                    opacity: 0.9;
-                }
-            }
-        }
     }
 
     .news-list {
