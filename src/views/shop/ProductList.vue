@@ -53,7 +53,7 @@ const router = useRouter();
 
 async function fetchData(page: number, pageSize: number, keyword: string) {
     try {
-        const res = await getProductList({ page, pageSize, keyword });
+        const res = await getProductList({ page, pageSize, title: keyword });
 
         if (list.value.length + res.data.records.length > res.data.total) {
             return [];

@@ -1,12 +1,7 @@
 import service from "./index";
 
 // 商品相关
-export function getProductList(params: {
-    page: number;
-    pageSize: number;
-    keyword?: string;
-    status?: string;
-}) {
+export function getProductList(params: { page: number; pageSize: number; title?: string }) {
     return service.get("/products/subject/list", { params });
 }
 

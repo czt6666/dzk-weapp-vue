@@ -74,7 +74,7 @@
         <div v-if="showBuyModal" class="buy-modal">
             <div class="modal-content">
                 <h3>前往购买</h3>
-                <a :href="product.link" target="_blank">{{ product.link }}</a>
+                <a :href="product.productUrl" target="_blank">{{ product.productUrl }}</a>
                 <button class="close" @click="showBuyModal = false">关闭</button>
             </div>
         </div>
@@ -99,7 +99,6 @@ const product = ref<ProductDetail>({
     title: "",
     description: "",
     previewImages: [],
-    link: "",
     createTime: "",
     detailImages: [],
     updateTime: "",

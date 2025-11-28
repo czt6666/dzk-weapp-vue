@@ -10,7 +10,6 @@ export interface Product {
     title: string; // 商品标题
     description: string; // 商品描述
     previewImages: string[]; // 预览图数组
-    link: string; // 商品链接
     createTime: string; // 创建时间（ISO时间字符串）
     detailImages: string[]; // 详情图片
     updateTime: string; // 更新时间（ISO时间字符串）
