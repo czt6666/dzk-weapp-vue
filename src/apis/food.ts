@@ -380,3 +380,93 @@ export const fetchMenuItems = async (): Promise<MenuItem[]> => {
         },
     ];
 };
+
+export interface StoreInfo {
+    id: string;
+    name: string;
+    address: string;
+    distance: string;
+    phone: string;
+    hours: string;
+    status: "open" | "closed";
+    tags: string[];
+    lat?: number;
+    lng?: number;
+}
+
+export const fetchStoreList = async (keyword?: string): Promise<StoreInfo[]> => {
+    await delay(400);
+
+    const stores: StoreInfo[] = [
+        {
+            id: "s001",
+            name: "oil测试",
+            address: "龙华区富士康龙华园区",
+            distance: "距离70m",
+            phone: "0755-12345678",
+            hours: "08:00-23:00",
+            status: "open",
+            tags: ["可团餐"],
+        },
+        {
+            id: "s002",
+            name: "和平饭店",
+            address: "南山区南头古城南山大道8号",
+            distance: "距离2.1km",
+            phone: "0755-87654321",
+            hours: "01:00-23:00",
+            status: "open",
+            tags: ["可团餐"],
+        },
+        {
+            id: "s003",
+            name: "飞翱鲜肥肠1",
+            address: "中天村88路",
+            distance: "距离9.70m",
+            phone: "0755-11223344",
+            hours: "00:00-20:00",
+            status: "open",
+            tags: [],
+        },
+        {
+            id: "s004",
+            name: "agr的门店",
+            address: "南山区龙珠园路50号",
+            distance: "距离7.51km",
+            phone: "0755-99887766",
+            hours: "00:00-23:59",
+            status: "open",
+            tags: [],
+        },
+        {
+            id: "s005",
+            name: "念念小店",
+            address: "中关村",
+            distance: "距离7.65km",
+            phone: "0755-55667788",
+            hours: "00:00-23:00",
+            status: "open",
+            tags: [],
+        },
+        {
+            id: "s006",
+            name: "那些克星三号店",
+            address: "重庆市渝北区龙溪街道金龙路154号",
+            distance: "距离3m",
+            phone: "023-67891234",
+            hours: "10:00-22:00",
+            status: "open",
+            tags: ["火锅", "川菜"],
+        },
+    ];
+
+    if (keyword) {
+        return stores.filter(
+            (store) =>
+                store.name.toLowerCase().includes(keyword.toLowerCase()) ||
+                store.address.toLowerCase().includes(keyword.toLowerCase()),
+        );
+    }
+
+    return stores;
+};

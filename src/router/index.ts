@@ -84,6 +84,11 @@ const routes = [
         component: () => import("../views/food/order.vue"),
     },
     {
+        path: "/food/store",
+        name: "StoreList",
+        component: () => import("../views/food/StoreList.vue"),
+    },
+    {
         path: "/test",
         children: generateRoutes(),
     },
