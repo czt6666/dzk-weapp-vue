@@ -1,14 +1,12 @@
 <template>
     <div class="news-info">
-        <el-page-header @back="router.back()" content="新闻详情" />
-
         <div v-if="loading" class="loading">加载中...</div>
         <div v-else class="content">
             <h2 class="news-title">{{ info.title }}</h2>
             <p class="meta">
-                发布日期：{{ publishDate || "--" }}　浏览量：{{ info.views || "--" }}
+                发布日期：{{ publishDate || "--" }}　
+                <!-- 浏览量：{{ info.views || "--" }} -->
             </p>
-            <!-- <img :src="imgUrl(info.imageUrl)" alt="封面" class="cover" /> -->
             <div class="body" v-html="transHtml(info.content)"></div>
         </div>
     </div>
@@ -18,7 +16,6 @@
 import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { getNewsItem } from "@/apis/news";
-import { imgUrl } from "@/utils/index";
 import { transHtml } from "@/utils/transHtml";
 
 const route = useRoute();
@@ -45,7 +42,7 @@ async function fetchNewsDetail(id: number) {
 }
 
 const publishDate = computed(() => {
-    if (!info.value.date) {
+    if (!info.value.createTime) {
         return "";
     }
     const date = new Date(info.value.createTime);
@@ -62,6 +59,7 @@ onMounted(async () => {
 // @use "../styles/htmlNews.scss";
 
 .news-info {
+    height: 100%;
     padding: 20px;
 }
 .loading {
@@ -70,8 +68,14 @@ onMounted(async () => {
     color: #666;
 }
 .content {
+    overflow-y: auto;
+    width: 100%;
+    height: 100%;
+
     .news-title {
-        font-size: 20px;
+        text-align: center;
+        font-size: 28px;
+        margin-bottom: 10px;
     }
 }
 .cover {
@@ -80,11 +84,23 @@ onMounted(async () => {
     margin: 20px 0;
 }
 .meta {
+    text-align: right;
     color: #888;
     font-size: 14px;
-    margin-top: 5px;
+    margin-bottom: 10px;
 }
-.body {
-    //
+:deep(.body) {
+    P {
+        font-size: 16px;
+        text-indent: 2em;
+        margin-bottom: 12px;
+
+        > img {
+            margin-left: -2em;
+        }
+    }
+    img {
+        width: 100%;
+    }
 }
 </style>

@@ -6,6 +6,7 @@
             <button @click="goNewsList">去新闻列表</button>
             <button @click="goHotelList">去民宿列表</button>
             <button @click="goShopList">去商品列表</button>
+            <button @click="goFoodOrder">去美食订单</button>
             <button @click="goLogin">去登录</button>
         </div>
     </div>
@@ -27,8 +28,8 @@ function goShopList() {
     router.push("/shop");
 }
 
-function goCart() {
-    router.push("/cart");
+function goFoodOrder() {
+    router.push("/food/order");
 }
 
 function goLogin() {
