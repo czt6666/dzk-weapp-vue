@@ -263,8 +263,10 @@ function goToShopInfo() {
     z-index: 20;
 
     .merchant {
+        overflow: hidden;
         display: flex;
         align-items: center;
+        width: 20%;
         gap: 8px;
         cursor: pointer;
         flex: 1;

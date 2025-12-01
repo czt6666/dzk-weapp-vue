@@ -24,7 +24,6 @@ export default defineConfigWithVueTs(
     skipFormatting,
 
     {
-        // 指定解析器：vue-eslint-parser 能正确理解 .vue 文件
         languageOptions: {
             parser: require("vue-eslint-parser"),
             parserOptions: {

@@ -10,7 +10,6 @@ declare module 'vue' {
   export interface GlobalComponents {
     Desktop: typeof import('./src/components/Desktop.vue')['default']
     ElIcon: typeof import('element-plus/es')['ElIcon']
-    ElPageHeader: typeof import('element-plus/es')['ElPageHeader']
     HotelItem: typeof import('./src/components/hotel/HotelItem.vue')['default']
     InertiaScroll: typeof import('./src/components/base/InertiaScroll.vue')['default']
     NewsListItem: typeof import('./src/components/news/NewsListItem.vue')['default']

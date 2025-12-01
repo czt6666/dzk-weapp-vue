@@ -2,11 +2,11 @@
     <div class="cart-page">
         <h1>🛒 我的购物车</h1>
 
-        <div v-if="cart.items.length === 0" class="empty">购物车是空的</div>
+        <div v-if="cart.list.length === 0" class="empty">购物车是空的</div>
 
         <div v-else class="cart-list">
             <div
-                v-for="item in cart.items"
+                v-for="item in cart.list"
                 :key="item.productId + '-' + item.specId"
                 class="cart-item"
             >
@@ -18,10 +18,7 @@
                         <button @click="item.quantity--" :disabled="item.quantity <= 1">-</button>
                         <span>{{ item.quantity }}</span>
                         <button @click="item.quantity++">+</button>
-                        <button
-                            class="remove"
-                            @click="cart.removeFromCart(item.productId, item.specId)"
-                        >
+                        <button class="remove" @click="cart.remove(item.productId, item.specId)">
                             删除
                         </button>
                     </div>
@@ -29,16 +26,16 @@
             </div>
         </div>
 
-        <footer v-if="cart.items.length > 0">
-            <p>共 {{ cart.totalCount }} 件，总计 ¥{{ cart.totalPrice.toFixed(2) }}</p>
+        <footer v-if="cart.list.length > 0">
+            <p>共 {{ cart.list.length - 1 }} 件，总计 ¥{{ cart.totalPrice.toFixed(2) }}</p>
             <button class="checkout">去结算</button>
         </footer>
     </div>
 </template>
 
 <script setup lang="ts">
-import { useCartStore } from "@/stores/shopFavorite";
-const cart = useCartStore();
+import { useShopFavoriteStore } from "@/stores/shopFavorite";
+const cart = useShopFavoriteStore();
 </script>
 
 <style scoped>
