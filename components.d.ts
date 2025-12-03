@@ -9,7 +9,6 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     Desktop: typeof import('./src/components/Desktop.vue')['default']
-    ElIcon: typeof import('element-plus/es')['ElIcon']
     HotelItem: typeof import('./src/components/hotel/HotelItem.vue')['default']
     InertiaScroll: typeof import('./src/components/base/InertiaScroll.vue')['default']
     NewsListItem: typeof import('./src/components/news/NewsListItem.vue')['default']
@@ -21,8 +20,5 @@ declare module 'vue' {
     SmartScrollList: typeof import('./src/components/base/SmartScrollList.vue')['default']
     SmoothScroll: typeof import('./src/components/base/SmoothScroll.vue')['default']
     TopBar: typeof import('./src/components/TopBar.vue')['default']
-  }
-  export interface GlobalDirectives {
-    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }
