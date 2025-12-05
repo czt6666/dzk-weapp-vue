@@ -43,5 +43,9 @@ export const useShopFavoriteStore = defineStore("shopFavorite", () => {
         }
     }
 
-    return { list, fetchFavorites, add, remove };
+    const totalPrice = computed(() => {
+        return list.value.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    });
+
+    return { list, fetchFavorites, add, remove, totalPrice };
 });

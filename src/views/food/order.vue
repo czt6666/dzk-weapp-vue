@@ -67,7 +67,7 @@
                                         −
                                     </button>
                                     <span class="quantity">{{
-                                        cartStore.cartItems[item.id].quantity
+                                        cartStore.cartItems[item.id]?.quantity || 0
                                     }}</span>
                                     <button class="btn-plus" @click="cartStore.addItem(item)">
                                         +

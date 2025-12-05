@@ -14,8 +14,8 @@ export const useCartStore = defineStore("orderCart", () => {
     const cartItems = ref<Record<string, CartItem>>({});
 
     const addItem = (item: Omit<CartItem, "quantity">) => {
-        if (cartItems.value[item.id]) {
-            cartItems.value[item.id].quantity++;
+        if (cartItems.value[item.id]?.quantity) {
+            cartItems.value[item.id]!.quantity++;
         } else {
             cartItems.value[item.id] = { ...item, quantity: 1 };
         }

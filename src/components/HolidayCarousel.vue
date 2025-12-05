@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import Carousel from "@/components/base/Carousel.vue";
 
 // 1. 定义节气和节日数据（包含日期和类型）
 const festivals = [

@@ -69,11 +69,6 @@ const routes = [
         props: true,
     },
     {
-        path: "/shop/cart",
-        name: "ShopCart",
-        component: () => import("../views/shop/CartPage.vue"),
-    },
-    {
         path: "/shop/favorites",
         name: "ShopFavorites",
         component: () => import("../views/shop/Favorites.vue"),

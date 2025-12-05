@@ -25,11 +25,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import BScroll from "better-scroll";
-import PullDown from "better-scroll";
-import PullUp from "better-scroll";
-
-BScroll.use(PullDown);
-BScroll.use(PullUp);
 
 // ------------------------ 常量 ------------------------
 const TIME_BOUNCE = 800;

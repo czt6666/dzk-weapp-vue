@@ -5,7 +5,9 @@
             ref="scrollInner"
             :style="{
                 transform: `translateY(${bounceY}px)`,
-                transition: isTouching ? 'none' : `transform ${bounceTime}ms cubic-bezier(0.25, 1, 0.5, 1)`,
+                transition: isTouching
+                    ? 'none'
+                    : `transform ${bounceTime}ms cubic-bezier(0.25, 1, 0.5, 1)`,
             }"
         >
             <slot></slot>
@@ -52,14 +54,14 @@ const handleTouchStart = (e: TouchEvent) => {
     const el = scrollInner.value;
     if (!el) return;
     isTouching.value = true;
-    startY = e.touches[0].clientY;
+    startY = e.touches[0]?.clientY || 0;
     overscroll = 0;
 };
 
 const handleTouchMove = (e: TouchEvent) => {
     const el = scrollInner.value;
     if (!el) return;
-    currentY = e.touches[0].clientY;
+    currentY = e.touches[0]?.clientY || 0;
     const deltaY = currentY - startY;
 
     // 顶部下拉 overscroll
