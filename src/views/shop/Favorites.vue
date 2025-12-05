@@ -66,6 +66,8 @@ function goDetail(item: any) {
 
 <style scoped>
 .favorites-page {
+    overflow-y: auto;
+    height: 100%;
     padding: 2rem;
     max-width: 1200px;
     margin: auto;
