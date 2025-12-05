@@ -9,13 +9,8 @@
                 <slot></slot>
 
                 <!-- 上拉加载提示 -->
-                <div class="pullup-tips">
-                    <div v-if="!isPullUpLoad" class="before-trigger">
-                        <span class="pullup-txt">上拉加载更多</span>
-                    </div>
-                    <div v-else class="after-trigger">
-                        <span class="pullup-txt">加载中...</span>
-                    </div>
+                <div class="pullup-tips" v-show="pullUpTip !== 'hidden'">
+                    {{ pullUpTip }}
                 </div>
             </div>
         </div>
@@ -43,44 +38,54 @@ const ARROW_UP =
     '<svg width="16" height="16" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M390.624 150.625L256 16L121.376 150.625l22.628 22.627l95.997-95.998v417.982h32V77.257l95.995 95.995l22.628-22.627z"/></svg>';
 
 // ---------- reactive state ----------
-const tipHtml = ref<string>(`${ARROW_BOTTOM} 下拉刷新`);
-const isPullUpLoad = ref(false);
+const tipHtml = ref(`${ARROW_BOTTOM} 下拉刷新`);
+const pullUpTip = ref("上拉加载更多");
 const bsWrapper = ref<HTMLElement | null>(null);
 const initLoading = ref(false);
 let bscroll: BScroll | null = null;
 
 // small helper to set tip text
-function setTip(phase: "enter" | "leave" | "fetching" | "succeed" | "idle") {
-    const map: Record<string, string> = {
+function setPullDownTip(phase: "enter" | "leave" | "fetching" | "succeed" | "idle") {
+    const map = {
         enter: `${ARROW_BOTTOM} 下拉刷新`,
         leave: `${ARROW_UP} 释放刷新`,
         fetching: `加载中...`,
         succeed: `刷新成功`,
         idle: `${ARROW_BOTTOM} 下拉刷新`,
     };
-    tipHtml.value = map[phase] || (map.idle as string);
+    tipHtml.value = map[phase] || map.idle;
 }
 
-// ---------- fetch wrappers ----------
+function setPullUpTip(phase: "enter" | "leave" | "fetching" | "succeed" | "idle") {
+    const map = {
+        enter: "上拉加载更多",
+        leave: "释放加载更多",
+        fetching: "加载中...",
+        succeed: "hidden",
+        idle: "上拉加载更多",
+    };
+    pullUpTip.value = map[phase] || map.idle;
+}
+
 let isFetching = false;
 
 async function doRefresh() {
     if (isFetching) return;
     isFetching = true;
     try {
-        setTip("fetching");
+        setPullDownTip("fetching");
         await props.onRefresh();
-        setTip("succeed");
+        setPullDownTip("succeed");
         bscroll?.finishPullDown();
 
         // refresh after a small delay to allow bounce animation
         setTimeout(() => {
             bscroll?.refresh();
-            setTip("idle");
+            setPullDownTip("idle");
         }, TIME_BOUNCE + 50);
     } catch (e) {
         // 出错也恢复状态
-        setTip("idle");
+        setPullDownTip("idle");
         bscroll?.finishPullDown();
         bscroll?.refresh();
         // console.error("doRefresh error", e);
@@ -93,18 +98,23 @@ async function doLoadMore() {
     if (isFetching) return;
     isFetching = true;
     try {
-        isPullUpLoad.value = true;
+        setPullUpTip("fetching");
 
         await props.onLoadMore();
+        setPullUpTip("succeed");
         await nextTick();
-        bscroll?.finishPullUp();
-        bscroll?.refresh();
+
+        setTimeout(() => {
+            setPullUpTip("idle");
+            bscroll?.finishPullUp();
+            bscroll?.refresh();
+        }, TIME_BOUNCE + 50);
     } catch (e) {
+        setPullUpTip("idle");
         console.error("doLoadMore error", e);
         bscroll?.finishPullUp();
         bscroll?.refresh();
     } finally {
-        isPullUpLoad.value = false;
         isFetching = false;
     }
 }
@@ -112,6 +122,7 @@ async function doLoadMore() {
 // ---------- better-scroll init ----------
 function initBScroll() {
     if (!bsWrapper.value) return;
+    console.log(props);
 
     bscroll = new BScroll(bsWrapper.value, {
         scrollY: true,
@@ -141,8 +152,8 @@ function initBScroll() {
         });
     }
 
-    bscroll.on("enterThreshold", () => setTip("enter"));
-    bscroll.on("leaveThreshold", () => setTip("leave"));
+    bscroll.on("enterThreshold", () => (setPullDownTip("enter"), setPullUpTip("enter")));
+    bscroll.on("leaveThreshold", () => (setPullDownTip("leave"), setPullUpTip("leave")));
     // bscroll.on("scrollEnd", () => {});
 }
 
@@ -173,7 +184,7 @@ onBeforeUnmount(() => {
     .scroll-wrapper {
         position: relative;
         height: 100%;
-        padding: 0 10px;
+        padding: 0 10px 10px;
         overflow: hidden;
 
         .scroll-scroller {
@@ -192,7 +203,7 @@ onBeforeUnmount(() => {
             }
 
             .pullup-tips {
-                padding: 20px;
+                line-height: 40px;
                 text-align: center;
                 color: #999;
             }

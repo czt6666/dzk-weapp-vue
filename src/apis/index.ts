@@ -37,7 +37,6 @@ service.interceptors.request.use(
 // 响应拦截器
 service.interceptors.response.use(
     (response: AxiosResponse): any => {
-        console.log(response);
         const res = response.data;
         // 统一处理 code
         if (res.code === undefined) {
