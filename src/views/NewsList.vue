@@ -1,7 +1,7 @@
 <template>
     <div class="page">
         <div class="banner">
-            <img src="@/assets/banner/qiufen.jpg" alt="banner" />
+            <HolidayCarousel />
         </div>
 
         <div class="toolbar">
@@ -27,6 +27,7 @@
 
 <script lang="ts" setup name="NewsList">
 import { ref } from "vue";
+import HolidayCarousel from "@/components/HolidayCarousel.vue";
 import NewsListItem from "@/components/news/NewsListItem.vue";
 import SmartScrollList from "@/components/base/SmartScrollList.vue";
 import SearchInput from "@/components/input/SearchInput.vue";
@@ -34,6 +35,7 @@ import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
 import { getNewsList } from "@/apis/news";
 import { debounce } from "@/utils/index";
+import QiuFen from "@/assets/banner/qiufen.jpg";
 
 const router = useRouter();
 
@@ -100,7 +102,6 @@ function goDetail(id: number) {
 
     .banner {
         width: 100%;
-        height: 200px;
 
         img {
             width: 100%;

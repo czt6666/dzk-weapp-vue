@@ -8,8 +8,10 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    Carousel: typeof import('./src/components/base/Carousel.vue')['default']
     Desktop: typeof import('./src/components/Desktop.vue')['default']
     ElIcon: typeof import('element-plus/es')['ElIcon']
+    HolidayCarousel: typeof import('./src/components/HolidayCarousel.vue')['default']
     HotelItem: typeof import('./src/components/hotel/HotelItem.vue')['default']
     InertiaScroll: typeof import('./src/components/base/InertiaScroll.vue')['default']
     NewsListItem: typeof import('./src/components/news/NewsListItem.vue')['default']
