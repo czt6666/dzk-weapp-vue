@@ -29,7 +29,7 @@ function goShopList() {
 }
 
 function goFoodOrder() {
-    router.push("/food/order");
+    router.push("/restaurant");
 }
 
 function goLogin() {

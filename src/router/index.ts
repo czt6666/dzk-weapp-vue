@@ -79,14 +79,14 @@ const routes = [
         component: () => import("../views/shop/ShopHome.vue"),
     },
     {
-        path: "/food/order",
-        name: "Order",
-        component: () => import("../views/food/order.vue"),
+        path: "/restaurant",
+        name: "RestaurantList",
+        component: () => import("../views/restaurant/StoreList.vue"),
     },
     {
-        path: "/food/store",
-        name: "StoreList",
-        component: () => import("../views/food/StoreList.vue"),
+        path: "/restaurant/order",
+        name: "RestaurantOrder",
+        component: () => import("../views/restaurant/order.vue"),
     },
     {
         path: "/test",

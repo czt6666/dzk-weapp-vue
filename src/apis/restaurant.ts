@@ -1,15 +1,25 @@
-// 模拟网络请求
+import service from "./index";
+
+export function getRestaurantList(params: { name?: string }) {
+    return service.get("/admin/ecadmin/restaurant/list", { params });
+}
+
+export function getRestaurantDetail(params: { id: number }) {
+    return service.get(`/admin/ecadmin/restaurant/detail`, { params });
+}
+
 export interface RestaurantInfo {
-    id: string;
+    id: number;
     name: string;
+    businessStartTime: string;
+    businessEndTime: string;
+    logoUrl: string;
     address: string;
-    distance: string;
+    coordinateLat?: number;
+    coordinateLng?: number;
     phone: string;
-    hours: string;
-    description: string;
-    rating: number;
-    tags: string[];
-    images: string[];
+    notice: string;
+    villageName: string;
 }
 
 export interface Category {

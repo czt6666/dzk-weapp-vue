@@ -210,7 +210,7 @@ import {
     type RestaurantInfo,
     type Category,
     type MenuItem,
-} from "@/apis/food";
+} from "@/apis/restaurant";
 
 const cartStore = useCartStore();
 const activeCategory = ref("member");
