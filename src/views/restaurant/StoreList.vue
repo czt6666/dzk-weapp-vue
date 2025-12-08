@@ -2,17 +2,12 @@
     <div class="store-list-page">
         <!-- 搜索栏 -->
         <div class="search-section">
-            <div class="search-bar">
-                <span class="search-icon">🔍</span>
-                <input
-                    v-model="keyword"
-                    type="text"
-                    placeholder="请输入门店名称"
-                    @input="fetchData"
-                    class="search-input"
-                />
-                <button v-if="keyword" class="clear-btn" @click="clearSearch">✕</button>
-            </div>
+            <SearchInput
+                v-model="keyword"
+                placeholder="请输入门店名称"
+                @handleSearch="fetchData"
+                @handleReset="clearSearch"
+            />
         </div>
 
         <!-- 门店列表 -->
@@ -91,7 +86,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { getRestaurantList, fetchStoreList, type RestaurantInfo } from "@/apis/restaurant";
+import SearchInput from "@/components/input/SearchInput.vue";
+import { getRestaurantList, type RestaurantInfo } from "@/apis/restaurant";
 import { useRouter } from "vue-router";
 import { imgUrl } from "@/utils";
 
@@ -121,7 +117,7 @@ const clearSearch = async () => {
 
 const goToStore = (store: RestaurantInfo) => {
     console.log("进入门店:", store.name);
-    router.push({ name: "RestaurantOrder", query: { id: store.id } });
+    router.push({ name: "RestaurantOrder", query: { id: store.id, name: store.name } });
 };
 
 onMounted(async () => {
@@ -138,26 +134,7 @@ onMounted(async () => {
 
 // 搜索区域
 .search-section {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: #fff;
-    padding: 16px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-}
-
-.search-bar {
-    display: flex;
-    align-items: center;
-    background: #f5f5f5;
-    border-radius: 24px;
-    padding: 10px 16px;
-    transition: all 0.3s ease;
-
-    &:focus-within {
-        background: #fff;
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-    }
+    padding: 10px;
 }
 
 .search-icon {

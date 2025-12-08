@@ -8,7 +8,7 @@
                     <div class="store-meta" v-if="restaurantInfo">
                         <span class="icon">📍</span>
                         <span class="address">{{ restaurantInfo.address }}</span>
-                        <span class="distance">{{ restaurantInfo.distance }}</span>
+                        <!-- <span class="distance">{{ restaurantInfo.distance }}</span> -->
                     </div>
                 </div>
             </div>
@@ -25,8 +25,8 @@
                     :class="['category-item', { active: activeCategory === cat.id }]"
                     @click="activeCategory = cat.id"
                 >
-                    <span class="cat-icon">{{ cat.icon }}</span>
-                    <span class="cat-name">{{ cat.name }}</span>
+                    <span class="cat-icon">{{ cat.icon || "🍽️" }}</span>
+                    <span class="cat-name">{{ cat.categoryName }}</span>
                 </div>
             </aside>
 
@@ -38,19 +38,13 @@
                 </div>
                 <div v-else class="product-list">
                     <div v-for="item in currentProducts" :key="item.id" class="product-card">
-                        <div class="product-image">{{ item.image }}</div>
+                        <div class="product-image">{{ item.coverImgUrl }}</div>
 
                         <div class="product-info">
                             <div class="product-header">
-                                <h3 class="product-name">{{ item.name }}</h3>
-                                <span v-if="item.tag" class="product-tag">{{ item.tag }}</span>
+                                <h3 class="product-name">{{ item.dishName }}</h3>
                             </div>
-
-                            <p class="product-desc">{{ item.description }}</p>
-
-                            <div class="product-meta">
-                                <span class="sales" v-if="item.sales">月售{{ item.sales }}</span>
-                            </div>
+                            <p class="product-desc">{{ item.summary }}</p>
 
                             <div class="product-footer">
                                 <div class="price">
@@ -95,10 +89,9 @@
 
                 <div class="cart-info">
                     <div class="total-price">¥{{ cartStore.totalPrice.toFixed(2) }}</div>
-                    <div class="start-price">另需配送费￥5</div>
                 </div>
 
-                <button class="checkout-btn" :disabled="cartStore.totalItems === 0">去结算</button>
+                <!-- <button class="checkout-btn" :disabled="cartStore.totalItems === 0">去结算</button> -->
             </div>
         </footer>
 
@@ -118,9 +111,11 @@
 
                     <div v-else class="cart-items">
                         <div v-for="item in cartStore.cartList" :key="item.id" class="cart-item">
-                            <div class="item-image">{{ item.image }}</div>
+                            <div class="item-image">
+                                <img :src="imgUrl(item.coverImgUrl)" alt="商品图片" />
+                            </div>
                             <div class="item-info">
-                                <div class="item-name">{{ item.name }}</div>
+                                <div class="item-name">{{ item.dishName }}</div>
                                 <div class="item-price">¥{{ item.price }}</div>
                             </div>
                             <div class="item-control">
@@ -152,27 +147,15 @@
 
                 <div class="modal-body" v-if="restaurantInfo">
                     <div class="store-images">
-                        <div
-                            v-for="(img, idx) in restaurantInfo.images"
-                            :key="idx"
-                            class="store-img"
-                        >
-                            {{ img }}
-                        </div>
+                        <img
+                            :src="imgUrl(restaurantInfo.logoUrl)"
+                            alt="店铺logo"
+                            class="store-logo"
+                        />
                     </div>
 
                     <div class="store-detail-section">
                         <h2 class="store-detail-name">{{ restaurantInfo.name }}</h2>
-                        <div class="store-rating">
-                            <span class="rating-score">⭐ {{ restaurantInfo.rating }}</span>
-                            <span class="rating-text">综合评分</span>
-                        </div>
-                    </div>
-
-                    <div class="store-tags">
-                        <span v-for="tag in restaurantInfo.tags" :key="tag" class="tag">{{
-                            tag
-                        }}</span>
                     </div>
 
                     <div class="store-detail-section">
@@ -186,13 +169,16 @@
                         </div>
                         <div class="detail-item">
                             <span class="label">🕐 营业时间</span>
-                            <span class="value">{{ restaurantInfo.hours }}</span>
+                            <span class="value"
+                                >{{ restaurantInfo.businessStartTime }} -
+                                {{ restaurantInfo.businessEndTime }}</span
+                            >
                         </div>
                     </div>
 
                     <div class="store-detail-section">
                         <h4>店铺介绍</h4>
-                        <p class="store-description">{{ restaurantInfo.description }}</p>
+                        <p class="store-description">{{ restaurantInfo.notice }}</p>
                     </div>
                 </div>
             </div>
@@ -204,23 +190,33 @@
 import { ref, computed, onMounted } from "vue";
 import { useCartStore } from "@/stores/orderCart";
 import {
-    fetchRestaurantInfo,
-    fetchCategories,
-    fetchMenuItems,
+    getRestaurantDetail,
+    getCategoryList,
+    getDishList,
     type RestaurantInfo,
-    type Category,
-    type MenuItem,
+    type DishCategory,
+    type DishItem,
 } from "@/apis/restaurant";
+import { imgUrl } from "@/utils";
 
+const route = useRoute();
 const cartStore = useCartStore();
-const activeCategory = ref("member");
+const activeCategory = ref<number>(0);
 const showCart = ref(false);
 const showStoreDetail = ref(false);
 const loading = ref(true);
 
 const restaurantInfo = ref<RestaurantInfo | null>(null);
-const categories = ref<Category[]>([]);
-const menuItems = ref<MenuItem[]>([]);
+const categories = ref<DishCategory[]>([]);
+const menuItems = ref<DishItem[]>([]);
+
+const restaurantName = computed(() => {
+    return route.query.name as string;
+});
+
+const restaurantId = computed(() => {
+    return Number(route.query.id);
+});
 
 const currentProducts = computed(() => {
     return menuItems.value.filter((item) => item.categoryId === activeCategory.value);
@@ -230,14 +226,16 @@ onMounted(async () => {
     try {
         loading.value = true;
         const [info, cats, items] = await Promise.all([
-            fetchRestaurantInfo(),
-            fetchCategories(),
-            fetchMenuItems(),
+            getRestaurantDetail({ id: restaurantId.value }),
+            getCategoryList({ restaurantName: restaurantName.value }),
+            getDishList({ restaurantName: restaurantName.value }),
         ]);
 
-        restaurantInfo.value = info;
-        categories.value = cats;
-        menuItems.value = items;
+        restaurantInfo.value = info.data;
+        categories.value = cats.data.records;
+        menuItems.value = items.data.records;
+
+        activeCategory.value = categories.value[0]?.id || 0;
     } catch (error) {
         console.error("加载数据失败:", error);
     } finally {
@@ -247,17 +245,6 @@ onMounted(async () => {
 </script>
 
 <style lang="scss">
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif;
-    -webkit-font-smoothing: antialiased;
-}
-
 .restaurant-app {
     min-height: 100vh;
     background: #f5f5f5;
@@ -460,15 +447,6 @@ body {
                                 color: #333;
                                 flex: 1;
                             }
-
-                            .product-tag {
-                                padding: 2px 6px;
-                                background: linear-gradient(135deg, #ffd700, #ff8c00);
-                                color: white;
-                                font-size: 11px;
-                                border-radius: 2px;
-                                white-space: nowrap;
-                            }
                         }
 
                         .product-desc {
@@ -476,15 +454,6 @@ body {
                             color: #999;
                             margin-bottom: 4px;
                             line-height: 1.3;
-                        }
-
-                        .product-meta {
-                            margin-bottom: 8px;
-
-                            .sales {
-                                font-size: 11px;
-                                color: #999;
-                            }
                         }
 
                         .product-footer {
@@ -771,7 +740,9 @@ body {
                     border-radius: 6px;
 
                     .item-image {
-                        font-size: 32px;
+                        img {
+                            width: 100%;
+                        }
                     }
 
                     .item-info {
@@ -888,24 +859,6 @@ body {
                     margin-bottom: 8px;
                 }
 
-                .store-rating {
-                    display: flex;
-                    align-items: center;
-                    gap: 8px;
-                    margin-bottom: 12px;
-
-                    .rating-score {
-                        font-size: 16px;
-                        font-weight: 600;
-                        color: #ff9800;
-                    }
-
-                    .rating-text {
-                        font-size: 13px;
-                        color: #999;
-                    }
-                }
-
                 h4 {
                     font-size: 15px;
                     font-weight: 600;
@@ -939,22 +892,6 @@ body {
                     font-size: 14px;
                     line-height: 1.6;
                     color: #666;
-                }
-            }
-
-            .store-tags {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 8px;
-                margin-bottom: 20px;
-
-                .tag {
-                    padding: 4px 10px;
-                    background: #fff5f0;
-                    color: #ff6b35;
-                    font-size: 12px;
-                    border-radius: 12px;
-                    border: 1px solid #ffe8dc;
                 }
             }
         }

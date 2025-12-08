@@ -1,17 +1,13 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
+import type { DishItem } from "@/apis/restaurant";
 
-export interface CartItem {
-    id: string;
-    name: string;
-    price: number;
-    unit: string;
-    image: string;
+export interface CartItem extends DishItem {
     quantity: number;
 }
 
 export const useCartStore = defineStore("orderCart", () => {
-    const cartItems = ref<Record<string, CartItem>>({});
+    const cartItems = ref<Record<number, CartItem>>({});
 
     const addItem = (item: Omit<CartItem, "quantity">) => {
         if (cartItems.value[item.id]?.quantity) {
@@ -21,7 +17,7 @@ export const useCartStore = defineStore("orderCart", () => {
         }
     };
 
-    const removeItem = (itemId: string) => {
+    const removeItem = (itemId: number) => {
         if (cartItems.value[itemId]) {
             if (cartItems.value[itemId].quantity > 1) {
                 cartItems.value[itemId].quantity--;
