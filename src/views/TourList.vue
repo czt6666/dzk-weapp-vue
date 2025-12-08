@@ -17,7 +17,7 @@
             <SmartScrollList :onRefresh="onRefresh" :onLoadMore="debounce(onLoadMore)">
                 <ul class="scroll-list">
                     <li v-for="item in list" :key="item.id" class="scroll-list-item">
-                        <NewsListItem :info="item" @click="goDetail(item.id)" />
+                        <NewsListItem :info="item" />
                     </li>
                 </ul>
             </SmartScrollList>
@@ -45,6 +45,7 @@ const keyword = ref("");
 
 async function fetchData(page: number, pageSize: number, keyword?: string) {
     try {
+        // 替换为 旅游列表接口
         const res = await getNewsList({ page, pageSize, keyword });
         if (list.value.length + res.data.list.length > res.data.totalCount) {
             return [];
@@ -85,10 +86,6 @@ async function onLoadMore() {
         return;
     }
     list.value.push(...newList);
-}
-
-function goDetail(id: number) {
-    router.push(`/news/${id}`);
 }
 </script>
 

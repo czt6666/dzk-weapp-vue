@@ -89,6 +89,21 @@ const routes = [
         component: () => import("../views/restaurant/OrderPage.vue"),
     },
     {
+        path: "/tour",
+        name: "TourList",
+        component: () => import("../views/TourList.vue"),
+    },
+    {
+        path: "/study",
+        name: "StudyList",
+        component: () => import("../views/StudyList.vue"),
+    },
+    {
+        path: "/retirement",
+        name: "RetirementList",
+        component: () => import("../views/RetirementList.vue"),
+    },
+    {
         path: "/test",
         children: generateRoutes(),
     },
