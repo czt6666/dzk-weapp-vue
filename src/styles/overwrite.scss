@@ -1,0 +1,57 @@
+// 引入Element Plus默认主题（按需）
+// @use "element-plus/theme-chalk/src/common/var.scss" as *;
+
+// 主题色定义（乡村+红色+旅游）
+:root {
+    // 主色调：大地红/砖红（红色文化）
+    --el-color-primary: #c41e3a;
+    --el-color-primary-light-3: #d6455a;
+    --el-color-primary-light-5: #e86e81;
+    --el-color-primary-light-7: #f097a6;
+    --el-color-primary-light-8: #f5b4c0;
+    --el-color-primary-light-9: #fad1d9;
+
+    // 辅助色：自然绿（乡村生机）
+    --el-color-success: #4a7c59;
+    --el-color-success-light-3: #6b9a7b;
+    --el-color-success-light-5: #8cb89d;
+
+    // 点缀色：暖橙色（旅游活力）
+    --el-color-warning: #ff8c00;
+    --el-color-warning-light-3: #ffa533;
+    --el-color-warning-light-5: #ffbd66;
+
+    // 背景色：浅米色（乡村质朴）
+    --el-bg-color: #f5f5dc;
+    --el-bg-color-page: #f5f5dc;
+    --el-bg-color-overlay: #ffffff;
+
+    // 文字色：深灰（可读性优先）
+    --el-text-color-primary: #333333;
+    --el-text-color-regular: #606266;
+    --el-text-color-secondary: #909399;
+
+    // 边框色：浅灰（弱化边界）
+    --el-border-color: #e4e7ed;
+    --el-border-color-light: #f2f6fc;
+}
+
+// 自定义字体（思源黑体，适配移动端）
+body {
+    font-family:
+        -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
+        sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    background-color: var(--el-bg-color);
+}
+
+// 卡片样式优化（乡村木质质感）
+.el-card {
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--el-border-color-light);
+}
+
+// 按钮圆角优化
+.el-button {
+    border-radius: 8px;
+}
