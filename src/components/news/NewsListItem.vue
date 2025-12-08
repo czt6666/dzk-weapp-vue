@@ -9,12 +9,14 @@
             </div>
         </div>
         <div class="news-image">
-            <img :src="titleImg" alt="新闻图片" />
+            <img :src="imgUrl(props.info.imageUrl)" alt="新闻图片" />
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
+import { imgUrl } from "@/utils";
+
 interface INewsListItem {
     author: string;
     content: string;
@@ -28,8 +30,6 @@ interface INewsListItem {
 }
 
 const props = defineProps<{ info: INewsListItem }>();
-
-const titleImg = computed(() => import.meta.env.VITE_API_BASE_URL + props.info.imageUrl);
 
 const publishTime = computed(() => {
     const date = new Date(props.info.createTime);

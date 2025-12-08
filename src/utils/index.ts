@@ -61,6 +61,64 @@ export function throttle<T extends (...args: any[]) => void>(
     };
 }
 
+// // 1x1 base64 占位图
+// const FALLBACK_BASE64 =
+//     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIW2P8z/C/HwAFgwJ/lZSmOQAAAABJRU5ErkJggg==";
+
+// function checkImgAvailable(url: string, callback: typeof imgUrl): boolean {
+//     console.log("checkImgAvailable:", url);
+
+//     // 异步加载图片
+//     const img = new Image();
+//     img.onload = () => {
+//         console.log("img loaded:", url);
+//         callback(url, true);
+//     };
+//     img.onerror = () => {
+//         console.log("img error:", url);
+//         callback(FALLBACK_BASE64, true);
+//     };
+//     img.src = url;
+
+//     // 同步阶段先抛错
+//     throw new Error("checkImgAvailable is loading");
+// }
+
+// export function imgUrl(url: string | null | undefined, isCheck: boolean = false): string {
+//     // 当回调触发时 isCheck=true，此时直接返回 url
+//     if (isCheck) return url!;
+
+//     if (!url) return FALLBACK_BASE64;
+
+//     // http 或 data URL
+//     if (url.startsWith("http") || url.startsWith("data:")) {
+//         try {
+//             return checkImgAvailable(url, imgUrl) ? url : FALLBACK_BASE64;
+//         } catch (err) {
+//             // 第一次必然走这里
+//             console.warn(err);
+//             return FALLBACK_BASE64;
+//         }
+//     }
+
+//     // 后端的路径
+//     const base = import.meta.env.VITE_API_BASE_URL;
+//     const newUrl = url.startsWith("/api") ? url.slice(4) : url;
+//     const finalUrl = joinUrl(base, newUrl);
+//     console.log("imgUrl final:", finalUrl);
+
+//     try {
+//         return checkImgAvailable(finalUrl, imgUrl) ? finalUrl : FALLBACK_BASE64;
+//     } catch (err) {
+//         console.warn(err);
+//         return FALLBACK_BASE64;
+//     }
+// }
+
+// function joinUrl(base: string, path: string) {
+//     return base.replace(/\/+$/, "") + "/" + path.replace(/^\/+/, "");
+// }
+
 export const imgUrl = (url: string | null | undefined) => {
     if (!url) return "";
     if (url.startsWith("http")) return url;
