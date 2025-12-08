@@ -11,22 +11,6 @@
                 @handleSearch="handleSearch"
                 @handleReset="handleReset"
             />
-
-            <!-- <div class="sort-dropdown">
-                <el-dropdown trigger="click" @command="handleSortChange">
-                    <span class="el-dropdown-link">
-                        排序
-                        <el-icon class="el-icon--right"><ArrowDown /></el-icon>
-                    </span>
-                    <template #dropdown>
-                        <el-dropdown-menu>
-                            <el-dropdown-item command="latest">最新</el-dropdown-item>
-                            <el-dropdown-item command="hot">最热</el-dropdown-item>
-                            <el-dropdown-item command="recommend">推荐</el-dropdown-item>
-                        </el-dropdown-menu>
-                    </template>
-                </el-dropdown>
-            </div> -->
         </div>
 
         <!-- 瀑布流容器 -->
@@ -70,7 +54,6 @@ import { getHotelList } from "@/apis/hotel";
 import { debounce } from "@/utils/index";
 
 const router = useRouter();
-// const currentSort = ref("latest");
 
 let page = 1;
 const pageSize = 10;
@@ -112,6 +95,10 @@ async function handleReset() {
 async function onRefresh() {
     page = 1;
     list.value = [];
+    left.length = 0;
+    right.length = 0;
+    leftHeight = 0;
+    rightHeight = 0;
     list.value = await fetchData(page, pageSize, keyword.value);
     splitToColumns(list.value);
 }
@@ -186,25 +173,6 @@ function waitForAllImagesLoaded(): Promise<void> {
 function goDetail(id: number) {
     router.push(`/hotels/${id}`);
 }
-
-// function handleSortChange(command: string) {
-//     currentSort.value = command;
-//     ElMessage.success(`已切换排序：${getSortName(command)}`);
-//     onRefresh();
-// }
-
-// function getSortName(type: string) {
-//     switch (type) {
-//         case "latest":
-//             return "最新";
-//         case "hot":
-//             return "最热";
-//         case "recommend":
-//             return "推荐";
-//         default:
-//             return "未知";
-//     }
-// }
 </script>
 
 <style lang="scss" scoped>

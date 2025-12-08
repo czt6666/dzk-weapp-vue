@@ -29,8 +29,6 @@ const props = defineProps({
 
 // ---------- constants & svg ----------
 const TIME_BOUNCE = 800;
-const THRESHOLD = 70;
-const STOP = 56;
 
 const ARROW_BOTTOM =
     '<svg width="16" height="16" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M367.997 338.75l-95.998 95.997V17.503h-32v417.242l-95.996-95.995l-22.627 22.627L256 496l134.624-134.623l-22.627-22.627z"/></svg>';
@@ -130,12 +128,7 @@ function initBScroll() {
         probeType: 3,
         click: true,
         bounceTime: TIME_BOUNCE,
-        pullDownRefresh: props.pullDown
-            ? {
-                  threshold: THRESHOLD,
-                  stop: STOP,
-              }
-            : false,
+        pullDownRefresh: props.pullDown,
         pullUpLoad: props.pullUp,
         observeDOM: true,
     });
@@ -154,7 +147,7 @@ function initBScroll() {
 
     bscroll.on("enterThreshold", () => (setPullDownTip("enter"), setPullUpTip("enter")));
     bscroll.on("leaveThreshold", () => (setPullDownTip("leave"), setPullUpTip("leave")));
-    // bscroll.on("scrollEnd", () => {});
+    bscroll.on("scrollEnd", () => {});
 }
 
 onMounted(async () => {
@@ -184,10 +177,11 @@ onBeforeUnmount(() => {
     .scroll-wrapper {
         position: relative;
         height: 100%;
-        padding: 0 10px 10px;
+        padding: 0 10px;
         overflow: hidden;
 
         .scroll-scroller {
+            padding-bottom: 10px;
             .pull-tip {
                 position: absolute;
                 width: 100%;
