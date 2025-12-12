@@ -25,6 +25,7 @@ declare module 'vue' {
     SearchInput: typeof import('./src/components/input/SearchInput.vue')['default']
     SmartScrollList: typeof import('./src/components/base/SmartScrollList.vue')['default']
     SmoothScroll: typeof import('./src/components/base/SmoothScroll.vue')['default']
+    StoreCard: typeof import('./src/components/restaurant/StoreCard.vue')['default']
     TopBar: typeof import('./src/components/TopBar.vue')['default']
   }
   export interface GlobalDirectives {

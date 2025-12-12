@@ -35,7 +35,6 @@ import { imgUrl } from "@/utils";
 import heartFilledIcon from "@/assets/svg/heart-filled.svg";
 import heartOutlineIcon from "@/assets/svg/heart-outline.svg";
 import addressIcon from "@/assets/svg/address.svg";
-import capacityIcon from "@/assets/svg/capacity.svg";
 import ratingIcon from "@/assets/svg/rating.svg";
 
 const props = defineProps<{ info: any }>();
