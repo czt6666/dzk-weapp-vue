@@ -8,7 +8,6 @@
                     <div class="store-meta" v-if="restaurantInfo">
                         <span class="icon">📍</span>
                         <span class="address">{{ restaurantInfo.address }}</span>
-                        <!-- <span class="distance">{{ restaurantInfo.distance }}</span> -->
                     </div>
                 </div>
             </div>
@@ -38,7 +37,11 @@
                 </div>
                 <div v-else class="product-list">
                     <div v-for="item in currentProducts" :key="item.id" class="product-card">
-                        <div class="product-image">{{ item.coverImgUrl }}</div>
+                        <el-image
+                            class="product-image"
+                            :src="imgUrl(item.coverImgUrl)"
+                            alt="商品图片"
+                        />
 
                         <div class="product-info">
                             <div class="product-header">
@@ -112,7 +115,7 @@
                     <div v-else class="cart-items">
                         <div v-for="item in cartStore.cartList" :key="item.id" class="cart-item">
                             <div class="item-image">
-                                <img :src="imgUrl(item.coverImgUrl)" alt="商品图片" />
+                                <el-image :src="imgUrl(item.coverImgUrl)" alt="商品图片" />
                             </div>
                             <div class="item-info">
                                 <div class="item-name">{{ item.dishName }}</div>
@@ -147,10 +150,10 @@
 
                 <div class="modal-body" v-if="restaurantInfo">
                     <div class="store-images">
-                        <img
+                        <el-image
                             :src="imgUrl(restaurantInfo.logoUrl)"
                             alt="店铺logo"
-                            class="store-logo"
+                            class="store-img"
                         />
                     </div>
 
@@ -500,6 +503,7 @@ onMounted(async () => {
                                     justify-content: center;
 
                                     &.btn-minus {
+                                        padding-bottom: 2px;
                                         color: #ff6b35;
 
                                         &:hover {
