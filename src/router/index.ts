@@ -91,7 +91,13 @@ const routes = [
     {
         path: "/tour",
         name: "TourList",
-        component: () => import("../views/TourList.vue"),
+        component: () => import("../views/tour/TourList.vue"),
+    },
+    {
+        path: "/tour/:id",
+        name: "TourInfo",
+        component: () => import("../views/tour/TourInfo.vue"),
+        props: true,
     },
     {
         path: "/study",

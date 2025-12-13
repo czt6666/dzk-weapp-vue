@@ -7,7 +7,7 @@
         <div class="toolbar">
             <SearchInput
                 v-model="keyword"
-                placeholder="搜索新闻标题 / 关键词..."
+                placeholder="搜索旅游标题 / 关键词..."
                 @handleSearch="handleSearch"
                 @handleReset="handleReset"
             />
@@ -17,7 +17,7 @@
             <SmartScrollList :onRefresh="onRefresh" :onLoadMore="debounce(onLoadMore)">
                 <ul class="scroll-list">
                     <li v-for="item in list" :key="item.id" class="scroll-list-item">
-                        <NewsListItem :info="item" />
+                        <TourListItem :info="item" @click="goDetail(item.id)" />
                     </li>
                 </ul>
             </SmartScrollList>
@@ -25,15 +25,15 @@
     </div>
 </template>
 
-<script lang="ts" setup name="NewsList">
+<script lang="ts" setup name="TourList">
 import { ref } from "vue";
 import HolidayCarousel from "@/components/HolidayCarousel.vue";
-import NewsListItem from "@/components/news/NewsListItem.vue";
+import TourListItem from "@/components/tour/TourListItem.vue";
 import SmartScrollList from "@/components/base/SmartScrollList.vue";
 import SearchInput from "@/components/input/SearchInput.vue";
 import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
-import { getNewsList } from "@/apis/news";
+import { getTourRouteList } from "@/apis/tour";
 import { debounce } from "@/utils/index";
 
 const router = useRouter();
@@ -46,14 +46,15 @@ const keyword = ref("");
 async function fetchData(page: number, pageSize: number, keyword?: string) {
     try {
         // 替换为 旅游列表接口
-        const res = await getNewsList({ page, pageSize, keyword });
-        if (list.value.length + res.data.list.length > res.data.totalCount) {
+        const res = await getTourRouteList({ name: keyword, page, pageSize });
+        if (list.value.length + res.data.records.length > res.data.totalCount) {
             return [];
         }
-        const resList = res?.data?.list || [];
+        const resList = res?.data?.records || [];
         return resList;
     } catch (err: any) {
-        ElMessage.error(err.msg || "获取新闻列表失败");
+        ElMessage.error(err.msg || "获取旅游列表失败");
+        console.error(err);
         return [];
     }
 }
@@ -86,6 +87,10 @@ async function onLoadMore() {
         return;
     }
     list.value.push(...newList);
+}
+
+function goDetail(id: number) {
+    router.push({ name: "TourInfo", params: { id } });
 }
 </script>
 

@@ -25,12 +25,8 @@ const id = Number(route.params.id);
 const info = ref<any>({});
 const loading = ref(true);
 
-async function fetchNewsDetail(id: number) {
+async function fetchNewsDetail() {
     try {
-        const params = route.params;
-        const id = Number(params.id);
-        if (!id) return console.error("id未传入");
-
         const res = await getNewsItem({ id });
         if (!res.data) {
             return ElMessage.error("新闻获取失败");
@@ -50,7 +46,7 @@ const publishDate = computed(() => {
 });
 
 onMounted(async () => {
-    info.value = await fetchNewsDetail(id);
+    info.value = await fetchNewsDetail();
     loading.value = false;
 });
 </script>
