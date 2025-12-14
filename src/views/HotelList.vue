@@ -27,6 +27,7 @@
                             :key="item.id"
                             :info="item"
                             @click="goDetail(item.id)"
+                            @favorite="toggleFavorite(item.id, $event)"
                         />
                     </div>
                 </div>
@@ -52,6 +53,7 @@ import SearchInput from "@/components/input/SearchInput.vue";
 import WaterfallItem from "@/components/hotel/HotelItem.vue";
 import { getHotelList } from "@/apis/hotel";
 import { debounce } from "@/utils/index";
+import { createCollect, deleteCollect } from "@/apis/collect";
 
 const router = useRouter();
 
@@ -114,6 +116,14 @@ async function onLoadMore() {
     list.value.push(...newList);
 
     splitToColumns(newList);
+}
+
+async function toggleFavorite(id: number, isFavorite: boolean) {
+    if (isFavorite) {
+        createCollect({ userId: 10, targetId: id, targetType: "homestay" });
+    } else {
+        deleteCollect({ userId: 10, targetId: id, targetType: "homestay" });
+    }
 }
 
 const left: any[] = [];

@@ -78,7 +78,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
     click: [store: RestaurantInfo];
-    favorite: [store: RestaurantInfo, isFavorite: boolean];
+    favorite: [isFavorite: boolean];
 }>();
 
 const isFavorite = ref(false);
@@ -89,7 +89,7 @@ const handleClick = () => {
 
 const toggleFavorite = () => {
     isFavorite.value = !isFavorite.value;
-    emit("favorite", props.store, isFavorite.value);
+    emit("favorite", isFavorite.value);
 };
 </script>
 

@@ -28,7 +28,7 @@
                     :key="store.id"
                     :store="store"
                     @click="goToStore"
-                    @favorite="handleFavorite"
+                    @favorite="toggleFavorite(store.id, $event)"
                 />
             </div>
         </main>
@@ -42,6 +42,7 @@ import StoreCard from "@/components/restaurant/StoreCard.vue";
 import { getRestaurantList, type RestaurantInfo } from "@/apis/restaurant";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
+import { createCollect, deleteCollect } from "@/apis/collect";
 
 const loading = ref(true);
 const keyword = ref("");
@@ -68,15 +69,16 @@ const clearSearch = async () => {
 };
 
 const goToStore = (store: RestaurantInfo) => {
-    console.log("进入门店:", store.name);
     router.push({ name: "RestaurantOrder", query: { id: store.id, name: store.name } });
 };
 
-const handleFavorite = (store: RestaurantInfo, isFavorite: boolean) => {
-    console.log("收藏状态:", store.name, isFavorite);
-    // TODO: 调用收藏API
-    ElMessage.success(isFavorite ? "已收藏" : "已取消收藏");
-};
+async function toggleFavorite(id: number, isFavorite: boolean) {
+    if (isFavorite) {
+        createCollect({ userId: 10, targetId: id, targetType: "restaurant" });
+    } else {
+        deleteCollect({ userId: 10, targetId: id, targetType: "restaurant" });
+    }
+}
 
 onMounted(async () => {
     await fetchData();

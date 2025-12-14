@@ -20,7 +20,11 @@
             <SmartScrollList :onRefresh="onRefresh" :onLoadMore="debounce(onLoadMore)">
                 <ul class="scroll-list">
                     <li v-for="item in list" :key="item.id">
-                        <ProductCard :item="item" @open="openProduct" />
+                        <ProductCard
+                            :item="item"
+                            @open="openProduct"
+                            @favorite="toggleFavorite(item.id, $event)"
+                        />
                     </li>
                 </ul>
             </SmartScrollList>
@@ -43,6 +47,7 @@ import { debounce } from "@/utils/index";
 import { ElMessage } from "element-plus";
 import { useShopFavoriteStore } from "@/stores/shopFavorite";
 import SearchInput from "@/components/input/SearchInput.vue";
+import { createCollect, deleteCollect } from "@/apis/collect";
 
 let page = 1;
 const pageSize = 6;
@@ -115,6 +120,14 @@ function openProduct(item: Product) {
 
 function goFavorites() {
     router.push("/shop/favorites");
+}
+
+async function toggleFavorite(id: number, isFavorite: boolean) {
+    if (isFavorite) {
+        createCollect({ userId: 10, targetId: id, targetType: "product" });
+    } else {
+        deleteCollect({ userId: 10, targetId: id, targetType: "product" });
+    }
 }
 </script>
 
