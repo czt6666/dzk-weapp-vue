@@ -9,7 +9,7 @@
             </div>
         </div>
         <div class="news-image">
-            <img :src="imgUrl(props.info.imageUrl)" alt="新闻图片" />
+            <el-image :src="imgUrl(props.info.imageUrl)" alt="新闻图片" />
         </div>
     </div>
 </template>
@@ -88,12 +88,15 @@ const publishTime = computed(() => {
     .news-image {
         flex-shrink: 0;
 
-        img {
+        .el-image {
             display: block;
             width: 120px;
             height: 80px;
-            object-fit: cover;
             border-radius: 8px;
+
+            :deep(img) {
+                object-fit: cover;
+            }
         }
     }
 }
