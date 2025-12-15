@@ -17,8 +17,7 @@
 import { ref, onMounted, watch } from "vue";
 
 // 定义商家标记的类型
-export interface RestaurantMarker {
-    id: string | number;
+export interface MapMarker {
     lng: number; // 经度
     lat: number; // 纬度
     name: string; // 商家名称
@@ -30,13 +29,13 @@ export interface RestaurantMarker {
 
 // 定义组件props
 interface Props {
-    restaurants?: RestaurantMarker[];
+    marks?: MapMarker[];
     showMyLocation?: boolean; // 是否显示我的位置
     autoFitView?: boolean; // 是否自动调整视野
 }
 
 const props = withDefaults(defineProps<Props>(), {
-    restaurants: () => [],
+    marks: () => [],
     showMyLocation: false,
     autoFitView: true,
 });
@@ -57,7 +56,7 @@ const initMap = () => {
 };
 
 // 添加商家标记
-const addRestaurantMarkers = () => {
+const addMapMarkers = () => {
     // 清除旧标记
     restaurantMarkers.value.forEach((marker) => {
         map.value.remove(marker);
@@ -65,7 +64,7 @@ const addRestaurantMarkers = () => {
     restaurantMarkers.value = [];
 
     // 添加商家标记
-    props.restaurants.forEach((restaurant) => {
+    props.marks.forEach((restaurant) => {
         // 创建自定义标记图标
         const markerContent = `
       <div class="restaurant-marker">
@@ -105,10 +104,10 @@ const addRestaurantMarkers = () => {
     });
 
     // 自动调整视野以显示所有商家
-    if (props.autoFitView && props.restaurants.length > 0) {
-        if (props.restaurants.length === 1) {
+    if (props.autoFitView && props.marks.length > 0) {
+        if (props.marks.length === 1) {
             // 只有一个商家时，居中并设置合适的缩放级别
-            const restaurant = props.restaurants[0];
+            const restaurant = props.marks[0] as MapMarker;
             map.value.setZoomAndCenter(16, [restaurant.lng, restaurant.lat]);
         } else {
             // 多个商家时，自动适应所有标记
@@ -184,10 +183,10 @@ const loadAMapScript = (): Promise<void> => {
 
 // 监听商家列表变化
 watch(
-    () => props.restaurants,
+    () => props.marks,
     () => {
         if (map.value) {
-            addRestaurantMarkers();
+            addMapMarkers();
         }
     },
     { deep: true },
@@ -197,7 +196,7 @@ onMounted(async () => {
     try {
         await loadAMapScript();
         initMap();
-        addRestaurantMarkers();
+        addMapMarkers();
 
         // 如果开启了显示我的位置，自动定位
         if (props.showMyLocation) {

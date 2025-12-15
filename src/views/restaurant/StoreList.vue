@@ -87,7 +87,8 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
 .store-list-page {
-    min-height: 100vh;
+    overflow-y: auto;
+    height: 100%;
     background: #f5f5f5;
     padding-bottom: 20px;
 }

@@ -20,6 +20,19 @@
 
             <div class="desc">{{ info.description }}</div>
 
+            <MapMark
+                :marks="[
+                    {
+                        lng: info.longitude,
+                        lat: info.latitude,
+                        name: info.homestayName,
+                        address: info.address,
+                    },
+                ]"
+                :showMyLocation="false"
+                :autoFitView="false"
+            />
+
             <div class="info-section">
                 <h2>民宿信息</h2>
                 <ul class="info-list">
@@ -46,6 +59,7 @@ import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { getHotelItem } from "@/apis/hotel";
 import { imgUrl } from "@/utils/index";
+import MapMark from "@/components/base/MapMark.vue";
 
 const route = useRoute();
 const router = useRouter();
