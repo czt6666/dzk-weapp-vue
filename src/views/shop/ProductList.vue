@@ -39,7 +39,7 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
-import ProductCard from "@/components/shop/ProductCard.vue";
+import ProductCard from "@/components/listitem/ProductCard.vue";
 import SmartScrollList from "@/components/base/SmartScrollList.vue";
 import type { Product } from "@/views/shop/types";
 import { getProductList } from "@/apis/shop";

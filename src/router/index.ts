@@ -38,23 +38,23 @@ const routes = [
     {
         path: "/news",
         name: "NewsList",
-        component: () => import("../views/NewsList.vue"),
+        component: () => import("../views/news/NewsList.vue"),
     },
     {
         path: "/news/:id",
         name: "NewsInfo",
-        component: () => import("../views/NewsInfo.vue"),
+        component: () => import("../views/news/NewsInfo.vue"),
         props: true,
     },
     {
         path: "/hotels",
         name: "HotelList",
-        component: () => import("../views/HotelList.vue"),
+        component: () => import("../views/hotel/HotelList.vue"),
     },
     {
         path: "/hotels/:id",
         name: "HotelInfo",
-        component: () => import("../views/HotelInfo.vue"),
+        component: () => import("../views/hotel/HotelInfo.vue"),
         props: true,
     },
     {

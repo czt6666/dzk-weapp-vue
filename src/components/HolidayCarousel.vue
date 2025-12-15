@@ -25,6 +25,8 @@ import default7 from "@/assets/festival/default7.png";
 import default8 from "@/assets/festival/default8.png";
 import default9 from "@/assets/festival/default9.jpg";
 
+const MAX_IMAGES = 6;
+
 // 👉 修改这里即可模拟日期
 const TEST_DATE = null;
 // const TEST_DATE = new Date("2025-01-29"); // 春节
@@ -75,10 +77,10 @@ const imageResources = {
     winterSolstice: [],
 
     // 季节
-    spring: [yushui, lixia, spring1, spring2],
-    summer: [yushui, lixia, summer1, summer2],
-    autumn: [yushui, lixia, autumn1],
-    winter: [yushui, lixia, winter1],
+    spring: [yushui, spring1, spring2],
+    summer: [yushui, summer1, summer2],
+    autumn: [yushui, autumn1],
+    winter: [yushui, winter1],
 
     //
     default: [
@@ -111,7 +113,6 @@ function getSeasonTheme() {
 }
 
 const currentImages = computed(() => {
-    const MAX_IMAGES = 6;
     const festivals = getUpcomingFestivals();
     const season = getSeasonTheme();
 

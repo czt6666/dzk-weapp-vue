@@ -28,7 +28,7 @@
 <script lang="ts" setup name="NewsList">
 import { ref } from "vue";
 import HolidayCarousel from "@/components/HolidayCarousel.vue";
-import NewsListItem from "@/components/news/NewsListItem.vue";
+import NewsListItem from "@/components/listitem/NewsListItem.vue";
 import SmartScrollList from "@/components/base/SmartScrollList.vue";
 import SearchInput from "@/components/input/SearchInput.vue";
 import { ElMessage } from "element-plus";

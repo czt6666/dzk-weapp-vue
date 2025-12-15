@@ -38,7 +38,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import SearchInput from "@/components/input/SearchInput.vue";
-import StoreCard from "@/components/restaurant/StoreCard.vue";
+import StoreCard from "@/components/listitem/StoreListItem.vue";
 import { getRestaurantList, type RestaurantInfo } from "@/apis/restaurant";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";

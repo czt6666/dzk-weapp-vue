@@ -50,7 +50,7 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import SearchInput from "@/components/input/SearchInput.vue";
-import WaterfallItem from "@/components/hotel/HotelItem.vue";
+import WaterfallItem from "@/components/listitem/HotelItem.vue";
 import { getHotelList } from "@/apis/hotel";
 import { debounce } from "@/utils/index";
 import { createCollect, deleteCollect } from "@/apis/collect";

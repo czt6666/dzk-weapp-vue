@@ -28,7 +28,7 @@
 <script lang="ts" setup name="TourList">
 import { ref } from "vue";
 import HolidayCarousel from "@/components/HolidayCarousel.vue";
-import TourListItem from "@/components/tour/TourListItem.vue";
+import TourListItem from "@/components/listitem/TourListItem.vue";
 import SmartScrollList from "@/components/base/SmartScrollList.vue";
 import SearchInput from "@/components/input/SearchInput.vue";
 import { ElMessage } from "element-plus";
