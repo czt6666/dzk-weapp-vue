@@ -173,7 +173,7 @@ const loadAMapScript = (): Promise<void> => {
         const script = document.createElement("script");
         // 请替换为你自己的高德地图API Key
         script.src =
-            "https://webapi.amap.com/maps?v=2.0&key=a85fd4e059de8095a430b5bffdc7d6a3&plugin=AMap.Geolocation";
+            "https://webapi.amap.com/maps?v=2.0&key=cace0c9b67dbbaebc5f2d68d371ccfdf&plugin=AMap.Geolocation";
         script.async = true;
         script.onload = () => resolve();
         script.onerror = () => reject(new Error("高德地图加载失败"));

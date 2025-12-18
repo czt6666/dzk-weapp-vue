@@ -110,6 +110,12 @@ const routes = [
         component: () => import("../views/RetirementList.vue"),
     },
     {
+        path: "/retirement/:id",
+        name: "RetirementInfo",
+        component: () => import("../views/RetirementInfo.vue"),
+        props: true,
+    },
+    {
         path: "/test",
         children: generateRoutes(),
     },
