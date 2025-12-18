@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import type { IProduct } from "@/views/shop/types";
 import { imgUrl } from "@/utils";
 import heartFilledIcon from "@/assets/svg/heart-filled.svg";
@@ -44,11 +44,21 @@ const emit = defineEmits<{
 const placeholder =
     'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300"><rect width="100%" height="100%" fill="#f4efe3"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#b5a688">无图</text></svg>';
 
-const isFavorite = ref(false);
+// 使用接口返回的isCollect初始化收藏状态
+const isFavorite = ref(props.item.isCollect || false);
+
+// 监听item变化，更新收藏状态
+watch(
+    () => props.item.isCollect,
+    (newVal) => {
+        isFavorite.value = newVal || false;
+    },
+    { immediate: true },
+);
 
 // 本地收藏数（用于显示动态变化）
 const localFavoriteCount = computed(() => {
-    const baseCount = (props.item as any).favoriteCount || 0;
+    const baseCount = props.item.collectNumber || 0;
     return isFavorite.value ? baseCount + 1 : baseCount;
 });
 

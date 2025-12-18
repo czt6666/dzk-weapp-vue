@@ -4,9 +4,22 @@
         <!-- 标题行 -->
         <div class="item-header">
             <h3 class="item-title">{{ info.name }}</h3>
-            <span :class="['difficulty-tag', `difficulty-${info.difficulty}`]">
-                {{ info.difficulty }}
-            </span>
+            <div class="header-right">
+                <span :class="['difficulty-tag', `difficulty-${info.difficulty}`]">
+                    {{ info.difficulty }}
+                </span>
+                <div class="favorite-overlay" @click.stop="toggleFavorite">
+                    <div class="favorite-btn" :class="{ active: isFavorite }">
+                        <img
+                            v-if="isFavorite"
+                            :src="heartFilledIcon"
+                            alt="已收藏"
+                            class="heart-icon"
+                        />
+                        <img v-else :src="heartOutlineIcon" alt="收藏" class="heart-icon" />
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- 路线信息 -->
@@ -51,6 +64,11 @@
                 <span>{{ info.targetCrowd }}</span>
             </div>
 
+            <div class="info-item favorites">
+                <img :src="heartOutlineIcon" alt="收藏数" />
+                <span>{{ localFavoriteCount }}</span>
+            </div>
+
             <div v-if="info.priceRange" class="info-item price">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <line x1="12" y1="1" x2="12" y2="23"></line>
@@ -63,7 +81,10 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed, watch } from "vue";
 import type { ITourRoute } from "@/apis/tour";
+import heartFilledIcon from "@/assets/svg/heart-filled.svg";
+import heartOutlineIcon from "@/assets/svg/heart-outline.svg";
 
 // Props
 const props = defineProps<{
@@ -73,7 +94,26 @@ const props = defineProps<{
 // Emits
 const emit = defineEmits<{
     click: [id: number];
+    favorite: [isFavorite: boolean];
 }>();
+
+// 使用接口返回的isCollect初始化收藏状态
+const isFavorite = ref(props.info.isCollect || false);
+
+// 监听info变化，更新收藏状态
+watch(
+    () => props.info.isCollect,
+    (newVal) => {
+        isFavorite.value = newVal || false;
+    },
+    { immediate: true },
+);
+
+// 本地收藏数（用于显示动态变化）
+const localFavoriteCount = computed(() => {
+    const baseCount = props.info.collectNumber || 0;
+    return isFavorite.value ? baseCount + 1 : baseCount;
+});
 
 // 格式化价格
 const formatPrice = (price: string): string => {
@@ -89,7 +129,7 @@ const formatPrice = (price: string): string => {
 const simplifyAddress = (address: string): string => {
     if (!address) return "";
     const match = address.match(/北京市(.+?区)(.+)/);
-    if (match) {
+    if (match && match[1] && match[2]) {
         return `${match[1]} ${match[2].substring(0, 10)}...`;
     }
     return address.substring(0, 20) + "...";
@@ -98,6 +138,12 @@ const simplifyAddress = (address: string): string => {
 // 点击事件
 const handleClick = () => {
     emit("click", props.info.id);
+};
+
+// 切换收藏
+const toggleFavorite = () => {
+    isFavorite.value = !isFavorite.value;
+    emit("favorite", isFavorite.value);
 };
 </script>
 
@@ -131,6 +177,12 @@ const handleClick = () => {
             margin: 0;
         }
 
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
         .difficulty-tag {
             padding: 4px 8px;
             border-radius: 4px;
@@ -160,6 +212,51 @@ const handleClick = () => {
             &.difficulty-5 {
                 color: #dc2626;
                 background-color: #fee2e2;
+            }
+        }
+
+        .favorite-overlay {
+            position: relative;
+            z-index: 10;
+        }
+
+        .favorite-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+            .heart-icon {
+                width: 20px;
+                height: 20px;
+                transition: all 0.3s ease;
+                filter: invert(60%) sepia(0%) saturate(0%) hue-rotate(0deg);
+            }
+
+            &:hover {
+                transform: scale(1.1);
+                background: rgba(255, 255, 255, 1);
+
+                .heart-icon {
+                    filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(334deg)
+                        brightness(100%) contrast(101%);
+                }
+            }
+
+            &.active {
+                background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
+
+                .heart-icon {
+                    filter: brightness(0) invert(1);
+                    animation: heartBeat 0.3s ease;
+                }
             }
         }
     }
@@ -242,6 +339,32 @@ const handleClick = () => {
         .info-item.price .icon {
             color: #ea580c;
         }
+
+        .info-item.favorites {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+
+            img {
+                width: 16px;
+                height: 16px;
+                filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(334deg) brightness(100%)
+                    contrast(101%);
+            }
+        }
+    }
+}
+
+@keyframes heartBeat {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    25% {
+        transform: scale(1.3);
+    }
+    50% {
+        transform: scale(1.1);
     }
 }
 </style>

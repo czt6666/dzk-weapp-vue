@@ -30,4 +30,6 @@ export interface ITourRoute {
     serviceGuarantee: string;
     costIncluded: string;
     costExcluded: string;
+    collectNumber?: number; // 收藏数量
+    isCollect?: boolean; // 是否已收藏
 }

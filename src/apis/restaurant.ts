@@ -38,6 +38,8 @@ export interface IRestaurantInfo {
     phone: string;
     notice: string;
     villageName: string;
+    collectNumber?: number; // 收藏数量
+    isCollect?: boolean; // 是否已收藏
 }
 
 export interface IDishCategory {

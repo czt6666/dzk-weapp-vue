@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { imgUrl } from "@/utils";
 import heartFilledIcon from "@/assets/svg/heart-filled.svg";
 import heartOutlineIcon from "@/assets/svg/heart-outline.svg";
@@ -43,11 +43,21 @@ const emit = defineEmits<{
     favorite: [isFavorite: boolean];
 }>();
 
-const isFavorite = ref(false);
+// 使用接口返回的isCollect初始化收藏状态
+const isFavorite = ref(props.info.isCollect || false);
+
+// 监听info变化，更新收藏状态
+watch(
+    () => props.info.isCollect,
+    (newVal) => {
+        isFavorite.value = newVal || false;
+    },
+    { immediate: true }
+);
 
 // 本地收藏数（用于显示动态变化）
 const localFavoriteCount = computed(() => {
-    const baseCount = props.info.favoriteCount || 0;
+    const baseCount = props.info.collectNumber || 0;
     return isFavorite.value ? baseCount + 1 : baseCount;
 });
 

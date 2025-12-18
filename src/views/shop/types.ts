@@ -18,6 +18,8 @@ export interface IProduct {
     productUrl: string; // 商品跳转链接或标识
     specifications: ISpecItem[]; // 后台规格列表
     status: number; // 状态（如 1=上架，0=下架）
+    collectNumber?: number; // 收藏数量
+    isCollect?: boolean; // 是否已收藏
 }
 
 export interface IProductDetail extends IProduct {

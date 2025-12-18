@@ -17,7 +17,11 @@
             <SmartScrollList :onRefresh="onRefresh" :onLoadMore="debounce(onLoadMore)">
                 <ul class="scroll-list">
                     <li v-for="item in list" :key="item.id" class="scroll-list-item">
-                        <RetirementListItem :info="item" @click="goDetail(item.id)" />
+                        <RetirementListItem
+                            :info="item"
+                            @click="goDetail(item.id)"
+                            @favorite="toggleFavorite(item.id, $event)"
+                        />
                     </li>
                 </ul>
             </SmartScrollList>
@@ -35,6 +39,7 @@ import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
 import { getRetirementStationList } from "@/apis/retirement";
 import { debounce } from "@/utils/index";
+import { createCollect, deleteCollect } from "@/apis/collect";
 
 const router = useRouter();
 
@@ -90,6 +95,14 @@ async function onLoadMore() {
 
 function goDetail(id: number) {
     router.push({ name: "RetirementInfo", params: { id } });
+}
+
+async function toggleFavorite(id: number, isFavorite: boolean) {
+    if (isFavorite) {
+        createCollect({ userId: 10, targetId: id, targetType: "elderly_station" });
+    } else {
+        deleteCollect({ userId: 10, targetId: id, targetType: "elderly_station" });
+    }
 }
 </script>
 

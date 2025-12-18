@@ -57,6 +57,13 @@
             <span class="info-value">{{ store.phone }}</span>
         </div>
 
+        <!-- 收藏数 -->
+        <div class="store-info-row">
+            <img :src="heartOutlineIcon" alt="收藏" class="info-icon favorite-icon" />
+            <span class="info-label">收藏数：</span>
+            <span class="info-value">{{ localFavoriteCount }}</span>
+        </div>
+
         <!-- 公告 -->
         <div v-if="store.notice" class="store-notice">
             <span class="notice-icon">📢</span>
@@ -66,7 +73,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed, watch } from "vue";
 import type { IRestaurantInfo } from "@/apis/restaurant";
 import { imgUrl } from "@/utils";
 import heartFilledIcon from "@/assets/svg/heart-filled.svg";
@@ -81,7 +88,23 @@ const emit = defineEmits<{
     favorite: [isFavorite: boolean];
 }>();
 
-const isFavorite = ref(false);
+// 使用接口返回的isCollect初始化收藏状态
+const isFavorite = ref(props.store.isCollect || false);
+
+// 监听store变化，更新收藏状态
+watch(
+    () => props.store.isCollect,
+    (newVal) => {
+        isFavorite.value = newVal || false;
+    },
+    { immediate: true },
+);
+
+// 本地收藏数（用于显示动态变化）
+const localFavoriteCount = computed(() => {
+    const baseCount = props.store.collectNumber || 0;
+    return isFavorite.value ? baseCount + 1 : baseCount;
+});
 
 const handleClick = () => {
     emit("click", props.store);
@@ -256,6 +279,13 @@ const toggleFavorite = () => {
         font-size: 14px;
         flex-shrink: 0;
         margin-top: 1px;
+
+        &.favorite-icon {
+            width: 14px;
+            height: 14px;
+            filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(334deg) brightness(100%)
+                contrast(101%);
+        }
     }
 
     .info-label {
