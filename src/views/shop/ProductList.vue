@@ -41,7 +41,7 @@
 import { ref, onMounted } from "vue";
 import ProductCard from "@/components/listitem/ProductCard.vue";
 import SmartScrollList from "@/components/base/SmartScrollList.vue";
-import type { Product } from "@/views/shop/types";
+import type { IProduct } from "@/views/shop/types";
 import { getProductList } from "@/apis/shop";
 import { debounce } from "@/utils/index";
 import { ElMessage } from "element-plus";
@@ -52,7 +52,7 @@ import { createCollect, deleteCollect } from "@/apis/collect";
 let page = 1;
 const pageSize = 6;
 const keyword = ref("");
-const list = ref<Product[]>([]);
+const list = ref<IProduct[]>([]);
 const favorite = useShopFavoriteStore();
 const router = useRouter();
 
@@ -114,7 +114,7 @@ async function onLoadMore() {
     }
 }
 
-function openProduct(item: Product) {
+function openProduct(item: IProduct) {
     router.push(`/shop/${item.id}`);
 }
 

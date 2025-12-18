@@ -63,11 +63,11 @@
 </template>
 
 <script setup lang="ts">
-import type { TourRoute } from "@/apis/tour";
+import type { ITourRoute } from "@/apis/tour";
 
 // Props
 const props = defineProps<{
-    info: TourRoute;
+    info: ITourRoute;
 }>();
 
 // Emits

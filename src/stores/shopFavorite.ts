@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { addToCart, getCartList, removeCartItem } from "@/apis/shop";
-import type { Product, SpecItem } from "@/views/shop/types";
+import type { IProduct, ISpecItem } from "@/views/shop/types";
 
 export const useShopFavoriteStore = defineStore("shopFavorite", () => {
     const list = ref<any[]>([]);
@@ -16,7 +16,7 @@ export const useShopFavoriteStore = defineStore("shopFavorite", () => {
         }
     }
 
-    async function add(spec: SpecItem) {
+    async function add(spec: ISpecItem) {
         try {
             const res = await addToCart({ userId, skuId: spec.id });
             if (res.code === 200) {

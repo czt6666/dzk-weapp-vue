@@ -67,17 +67,17 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import type { RestaurantInfo } from "@/apis/restaurant";
+import type { IRestaurantInfo } from "@/apis/restaurant";
 import { imgUrl } from "@/utils";
 import heartFilledIcon from "@/assets/svg/heart-filled.svg";
 import heartOutlineIcon from "@/assets/svg/heart-outline.svg";
 
 const props = defineProps<{
-    store: RestaurantInfo;
+    store: IRestaurantInfo;
 }>();
 
 const emit = defineEmits<{
-    click: [store: RestaurantInfo];
+    click: [store: IRestaurantInfo];
     favorite: [isFavorite: boolean];
 }>();
 

@@ -148,11 +148,11 @@
 </template>
 
 <script setup lang="ts">
-import { getTourRouteDetail, type TourRoute } from "@/apis/tour";
+import { getTourRouteDetail, type ITourRoute } from "@/apis/tour";
 
 const route = useRoute();
 
-const info = ref<TourRoute>({
+const info = ref<ITourRoute>({
     id: 0,
     name: "",
     routeType: "",

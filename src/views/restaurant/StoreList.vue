@@ -39,14 +39,14 @@
 import { ref, onMounted } from "vue";
 import SearchInput from "@/components/input/SearchInput.vue";
 import StoreCard from "@/components/listitem/StoreListItem.vue";
-import { getRestaurantList, type RestaurantInfo } from "@/apis/restaurant";
+import { getRestaurantList, type IRestaurantInfo } from "@/apis/restaurant";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import { createCollect, deleteCollect } from "@/apis/collect";
 
 const loading = ref(true);
 const keyword = ref("");
-const stores = ref<RestaurantInfo[]>([]);
+const stores = ref<IRestaurantInfo[]>([]);
 const router = useRouter();
 
 const fetchData = async () => {
@@ -68,7 +68,7 @@ const clearSearch = async () => {
     await fetchData();
 };
 
-const goToStore = (store: RestaurantInfo) => {
+const goToStore = (store: IRestaurantInfo) => {
     router.push({ name: "RestaurantOrder", query: { id: store.id, name: store.name } });
 };
 

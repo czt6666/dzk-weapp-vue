@@ -9,7 +9,7 @@ export function getTourRouteDetail(id: number) {
 }
 
 // 定义路线类型
-export interface TourRoute {
+export interface ITourRoute {
     id: number;
     name: string;
     routeType: string;

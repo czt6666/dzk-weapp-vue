@@ -26,7 +26,7 @@ export function getDishList(params: { restaurantName: string }) {
     return service.get(`/restaurant/dish/list`, { params: defaultParams });
 }
 
-export interface RestaurantInfo {
+export interface IRestaurantInfo {
     id: number;
     name: string;
     businessStartTime: string;
@@ -40,13 +40,13 @@ export interface RestaurantInfo {
     villageName: string;
 }
 
-export interface DishCategory {
+export interface IDishCategory {
     id: number;
     categoryName: string;
     restaurantName: string;
 }
 
-export interface DishItem {
+export interface IDishItem {
     id: number;
     restaurantId: number;
     categoryId: number;

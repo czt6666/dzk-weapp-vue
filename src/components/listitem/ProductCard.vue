@@ -30,14 +30,14 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import type { Product } from "@/views/shop/types";
+import type { IProduct } from "@/views/shop/types";
 import { imgUrl } from "@/utils";
 import heartFilledIcon from "@/assets/svg/heart-filled.svg";
 import heartOutlineIcon from "@/assets/svg/heart-outline.svg";
 
-const props = defineProps<{ item: Product }>();
+const props = defineProps<{ item: IProduct }>();
 const emit = defineEmits<{
-    open: [item: Product];
+    open: [item: IProduct];
     favorite: [isFavorite: boolean];
 }>();
 

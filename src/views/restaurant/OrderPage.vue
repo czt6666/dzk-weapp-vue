@@ -196,9 +196,9 @@ import {
     getRestaurantDetail,
     getCategoryList,
     getDishList,
-    type RestaurantInfo,
-    type DishCategory,
-    type DishItem,
+    type IRestaurantInfo,
+    type IDishCategory,
+    type IDishItem,
 } from "@/apis/restaurant";
 import { imgUrl } from "@/utils";
 
@@ -209,9 +209,9 @@ const showCart = ref(false);
 const showStoreDetail = ref(false);
 const loading = ref(true);
 
-const restaurantInfo = ref<RestaurantInfo | null>(null);
-const categories = ref<DishCategory[]>([]);
-const menuItems = ref<DishItem[]>([]);
+const restaurantInfo = ref<IRestaurantInfo | null>(null);
+const categories = ref<IDishCategory[]>([]);
+const menuItems = ref<IDishItem[]>([]);
 
 const restaurantName = computed(() => {
     return route.query.name as string;

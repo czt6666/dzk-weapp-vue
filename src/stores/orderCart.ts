@@ -1,8 +1,8 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
-import type { DishItem } from "@/apis/restaurant";
+import type { IDishItem } from "@/apis/restaurant";
 
-export interface CartItem extends DishItem {
+export interface CartItem extends IDishItem {
     quantity: number;
 }
 

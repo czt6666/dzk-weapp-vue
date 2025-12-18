@@ -84,7 +84,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import type { ProductDetail, SpecItem } from "@/views/shop/types";
+import type { IProductDetail, ISpecItem } from "@/views/shop/types";
 import { imgUrl } from "@/utils";
 import { getProductItem } from "@/apis/shop";
 import { useShopFavoriteStore } from "@/stores/shopFavorite";
@@ -94,7 +94,7 @@ const router = useRouter();
 const favorite = useShopFavoriteStore();
 const id = Number(route.params.id);
 
-const product = ref<ProductDetail>({
+const product = ref<IProductDetail>({
     id: 0,
     title: "",
     description: "",
@@ -138,7 +138,7 @@ function resetAutoPlay() {
     startAutoPlay();
 }
 
-async function handleAddToCollect(selectedSpec: SpecItem) {
+async function handleAddToCollect(selectedSpec: ISpecItem) {
     await favorite.add(selectedSpec);
 }
 
