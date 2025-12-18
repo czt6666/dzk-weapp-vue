@@ -26,6 +26,8 @@ declare module 'vue' {
     SmartScrollList: typeof import('./src/components/base/SmartScrollList.vue')['default']
     SmoothScroll: typeof import('./src/components/base/SmoothScroll.vue')['default']
     StoreListItem: typeof import('./src/components/listitem/StoreListItem.vue')['default']
+    StudyActivityListItem: typeof import('./src/components/listitem/StudyActivityListItem.vue')['default']
+    StudyPlanListItem: typeof import('./src/components/listitem/StudyPlanListItem.vue')['default']
     TopBar: typeof import('./src/components/TopBar.vue')['default']
     TourListItem: typeof import('./src/components/listitem/TourListItem.vue')['default']
   }
