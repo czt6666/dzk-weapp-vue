@@ -105,6 +105,18 @@ const routes = [
         component: () => import("../views/StudyList.vue"),
     },
     {
+        path: "/study/plan/:id",
+        name: "StudyPlanInfo",
+        component: () => import("../views/study/StudyPlanInfo.vue"),
+        props: true,
+    },
+    {
+        path: "/study/activity/:id",
+        name: "StudyActivityInfo",
+        component: () => import("../views/study/StudyActivityInfo.vue"),
+        props: true,
+    },
+    {
         path: "/retirement",
         name: "RetirementList",
         component: () => import("../views/RetirementList.vue"),

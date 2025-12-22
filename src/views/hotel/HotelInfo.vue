@@ -20,18 +20,20 @@
 
             <div class="desc">{{ info.description }}</div>
 
-            <MapMark
-                :marks="[
-                    {
-                        lng: info.longitude,
-                        lat: info.latitude,
-                        name: info.homestayName,
-                        address: info.address,
-                    },
-                ]"
-                :showMyLocation="false"
-                :autoFitView="false"
-            />
+            <div class="map-wrapper" v-if="info.longitude && info.latitude">
+                <MapMark
+                    :marks="[
+                        {
+                            lng: info.longitude,
+                            lat: info.latitude,
+                            name: info.homestayName,
+                            address: info.address,
+                        },
+                    ]"
+                    :showMyLocation="true"
+                    :autoFitView="true"
+                />
+            </div>
 
             <div class="info-section">
                 <h2>民宿信息</h2>
@@ -159,6 +161,15 @@ onMounted(async () => {
             line-height: 1.6;
             color: #555;
             margin-bottom: 16px;
+        }
+
+        .map-wrapper {
+            width: 100%;
+            height: 220px;
+            margin-bottom: 16px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
         }
 
         .info-section {

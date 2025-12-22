@@ -50,7 +50,7 @@ import SearchInput from "@/components/input/SearchInput.vue";
 import { createCollect, deleteCollect } from "@/apis/collect";
 
 let page = 1;
-const pageSize = 6;
+const pageSize = 10;
 const keyword = ref("");
 const list = ref<IProduct[]>([]);
 const favorite = useShopFavoriteStore();

@@ -5,9 +5,9 @@
         <div class="item-header">
             <h3 class="item-title">{{ info.name }}</h3>
             <div class="header-right">
-                <span :class="['difficulty-tag', `difficulty-${info.difficulty}`]">
-                    {{ info.difficulty }}
-                </span>
+            <span :class="['difficulty-tag', `difficulty-${info.difficulty}`]">
+                {{ info.difficulty }}
+            </span>
                 <div class="favorite-overlay" @click.stop="toggleFavorite">
                     <div class="favorite-btn" :class="{ active: isFavorite }">
                         <img

@@ -189,14 +189,12 @@ async function onLoadMore() {
 
 // 跳转到方案详情
 function goPlanDetail(id: number) {
-    // TODO: 添加路由
-    console.log("跳转到方案详情", id);
+    router.push({ name: "StudyPlanInfo", params: { id } });
 }
 
 // 跳转到活动详情
 function goActivityDetail(id: number) {
-    // TODO: 添加路由
-    console.log("跳转到活动详情", id);
+    router.push({ name: "StudyActivityInfo", params: { id } });
 }
 
 // 切换方案收藏

@@ -14,6 +14,16 @@ export function getStudyActivityList(params: {
     return service.get("/study/activity/page", { params });
 }
 
+// 研学方案详情
+export function getStudyPlanDetail(id: number) {
+    return service.get(`/study/tour/plan/${id}`);
+}
+
+// 研学活动详情
+export function getStudyActivityDetail(id: number) {
+    return service.get(`/study/activity/${id}`);
+}
+
 // 研学方案接口
 export interface IStudyPlan {
     id: number;

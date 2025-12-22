@@ -15,6 +15,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, watch } from "vue";
+import { wgs84ToGcj02 } from "@/utils/coord";
 
 // 定义商家标记的类型
 export interface MapMarker {
@@ -63,8 +64,9 @@ const addMapMarkers = () => {
     });
     restaurantMarkers.value = [];
 
-    // 添加商家标记
+    // 添加商家标记（传入的是 GPS/WGS84，需要转换为高德使用的 GCJ-02）
     props.marks.forEach((restaurant) => {
+        const [mapLng, mapLat] = wgs84ToGcj02(restaurant.lng, restaurant.lat);
         // 创建自定义标记图标
         const markerContent = `
       <div class="restaurant-marker">
@@ -73,7 +75,7 @@ const addMapMarkers = () => {
     `;
 
         const marker = new (window as any).AMap.Marker({
-            position: new (window as any).AMap.LngLat(restaurant.lng, restaurant.lat),
+            position: new (window as any).AMap.LngLat(mapLng, mapLat),
             content: markerContent,
             offset: new (window as any).AMap.Pixel(-15, -15),
             map: map.value,
@@ -108,7 +110,8 @@ const addMapMarkers = () => {
         if (props.marks.length === 1) {
             // 只有一个商家时，居中并设置合适的缩放级别
             const restaurant = props.marks[0] as MapMarker;
-            map.value.setZoomAndCenter(16, [restaurant.lng, restaurant.lat]);
+            const [mapLng, mapLat] = wgs84ToGcj02(restaurant.lng, restaurant.lat);
+            map.value.setZoomAndCenter(16, [mapLng, mapLat]);
         } else {
             // 多个商家时，自动适应所有标记
             map.value.setFitView();
@@ -131,6 +134,7 @@ const locateMe = () => {
 
             if (status === "complete") {
                 const position = result.position;
+                const [gcjLng, gcjLat] = wgs84ToGcj02(position.lng, position.lat);
 
                 // 移除旧的位置标记
                 if (myLocationMarker.value) {
@@ -146,14 +150,14 @@ const locateMe = () => {
         `;
 
                 myLocationMarker.value = new (window as any).AMap.Marker({
-                    position: [position.lng, position.lat],
+                    position: [gcjLng, gcjLat],
                     content: myMarkerContent,
                     offset: new (window as any).AMap.Pixel(-10, -10),
                     map: map.value,
                 });
 
                 // 移动地图到当前位置
-                map.value.setZoomAndCenter(15, [position.lng, position.lat]);
+                map.value.setZoomAndCenter(15, [gcjLng, gcjLat]);
             } else {
                 console.error("定位失败:", result);
                 alert("定位失败，请检查是否允许浏览器获取位置信息");
