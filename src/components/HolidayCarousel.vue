@@ -22,6 +22,7 @@ import default7 from "@/assets/swiper/default7.png";
 import default8 from "@/assets/swiper/default8.png";
 import default9 from "@/assets/swiper/default9.jpg";
 // 节日
+import yuanxiao from "@/assets/swiper/festival/yuanxiao.jpg";
 
 // 24节气
 import bailu from "@/assets/swiper/24terms/bailu.jpg";
@@ -63,7 +64,7 @@ function getNow() {
 
 const imageResources = {
     // 节日
-    newYear: [],
+    newYear: [yuanxiao],
     labourDay: [],
     qingmingFestival: [],
     nationalDay: [],
