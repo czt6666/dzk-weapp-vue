@@ -1,5 +1,6 @@
 import axios from "axios";
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
+import { STORAGE_TOKEN_KEY } from "@/utils/constence";
 
 export interface ApiResponse {
     code: string | number;
@@ -23,9 +24,9 @@ const service = axios.create({
 service.interceptors.request.use(
     (config) => {
         // 如果有 token，可以统一加到 headers
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem(STORAGE_TOKEN_KEY);
         if (token && config.headers) {
-            config.headers["Authorization"] = `Bearer ${token}`;
+            // config.headers["Authorization"] = `Bearer ${token}`;
         }
         return config;
     },

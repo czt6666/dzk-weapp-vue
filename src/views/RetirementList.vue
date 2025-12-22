@@ -99,9 +99,9 @@ function goDetail(id: number) {
 
 async function toggleFavorite(id: number, isFavorite: boolean) {
     if (isFavorite) {
-        createCollect({ userId: 10, targetId: id, targetType: "elderly_station" });
+        createCollect({ userId: 1, targetId: id, targetType: "elderly_station" });
     } else {
-        deleteCollect({ userId: 10, targetId: id, targetType: "elderly_station" });
+        deleteCollect({ userId: 1, targetId: id, targetType: "elderly_station" });
     }
 }
 </script>

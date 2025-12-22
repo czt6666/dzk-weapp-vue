@@ -74,9 +74,9 @@ const goToStore = (store: IRestaurantInfo) => {
 
 async function toggleFavorite(id: number, isFavorite: boolean) {
     if (isFavorite) {
-        createCollect({ userId: 10, targetId: id, targetType: "restaurant" });
+        createCollect({ userId: 1, targetId: id, targetType: "restaurant" });
     } else {
-        deleteCollect({ userId: 10, targetId: id, targetType: "restaurant" });
+        deleteCollect({ userId: 1, targetId: id, targetType: "restaurant" });
     }
 }
 

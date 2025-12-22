@@ -124,9 +124,9 @@ function goFavorites() {
 
 async function toggleFavorite(id: number, isFavorite: boolean) {
     if (isFavorite) {
-        createCollect({ userId: 10, targetId: id, targetType: "product" });
+        createCollect({ userId: 1, targetId: id, targetType: "product" });
     } else {
-        deleteCollect({ userId: 10, targetId: id, targetType: "product" });
+        deleteCollect({ userId: 1, targetId: id, targetType: "product" });
     }
 }
 </script>

@@ -202,18 +202,18 @@ function goActivityDetail(id: number) {
 // 切换方案收藏
 async function togglePlanFavorite(id: number, isFavorite: boolean) {
     if (isFavorite) {
-        createCollect({ userId: 10, targetId: id, targetType: "study_plan" });
+        createCollect({ userId: 1, targetId: id, targetType: "study_plan" });
     } else {
-        deleteCollect({ userId: 10, targetId: id, targetType: "study_plan" });
+        deleteCollect({ userId: 1, targetId: id, targetType: "study_plan" });
     }
 }
 
 // 切换活动收藏
 async function toggleActivityFavorite(id: number, isFavorite: boolean) {
     if (isFavorite) {
-        createCollect({ userId: 10, targetId: id, targetType: "study_activity" });
+        createCollect({ userId: 1, targetId: id, targetType: "study_activity" });
     } else {
-        deleteCollect({ userId: 10, targetId: id, targetType: "study_activity" });
+        deleteCollect({ userId: 1, targetId: id, targetType: "study_activity" });
     }
 }
 </script>

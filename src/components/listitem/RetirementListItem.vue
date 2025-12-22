@@ -9,7 +9,12 @@
                 </span>
                 <div class="favorite-overlay" @click.stop="toggleFavorite">
                     <div class="favorite-btn" :class="{ active: isFavorite }">
-                        <img v-if="isFavorite" :src="heartFilledIcon" alt="已收藏" class="heart-icon" />
+                        <img
+                            v-if="isFavorite"
+                            :src="heartFilledIcon"
+                            alt="已收藏"
+                            class="heart-icon"
+                        />
                         <img v-else :src="heartOutlineIcon" alt="收藏" class="heart-icon" />
                     </div>
                 </div>
@@ -92,7 +97,7 @@ watch(
     (newVal) => {
         isFavorite.value = newVal || false;
     },
-    { immediate: true }
+    { immediate: true },
 );
 
 // 本地收藏数（用于显示动态变化）
@@ -201,8 +206,8 @@ const toggleFavorite = () => {
             background: rgba(255, 255, 255, 1);
 
             .heart-icon {
-                filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(334deg)
-                    brightness(100%) contrast(101%);
+                filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(334deg) brightness(100%)
+                    contrast(101%);
             }
         }
 
@@ -282,8 +287,8 @@ const toggleFavorite = () => {
             .favorite-icon {
                 width: 14px;
                 height: 14px;
-                filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(334deg)
-                    brightness(100%) contrast(101%);
+                filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(334deg) brightness(100%)
+                    contrast(101%);
             }
         }
     }

@@ -10,8 +10,10 @@ declare module 'vue' {
   export interface GlobalComponents {
     Carousel: typeof import('./src/components/base/Carousel.vue')['default']
     Desktop: typeof import('./src/components/Desktop.vue')['default']
+    ElButton: typeof import('element-plus/es')['ElButton']
     ElIcon: typeof import('element-plus/es')['ElIcon']
     ElImage: typeof import('element-plus/es')['ElImage']
+    ElInput: typeof import('element-plus/es')['ElInput']
     HolidayCarousel: typeof import('./src/components/HolidayCarousel.vue')['default']
     HotelItem: typeof import('./src/components/listitem/HotelItem.vue')['default']
     InertiaScroll: typeof import('./src/components/base/InertiaScroll.vue')['default']

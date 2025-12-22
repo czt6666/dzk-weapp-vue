@@ -120,9 +120,9 @@ async function onLoadMore() {
 
 async function toggleFavorite(id: number, isFavorite: boolean) {
     if (isFavorite) {
-        createCollect({ userId: 10, targetId: id, targetType: "homestay" });
+        createCollect({ userId: 1, targetId: id, targetType: "homestay" });
     } else {
-        deleteCollect({ userId: 10, targetId: id, targetType: "homestay" });
+        deleteCollect({ userId: 1, targetId: id, targetType: "homestay" });
     }
 }
 
