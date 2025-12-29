@@ -128,19 +128,23 @@ const photos = computed(() =>
 </script>
 
 <style scoped lang="scss">
+@use "@/styles/variables.scss" as *;
+
 .station-detail {
     height: 100%;
     overflow-y: auto;
-    padding: 16px;
-    background: #f7f8fa;
+    padding: $spacing-md;
+    background: $bg-gradient-main;
 }
 
 /* 头部 */
 .header {
-    background: #fff;
-    border-radius: 14px;
-    padding: 20px;
-    margin-bottom: 16px;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: $radius-large;
+    padding: $spacing-md;
+    margin-bottom: $spacing-md;
+    box-shadow: $shadow-md;
 
     .header-main {
         display: flex;
@@ -151,6 +155,7 @@ const photos = computed(() =>
     .name {
         font-size: 22px;
         font-weight: 600;
+        color: $color-green-primary;
     }
 
     .status {
@@ -159,20 +164,20 @@ const photos = computed(() =>
         border-radius: 12px;
 
         &.open {
-            color: #67c23a;
-            background: #f0f9eb;
+            color: $color-green-primary;
+            background: $overlay-green-light;
         }
 
         &.close {
-            color: #f56c6c;
-            background: #fef0f0;
+            color: $color-red-primary;
+            background: rgba($color-red-primary, 0.1);
         }
     }
 
     .price {
-        margin-top: 10px;
+        margin-top: $spacing-md;
         font-size: 16px;
-        color: #f56c6c;
+        color: $color-green-primary;
         font-weight: 500;
     }
 
@@ -181,28 +186,31 @@ const photos = computed(() =>
 
         .mode {
             display: inline-block;
-            margin-right: 8px;
+            margin-right: $spacing-sm;
             margin-top: 6px;
-            padding: 4px 10px;
+            padding: 4px $spacing-md;
             font-size: 12px;
-            color: #409eff;
-            background: #ecf5ff;
-            border-radius: 8px;
+            color: $color-green-primary;
+            background: $overlay-green-light;
+            border-radius: $radius-small;
         }
     }
 }
 
 /* 区块 */
 .section {
-    background: #fff;
-    border-radius: 14px;
-    padding: 18px;
-    margin-bottom: 14px;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: $radius-large;
+    padding: $spacing-md;
+    margin-bottom: $spacing-sm;
+    box-shadow: $shadow-sm;
 
     .title {
         font-size: 16px;
         font-weight: 600;
-        margin-bottom: 12px;
+        margin-bottom: $spacing-md;
+        color: $color-green-primary;
     }
 
     .text {

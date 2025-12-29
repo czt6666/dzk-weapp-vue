@@ -43,11 +43,10 @@ router.beforeEach((to, from) => {
     height: 100vh;
 
     .router-view {
+        position: relative;
         height: 0;
         flex: 1 1 0;
-        padding-bottom: 60px; // 为底部 TabBar 留出空间
         overflow-y: auto;
-        position: relative;
     }
 }
 

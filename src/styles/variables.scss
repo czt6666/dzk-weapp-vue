@@ -1,3 +1,79 @@
+// 主题颜色
+$color-red-primary: #c62828;
+$color-green-primary: #2e7d32;
+
+// 背景渐变
+$bg-gradient-main: linear-gradient(180deg, #ffe5e5 0%, #f5f0e8 100%);
+$bg-gradient-light: linear-gradient(180deg, #fbf7ef 0%, #fff 100%);
+
+// 遮罩层
+$overlay-red-banner: linear-gradient(
+    to bottom,
+    rgba($color-red-primary, 0.3),
+    rgba(255, 255, 255, 0.1)
+);
+$overlay-red-gradient: linear-gradient(
+    135deg,
+    rgba($color-red-primary, 0.7),
+    rgba($color-red-primary, 0.4)
+);
+$overlay-red-strong: linear-gradient(
+    135deg,
+    rgba($color-red-primary, 0.8),
+    rgba($color-red-primary, 0.6)
+);
+$overlay-green-gradient: linear-gradient(
+    to top,
+    rgba($color-green-primary, 0.9),
+    rgba($color-green-primary, 0.6)
+);
+$overlay-green-strong: linear-gradient(
+    135deg,
+    rgba($color-green-primary, 0.8),
+    rgba($color-green-primary, 0.6)
+);
+$overlay-green-light: rgba($color-green-primary, 0.15);
+$overlay-green-label: rgba($color-green-primary, 0.85);
+
+// 圆角
+$radius-small: 8px;
+$radius-medium: 12px;
+$radius-large: 16px;
+$radius-round: 50%;
+
+// 阴影
+$shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+$shadow-md: 0 2px 8px rgba(0, 0, 0, 0.15);
+$shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.15);
+$shadow-xl: 0 4px 16px rgba(0, 0, 0, 0.1);
+$shadow-text: 0 2px 8px rgba(0, 0, 0, 0.3);
+
+// 文字颜色
+$text-primary: #333;
+$text-secondary: #666;
+$text-tertiary: #888;
+$text-light: #aaa;
+$text-white: #fff;
+
+// 间距
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 12px;
+$spacing-lg: 16px;
+$spacing-xl: 20px;
+$spacing-xxl: 24px;
+$spacing-xxxl: 32px;
+
+// 过渡动画
+$transition-base: all 0.3s ease;
+$transition-fast: all 0.2s ease;
+
+// CSS变量（用于在JS中访问）
 :root {
     --color-primary: #1890ff;
+    --color-red-primary: #{$color-red-primary};
+    --color-green-primary: #{$color-green-primary};
+    --bg-gradient-main: #{$bg-gradient-main};
+    --radius-medium: #{$radius-medium};
+    --radius-large: #{$radius-large};
 }

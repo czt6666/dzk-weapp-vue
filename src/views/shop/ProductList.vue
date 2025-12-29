@@ -132,50 +132,52 @@ async function toggleFavorite(id: number, isFavorite: boolean) {
 </script>
 
 <style lang="scss" scoped>
+@use "@/styles/variables.scss" as *;
+
 .shop-list {
-    padding-top: 24px;
-    width: 100%;
+    padding-top: $spacing-md;
     height: 100%;
     display: flex;
     flex-direction: column;
-    background: linear-gradient(180deg, #fbf7ef, #fff);
+    background: $bg-gradient-main;
 }
 
 .hero {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    margin-bottom: 18px;
-    padding: 0 12px;
+    gap: $spacing-sm;
+    margin-bottom: $spacing-md;
+    padding: 0 $spacing-md;
 
     h1 {
-        color: #34523a;
+        color: $color-green-primary;
         font-weight: bold;
+        font-size: 22px;
     }
 
     .sub {
-        color: #666;
+        color: $text-secondary;
         font-size: 14px;
-        margin-bottom: 8px;
+        margin-bottom: $spacing-sm;
     }
 
     .controls {
         display: flex;
-        gap: 8px;
+        gap: $spacing-sm;
         align-items: center;
     }
 
     .btn.primary {
-        background: #7fb069;
+        background: $color-green-primary;
         color: #fff;
         border: none;
         border-radius: 24px;
-        padding: 6px 16px;
+        padding: 6px $spacing-lg;
         cursor: pointer;
-        transition: background 0.2s ease;
+        transition: $transition-fast;
 
         &:hover {
-            background: #6a945c;
+            background: darken($color-green-primary, 10%);
         }
     }
 }
@@ -183,14 +185,16 @@ async function toggleFavorite(id: number, isFavorite: boolean) {
 .list {
     flex: 1;
     height: 500px;
+    padding: $spacing-md 0 0;
 
     .scroll-list {
         width: 100%;
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: $spacing-md;
     }
 }
+
 .overlay {
     position: fixed;
     inset: 0;
@@ -199,47 +203,59 @@ async function toggleFavorite(id: number, isFavorite: boolean) {
     align-items: center;
     justify-content: center;
 }
+
 .dialog {
     background: #fff;
-    padding: 18px;
-    border-radius: 8px;
+    padding: $spacing-lg;
+    border-radius: $radius-small;
     max-width: 900px;
     width: 90%;
     max-height: 90%;
     overflow: auto;
+    box-shadow: $shadow-xl;
 }
+
 .images {
     display: flex;
-    gap: 8px;
+    gap: $spacing-sm;
     img {
         max-width: 220px;
-        border-radius: 6px;
+        border-radius: $radius-small;
     }
 }
+
 .primary {
-    background: #7fb069;
+    background: $color-green-primary;
     color: #fff;
 }
+
 .cart-float {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
+    position: absolute;
+    bottom: $spacing-xxl;
+    right: $spacing-xxl;
     width: 48px;
     height: 48px;
-    border-radius: 50%;
+    border-radius: $radius-round;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 24px;
     background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: $shadow-md;
     z-index: 1000;
+    cursor: pointer;
+    transition: $transition-base;
+
+    &:hover {
+        transform: scale(1.1);
+        box-shadow: $shadow-lg;
+    }
 
     .cart-count {
         position: absolute;
         top: -2px;
         right: -4px;
-        background: #db4437;
+        background: $color-red-primary;
         color: #fff;
         font-size: 12px;
         padding: 2px 6px;

@@ -164,15 +164,18 @@ function goToShopInfo() {
 </script>
 
 <style lang="scss" scoped>
+@use "@/styles/variables.scss" as *;
+
 .product-detail {
     overflow-y: auto;
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    padding: 12px;
+    gap: $spacing-md;
+    padding: $spacing-md;
     padding-bottom: 66px;
+    background: $bg-gradient-main;
 
     /* 预览区 */
     .preview {
@@ -189,29 +192,29 @@ function goToShopInfo() {
                 width: 100%;
                 height: 100%;
                 object-fit: contain;
-                border-radius: 12px;
+                border-radius: $radius-medium;
             }
         }
 
         .thumbs {
-            margin-top: 10px;
+            margin-top: $spacing-md;
             display: flex;
-            gap: 10px;
+            gap: $spacing-md;
             justify-content: center;
 
             img {
                 width: 70px;
                 height: 70px;
-                border-radius: 8px;
+                border-radius: $radius-small;
                 object-fit: cover;
                 opacity: 0.6;
                 cursor: pointer;
-                transition: 0.2s;
+                transition: $transition-fast;
                 border: 2px solid transparent;
 
                 &.active {
                     opacity: 1;
-                    border-color: #42b983;
+                    border-color: $color-green-primary;
                 }
                 &:hover {
                     opacity: 1;
@@ -222,13 +225,20 @@ function goToShopInfo() {
 
     /* 文本信息 */
     .info {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(10px);
+        border-radius: $radius-large;
+        padding: $spacing-md;
+        box-shadow: $shadow-sm;
+
         h1 {
             font-size: 20px;
             font-weight: bold;
             margin-bottom: 6px;
+            color: $color-green-primary;
         }
         .desc {
-            color: #666;
+            color: $text-secondary;
             font-size: 14px;
             line-height: 1.6;
         }
@@ -238,10 +248,11 @@ function goToShopInfo() {
     .detail {
         .detail-img {
             width: 100%;
-            border-radius: 8px;
-            background: #f7f7f7;
-            margin-bottom: 12px;
+            border-radius: $radius-small;
+            background: rgba(255, 255, 255, 0.8);
+            margin-bottom: $spacing-md;
             object-fit: contain;
+            box-shadow: $shadow-sm;
         }
     }
 }
@@ -252,14 +263,15 @@ function goToShopInfo() {
     left: 0;
     right: 0;
     bottom: 0;
-    background: #fff;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
     height: 72px;
     display: flex;
     align-items: center;
-    padding: 0 12px;
-    border-top: 1px solid #ccc;
-    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-    gap: 10px;
+    padding: 0 $spacing-md;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: $shadow-md;
+    gap: $spacing-md;
     z-index: 20;
 
     .merchant {
@@ -285,19 +297,34 @@ function goToShopInfo() {
     .buy-btn {
         flex: 1;
         padding: 10px 0;
-        border-radius: 8px;
+        border-radius: $radius-small;
         border: none;
         font-size: 15px;
         cursor: pointer;
+        transition: $transition-base;
+        font-weight: 600;
+
+        &:active {
+            transform: scale(0.98);
+        }
     }
 
     .collect-btn {
-        background: #f2f2f2;
+        background: rgba(0, 0, 0, 0.05);
+        color: $text-primary;
+
+        &:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
     }
 
     .buy-btn {
-        background: #42b983;
+        background: $color-green-primary;
         color: #fff;
+
+        &:hover {
+            background: darken($color-green-primary, 10%);
+        }
     }
 }
 
@@ -308,10 +335,11 @@ function goToShopInfo() {
     right: 0;
     bottom: 0;
     height: 75vh;
-    background: #fff;
-    border-radius: 16px 16px 0 0;
-    padding: 16px;
-    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
+    border-radius: $radius-large $radius-large 0 0;
+    padding: $spacing-md;
+    box-shadow: $shadow-xl;
     z-index: 30;
 
     .popup-header {
@@ -340,12 +368,17 @@ function goToShopInfo() {
             gap: 10px;
 
             .item {
-                padding: 12px;
-                border-radius: 10px;
-                background: #f7f7f7;
+                padding: $spacing-md;
+                border-radius: $radius-medium;
+                background: rgba(0, 0, 0, 0.03);
                 border: none;
                 text-align: left;
                 cursor: pointer;
+                transition: $transition-base;
+
+                &:hover {
+                    background: $overlay-green-light;
+                }
             }
         }
     }
@@ -378,28 +411,37 @@ function goToShopInfo() {
     z-index: 40;
 
     .modal-content {
-        background: #fff;
-        padding: 20px;
-        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(20px);
+        padding: $spacing-md;
+        border-radius: $radius-medium;
         width: 80%;
         text-align: center;
+        box-shadow: $shadow-xl;
 
         h3 {
-            margin-bottom: 10px;
+            margin-bottom: $spacing-md;
+            color: $color-green-primary;
         }
 
         a {
             display: block;
-            margin: 12px 0;
-            color: #42b983;
+            margin: $spacing-md 0;
+            color: $color-green-primary;
+            text-decoration: underline;
         }
 
         .close {
-            padding: 8px 16px;
-            background: #f2f2f2;
+            padding: $spacing-sm $spacing-lg;
+            background: rgba(0, 0, 0, 0.05);
             border: none;
-            border-radius: 8px;
+            border-radius: $radius-small;
             cursor: pointer;
+            transition: $transition-base;
+
+            &:hover {
+                background: rgba(0, 0, 0, 0.1);
+            }
         }
     }
 }

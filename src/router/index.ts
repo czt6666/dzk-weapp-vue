@@ -107,7 +107,7 @@ const routes = [
     {
         path: "/study",
         name: "StudyList",
-        component: () => import("../views/StudyList.vue"),
+        component: () => import("../views/study/StudyList.vue"),
     },
     {
         path: "/study/plan/:id",

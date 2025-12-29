@@ -95,11 +95,12 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
+@use "@/styles/variables.scss" as *;
+
 .hotel-detail {
     font-family: "PingFang SC", sans-serif;
-    color: #333;
-    background: #fff;
-    min-height: 100vh;
+    color: $text-primary;
+    background: $bg-gradient-main;
 
     .cover-wrapper {
         position: relative;
@@ -131,7 +132,11 @@ onMounted(async () => {
     }
 
     .content {
-        padding: 16px;
+        padding: $spacing-md;
+        background: rgba(255, 255, 255, 0.6);
+        margin: $spacing-sm;
+        border-radius: $radius-large;
+        backdrop-filter: blur(10px);
 
         .hotel-name {
             font-size: 20px;
@@ -160,10 +165,10 @@ onMounted(async () => {
         .map-wrapper {
             width: 100%;
             height: 220px;
-            margin-bottom: 16px;
-            border-radius: 12px;
+            margin-bottom: $spacing-lg;
+            border-radius: $radius-medium;
             overflow: hidden;
-            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
+            box-shadow: $shadow-lg;
         }
 
         .info-section {
@@ -199,26 +204,36 @@ onMounted(async () => {
         bottom: 0;
         left: 0;
         right: 0;
-        background: #fff;
-        box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
-        padding: 12px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+        padding: $spacing-md;
 
         .btn-call {
             width: 100%;
-            background: #ff6b00;
+            background: $color-green-primary;
             color: #fff;
             font-size: 16px;
             font-weight: 600;
             border: none;
-            border-radius: 8px;
-            padding: 12px 0;
+            border-radius: $radius-small;
+            padding: $spacing-md 0;
             cursor: pointer;
+            transition: $transition-base;
+
+            &:hover {
+                background: darken($color-green-primary, 10%);
+            }
+
+            &:active {
+                transform: scale(0.98);
+            }
         }
     }
 
     .loading {
         text-align: center;
-        padding: 100px 0;
+        padding: $spacing-xxl 0;
         color: #888;
     }
 }

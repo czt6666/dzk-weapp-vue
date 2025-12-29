@@ -132,7 +132,7 @@ const formatPrice = (price: number): string => {
 .study-activity-detail {
     height: 100%;
     overflow-y: auto;
-    padding: 24px;
+    padding: $spacing-md;
     background: linear-gradient(135deg, #fefce8 0%, #e0f2fe 100%);
 
     .detail-container {

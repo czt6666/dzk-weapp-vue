@@ -51,18 +51,14 @@ function handleTabClick(routePath: string) {
 
 <style lang="scss" scoped>
 .tab-bar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
     display: flex;
+    width: 100%;
     justify-content: space-around;
     align-items: center;
     background: #fff;
     border-top: 1px solid #e5e5e5;
     padding: 8px 0;
     padding-bottom: calc(8px + env(safe-area-inset-bottom));
-    z-index: 1000;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
 }
 

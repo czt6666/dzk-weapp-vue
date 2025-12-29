@@ -64,24 +64,28 @@ function goDetail(item: any) {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@use "@/styles/variables.scss" as *;
+
 .favorites-page {
     overflow-y: auto;
     height: 100%;
-    padding: 2rem;
+    padding: $spacing-md;
     max-width: 1200px;
     margin: auto;
+    background: $bg-gradient-main;
 }
 
 .header {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: $spacing-md;
 }
 
 .header h1 {
     font-size: 2rem;
     font-weight: bold;
     margin-bottom: 0.3rem;
+    color: $color-green-primary;
 }
 
 .header .sub {
@@ -91,19 +95,18 @@ function goDetail(item: any) {
 .favorites-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 1.5rem;
+    gap: $spacing-md;
 }
 
 .favorite-card {
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: $radius-large;
+    box-shadow: $shadow-md;
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    transition:
-        transform 0.25s ease,
-        box-shadow 0.25s ease;
+    transition: $transition-base;
 }
 
 .favorite-card:hover {
@@ -134,7 +137,7 @@ function goDetail(item: any) {
 }
 
 .info {
-    padding: 1rem;
+    padding: $spacing-md;
     flex-grow: 1;
 }
 
@@ -164,14 +167,14 @@ function goDetail(item: any) {
 
 .info .price {
     font-weight: bold;
-    color: #42b983;
+    color: $color-green-primary;
     font-size: 1rem;
 }
 
 .actions {
     display: flex;
     justify-content: space-between;
-    padding: 0.8rem 1rem 1rem;
+    padding: $spacing-sm $spacing-md $spacing-md;
 }
 
 button {
@@ -184,12 +187,12 @@ button {
 }
 
 button.buy {
-    background-color: #42b983;
+    background-color: $color-green-primary;
     color: #fff;
 }
 
 button.buy:hover {
-    background-color: #38a06d;
+    background-color: darken($color-green-primary, 10%);
 }
 
 button.remove {
@@ -204,7 +207,7 @@ button.remove:hover {
 
 .empty {
     text-align: center;
-    padding: 5rem 0;
+    padding: $spacing-xxxl 0;
     color: #888;
 }
 

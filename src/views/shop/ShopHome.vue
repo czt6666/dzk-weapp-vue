@@ -69,20 +69,22 @@ const products = ref([
 </script>
 
 <style lang="scss" scoped>
+@use "@/styles/variables.scss" as *;
+
 .shop-page {
-    background: #f6f3ea; /* 乡村淡米色背景 */
-    min-height: 100vh;
-    padding: 16px;
+    background: $bg-gradient-main;
+    padding: $spacing-md;
     font-family: "Noto Sans SC", sans-serif;
 }
 
 .header {
     display: flex;
     align-items: center;
-    padding: 12px;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    padding: $spacing-md;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: $radius-medium;
+    box-shadow: $shadow-md;
 }
 
 .avatar {
@@ -100,6 +102,7 @@ const products = ref([
 .shop-name {
     font-size: 20px;
     font-weight: bold;
+    color: $color-green-primary;
 }
 
 .sub-info {
@@ -110,11 +113,12 @@ const products = ref([
 .stats {
     display: flex;
     justify-content: space-between;
-    margin-top: 14px;
-    padding: 12px;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    margin-top: $spacing-md;
+    padding: $spacing-md;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: $radius-medium;
+    box-shadow: $shadow-sm;
 }
 
 .stat-item {
@@ -128,7 +132,7 @@ const products = ref([
 }
 
 .value.open {
-    color: #28a745;
+    color: $color-green-primary;
     font-weight: bold;
 }
 
@@ -154,11 +158,18 @@ const products = ref([
 }
 
 .product-card {
-    background: #fff;
-    border-radius: 12px;
-    padding: 10px;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: $radius-medium;
+    padding: $spacing-md;
     text-align: center;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    box-shadow: $shadow-sm;
+    transition: $transition-base;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: $shadow-md;
+    }
 }
 
 .product-img {

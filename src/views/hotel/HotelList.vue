@@ -186,67 +186,91 @@ function goDetail(id: number) {
 </script>
 
 <style lang="scss" scoped>
+@use "@/styles/variables.scss" as *;
+
 .page {
     display: flex;
     flex-direction: column;
-    width: 100%;
     height: 100%;
+    background: $bg-gradient-main;
 }
+
 .banner {
+    position: relative;
     width: 100%;
     height: 200px;
+    overflow: hidden;
+
     > img {
         width: 100%;
         height: 100%;
         object-fit: cover;
     }
+
+    &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: $overlay-red-banner;
+        pointer-events: none;
+    }
 }
+
 .toolbar {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
-    padding: 12px 16px;
+    gap: $spacing-md;
+    padding: $spacing-md $spacing-lg;
     align-items: center;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
 }
+
 .search-bar {
     flex: 1;
     min-width: 280px;
     display: flex;
-    gap: 8px;
+    gap: $spacing-sm;
     .el-input {
         flex: 1;
     }
     .clear-search {
-        padding: 0 8px;
+        padding: 0 $spacing-sm;
     }
 }
+
 .sort-dropdown {
     height: 40px;
-    padding: 8px 12px;
+    padding: $spacing-sm $spacing-md;
     display: flex;
     align-items: center;
 }
+
 .waterfall-list {
     flex: 1;
     height: 500px;
     overflow-y: auto;
+    padding: $spacing-sm 0 0;
 
     .columns {
         display: flex;
-        gap: 12px;
+        gap: $spacing-md;
 
         .column {
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: $spacing-md;
         }
     }
 }
 
 .waterfall-item-temp {
     width: 50%;
-    padding-left: 16px;
+    padding-left: $spacing-lg;
     position: fixed;
     top: 0;
     left: 0;

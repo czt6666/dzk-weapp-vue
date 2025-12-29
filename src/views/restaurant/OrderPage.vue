@@ -273,14 +273,19 @@ onMounted(async () => {
 </script>
 
 <style lang="scss">
+@use "@/styles/variables.scss" as *;
+
 .restaurant-app {
-    min-height: 100vh;
-    background: #f5f5f5;
-    padding-bottom: 60px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: $bg-gradient-main;
 
     .header {
-        background: white;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        box-shadow: $shadow-md;
         position: sticky;
         top: 0;
         z-index: 100;
@@ -289,7 +294,7 @@ onMounted(async () => {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 16px;
+            padding: $spacing-sm $spacing-md;
 
             .store-info-brief {
                 flex: 1;
@@ -342,7 +347,7 @@ onMounted(async () => {
                     transition: all 0.2s;
 
                     &.active {
-                        background: #ff6b35;
+                        background: $color-green-primary;
                         color: white;
                     }
                 }
@@ -352,16 +357,18 @@ onMounted(async () => {
 
     .main-content {
         display: flex;
-        height: calc(100vh - 110px);
+        flex: 1 1 0;
+        margin-bottom: 61px;
 
         .category-sidebar {
             width: 90px;
-            background: #f8f8f8;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
             overflow-y: auto;
-            border-right: 1px solid #e8e8e8;
+            border-right: 1px solid rgba(0, 0, 0, 0.1);
 
             .loading {
-                padding: 20px;
+                padding: $spacing-md;
                 text-align: center;
                 color: #999;
                 font-size: 13px;
@@ -371,7 +378,7 @@ onMounted(async () => {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                padding: 16px 8px;
+                padding: $spacing-md $spacing-sm;
                 cursor: pointer;
                 transition: all 0.2s;
                 border-left: 3px solid transparent;
@@ -390,11 +397,11 @@ onMounted(async () => {
                 }
 
                 &.active {
-                    background: white;
-                    border-left-color: #ff6b35;
+                    background: rgba(255, 255, 255, 0.9);
+                    border-left-color: $color-green-primary;
 
                     .cat-name {
-                        color: #ff6b35;
+                        color: $color-green-primary;
                         font-weight: 600;
                     }
                 }
@@ -408,7 +415,8 @@ onMounted(async () => {
         .product-section {
             flex: 1;
             overflow-y: auto;
-            background: white;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
 
             .loading-products {
                 display: flex;
@@ -436,12 +444,12 @@ onMounted(async () => {
             }
 
             .product-list {
-                padding: 12px;
+                padding: $spacing-md;
 
                 .product-card {
                     display: flex;
                     gap: 12px;
-                    padding: 12px;
+                    padding: $spacing-md;
                     border-bottom: 1px solid #f0f0f0;
 
                     &:hover {
@@ -585,7 +593,8 @@ onMounted(async () => {
     }
 
     .cart-footer {
-        position: fixed;
+        position: absolute;
+        height: 61px;
         bottom: 0;
         left: 0;
         right: 0;
@@ -597,7 +606,7 @@ onMounted(async () => {
         .cart-bar {
             display: flex;
             align-items: center;
-            padding: 10px 16px;
+            padding: $spacing-sm $spacing-md;
             gap: 12px;
 
             .cart-icon-btn {
@@ -654,7 +663,7 @@ onMounted(async () => {
             }
 
             .checkout-btn {
-                padding: 10px 24px;
+                padding: $spacing-sm $spacing-xxl;
                 border-radius: 20px;
                 border: none;
                 background: #ff6b35;
@@ -709,7 +718,7 @@ onMounted(async () => {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 16px;
+            padding: $spacing-md;
             border-bottom: 1px solid #f0f0f0;
 
             h3 {
@@ -739,11 +748,11 @@ onMounted(async () => {
         .modal-body {
             flex: 1;
             overflow-y: auto;
-            padding: 16px;
+            padding: $spacing-md;
 
             .empty-state {
                 text-align: center;
-                padding: 40px 0;
+                padding: $spacing-xl 0;
                 color: #999;
 
                 .empty-icon {
@@ -766,7 +775,7 @@ onMounted(async () => {
                     display: flex;
                     align-items: center;
                     gap: 12px;
-                    padding: 12px;
+                    padding: $spacing-md;
                     background: #fafafa;
                     border-radius: 6px;
 
@@ -827,12 +836,12 @@ onMounted(async () => {
         }
 
         .modal-footer {
-            padding: 12px 16px;
+            padding: $spacing-sm $spacing-md;
             border-top: 1px solid #f0f0f0;
 
             .clear-btn {
                 width: 100%;
-                padding: 10px;
+                padding: $spacing-sm;
                 border-radius: 6px;
                 border: none;
                 background: #f5f5f5;
@@ -899,7 +908,7 @@ onMounted(async () => {
 
                 .detail-item {
                     display: flex;
-                    padding: 10px 0;
+                    padding: $spacing-sm 0;
                     border-bottom: 1px solid #f5f5f5;
                     font-size: 14px;
 

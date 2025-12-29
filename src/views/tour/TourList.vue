@@ -108,26 +108,33 @@ async function toggleFavorite(id: number, isFavorite: boolean) {
 </script>
 
 <style lang="scss" scoped>
+@use "@/styles/variables.scss" as *;
+
 .page {
     display: flex;
     flex-direction: column;
     width: 100%;
     height: 100%;
+    background: $bg-gradient-main;
 
     .banner {
         width: 100%;
+        position: relative;
     }
 
     .toolbar {
-        padding: 8px 12px;
+        padding: $spacing-sm $spacing-md;
+        background: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(10px);
     }
 
     .list {
         flex: 1;
         height: 500px;
+        padding: $spacing-sm 0 0;
 
         .scroll-list-item {
-            margin-bottom: 8px;
+            margin-bottom: $spacing-sm;
         }
     }
 }

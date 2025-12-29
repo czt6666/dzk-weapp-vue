@@ -86,21 +86,23 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
+@use "@/styles/variables.scss" as *;
+
 .store-list-page {
-    overflow-y: auto;
-    height: 100%;
-    background: #f5f5f5;
-    padding-bottom: 20px;
+    background: $bg-gradient-main;
+    padding-bottom: $spacing-md;
 }
 
 // 搜索区域
 .search-section {
-    padding: 10px;
+    padding: $spacing-md;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
 }
 
 // 主列表区域
 .store-list {
-    padding: 10px;
+    padding: $spacing-md $spacing-lg;
 }
 
 // 加载状态
@@ -109,17 +111,17 @@ onMounted(async () => {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 60px 20px;
-    color: #999;
+    padding: $spacing-xxl $spacing-md;
+    color: $text-tertiary;
 
     .spinner {
         width: 40px;
         height: 40px;
         border: 3px solid #f3f3f3;
-        border-top: 3px solid #3498db;
-        border-radius: 50%;
+        border-top: 3px solid $color-green-primary;
+        border-radius: $radius-round;
         animation: spin 1s linear infinite;
-        margin-bottom: 16px;
+        margin-bottom: $spacing-lg;
     }
 
     @keyframes spin {
@@ -138,12 +140,12 @@ onMounted(async () => {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 80px 20px;
-    color: #999;
+    padding: $spacing-xxxl $spacing-md;
+    color: $text-tertiary;
 
     .empty-icon {
         font-size: 64px;
-        margin-bottom: 16px;
+        margin-bottom: $spacing-lg;
         opacity: 0.5;
     }
 }
@@ -152,6 +154,6 @@ onMounted(async () => {
 .store-items {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: $spacing-md;
 }
 </style>

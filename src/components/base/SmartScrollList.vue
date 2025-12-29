@@ -171,13 +171,15 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss" scoped>
+@use "@/styles/variables.scss" as *;
+
 .scroll-container {
     height: 100%;
 
     .scroll-wrapper {
         position: relative;
         height: 100%;
-        padding: 0 10px;
+        padding: 0 $spacing-md;
         overflow: hidden;
 
         .scroll-scroller {

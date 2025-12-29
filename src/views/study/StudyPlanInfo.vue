@@ -101,9 +101,7 @@ const formatDateTime = (datetime: string | null): string => {
 
 <style scoped lang="scss">
 .study-plan-detail {
-    height: 100%;
-    overflow-y: auto;
-    padding: 24px;
+    padding: $spacing-md;
     background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
 
     .detail-container {

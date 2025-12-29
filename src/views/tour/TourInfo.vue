@@ -225,11 +225,11 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
+@use "@/styles/variables.scss" as *;
+
 .tour-route-detail {
-    height: 100%;
-    overflow-y: auto;
-    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-    padding: 24px;
+    background: $bg-gradient-main;
+    padding: $spacing-md;
 
     .detail-container {
         max-width: 1000px;
@@ -237,17 +237,18 @@ onMounted(async () => {
     }
 
     .detail-header {
-        background: #ffffff;
-        padding: 32px;
-        border-radius: 12px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        margin-bottom: 24px;
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        padding: $spacing-md;
+        border-radius: $radius-medium;
+        box-shadow: $shadow-md;
+        margin-bottom: $spacing-md;
 
         .detail-title {
             font-size: 32px;
             font-weight: 700;
-            color: #111827;
-            margin: 0 0 16px 0;
+            color: $color-red-primary;
+            margin: 0 0 $spacing-lg 0;
         }
 
         .header-tags {
@@ -287,19 +288,20 @@ onMounted(async () => {
     }
 
     .info-card {
-        background: #ffffff;
-        padding: 24px;
-        border-radius: 12px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        margin-bottom: 24px;
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        padding: $spacing-md;
+        border-radius: $radius-medium;
+        box-shadow: $shadow-md;
+        margin-bottom: $spacing-md;
 
         .card-title {
             font-size: 20px;
             font-weight: 600;
-            color: #111827;
-            margin: 0 0 20px 0;
-            padding-bottom: 12px;
-            border-bottom: 2px solid #e5e7eb;
+            color: $color-red-primary;
+            margin: 0 0 $spacing-xl 0;
+            padding-bottom: $spacing-md;
+            border-bottom: 2px solid rgba($color-red-primary, 0.2);
         }
 
         .info-grid {

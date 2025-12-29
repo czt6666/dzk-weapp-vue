@@ -168,11 +168,13 @@ watch(
 </script>
 
 <style lang="scss" scoped>
+@use "@/styles/variables.scss" as *;
+
 .hotel-carousel-wrapper {
     overflow: hidden;
     width: 100%;
     position: relative;
-    border-radius: 16px;
+    border-radius: $radius-large;
 
     .hotel-carousel-content {
         height: 100%;
@@ -207,12 +209,8 @@ watch(
                     bottom: 0;
                     left: 0;
                     right: 0;
-                    padding: 10px 16px;
-                    background: linear-gradient(
-                        to top,
-                        rgba(46, 125, 50, 0.9),
-                        rgba(46, 125, 50, 0.6)
-                    );
+                    padding: 10px $spacing-lg;
+                    background: $overlay-green-gradient;
                     color: white;
 
                     .hotel-name {

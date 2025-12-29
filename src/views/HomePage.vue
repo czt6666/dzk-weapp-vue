@@ -346,10 +346,13 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+@use "@/styles/variables.scss" as *;
+
 .home {
-    min-height: 100vh;
-    background: linear-gradient(180deg, #ffe5e5 0%, #f5f0e8 100%);
+    height: 100%;
+    background: $bg-gradient-main;
     overflow-x: hidden;
+    overflow-y: auto;
 }
 
 // 顶部横幅
@@ -365,7 +368,7 @@ onMounted(() => {
         left: 0;
         right: 0;
         bottom: 0;
-        background: linear-gradient(to bottom, rgba(198, 40, 40, 0.3), rgba(255, 255, 255, 0.1));
+        background: $overlay-red-banner;
         z-index: 2;
         pointer-events: none;
     }
@@ -388,7 +391,7 @@ onMounted(() => {
 
             .logo-text {
                 color: white;
-                text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+                text-shadow: $shadow-text;
 
                 h1 {
                     font-size: 28px;
@@ -416,7 +419,7 @@ onMounted(() => {
 
 // 主内容区域
 .main-content {
-    padding: 20px 16px 16px;
+    padding: $spacing-md $spacing-md $spacing-md;
     max-width: 1200px;
     margin: 0 auto;
 }
@@ -435,11 +438,11 @@ onMounted(() => {
         letter-spacing: 1px;
 
         &.red-theme {
-            color: #c62828;
+            color: $color-red-primary;
         }
 
         &.green-theme {
-            color: #2e7d32;
+            color: $color-green-primary;
         }
     }
 
@@ -452,7 +455,7 @@ onMounted(() => {
         white-space: nowrap;
 
         &:hover {
-            color: #2e7d32;
+            color: $color-green-primary;
             transform: translateX(2px);
         }
 
@@ -487,7 +490,7 @@ onMounted(() => {
             width: 280px;
             height: 140px;
             position: relative;
-            border-radius: 12px;
+            border-radius: $radius-medium;
             overflow: hidden;
             cursor: pointer;
             transition: transform 0.3s ease;
@@ -519,11 +522,7 @@ onMounted(() => {
                 }
 
                 .red-overlay {
-                    background: linear-gradient(
-                        135deg,
-                        rgba(198, 40, 40, 0.7),
-                        rgba(198, 40, 40, 0.4)
-                    );
+                    background: $overlay-red-gradient;
                 }
             }
 
@@ -587,7 +586,7 @@ onMounted(() => {
                 position: relative;
                 width: 100%;
                 aspect-ratio: 3/4;
-                border-radius: 12px;
+                border-radius: $radius-medium;
                 overflow: hidden;
                 margin-bottom: 8px;
 
@@ -603,7 +602,7 @@ onMounted(() => {
                     bottom: 8px;
                     left: 8px;
                     padding: 6px 12px;
-                    background: rgba(46, 125, 50, 0.85);
+                    background: $overlay-green-label;
                     color: white;
                     border-radius: 20px;
                     font-size: 14px;
@@ -644,7 +643,7 @@ onMounted(() => {
             display: flex;
             width: 100%;
             height: 140px;
-            border-radius: 16px;
+            border-radius: $radius-large;
             overflow: hidden;
             cursor: pointer;
             transition: transform 0.3s ease;
@@ -674,13 +673,13 @@ onMounted(() => {
                 justify-content: center;
 
                 &.green-content {
-                    background: rgba(46, 125, 50, 0.15);
+                    background: $overlay-green-light;
                 }
 
                 .food-name {
                     font-size: 18px;
                     font-weight: 600;
-                    color: #2e7d32;
+                    color: $color-green-primary;
                     margin: 0 0 8px 0;
                 }
 
@@ -727,7 +726,7 @@ onMounted(() => {
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(198, 40, 40, 0.8), rgba(198, 40, 40, 0.6));
+            background: $overlay-red-strong;
         }
 
         .red-tour-content {
@@ -740,13 +739,13 @@ onMounted(() => {
             align-items: center;
             color: white;
             text-align: center;
-            padding: 20px;
+            padding: $spacing-md;
 
             .red-tour-title {
                 font-size: 24px;
                 font-weight: 600;
                 margin: 0 0 8px 0;
-                text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+                text-shadow: $shadow-text;
             }
 
             .red-tour-desc {
@@ -791,7 +790,7 @@ onMounted(() => {
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(198, 40, 40, 0.8), rgba(198, 40, 40, 0.6));
+            background: $overlay-red-strong;
         }
 
         .study-content {
@@ -804,13 +803,13 @@ onMounted(() => {
             align-items: center;
             color: white;
             text-align: center;
-            padding: 20px;
+            padding: $spacing-md;
 
             .study-title {
                 font-size: 24px;
                 font-weight: 600;
                 margin: 0 0 8px 0;
-                text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+                text-shadow: $shadow-text;
             }
 
             .study-desc {
@@ -855,7 +854,7 @@ onMounted(() => {
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(46, 125, 50, 0.8), rgba(46, 125, 50, 0.6));
+            background: $overlay-green-strong;
         }
 
         .retirement-content {
@@ -868,13 +867,13 @@ onMounted(() => {
             align-items: center;
             color: white;
             text-align: center;
-            padding: 20px;
+            padding: $spacing-md;
 
             .retirement-title {
                 font-size: 24px;
                 font-weight: 600;
                 margin: 0 0 8px 0;
-                text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+                text-shadow: $shadow-text;
             }
 
             .retirement-desc {

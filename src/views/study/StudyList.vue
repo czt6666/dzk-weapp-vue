@@ -217,39 +217,45 @@ async function toggleActivityFavorite(id: number, isFavorite: boolean) {
 </script>
 
 <style lang="scss" scoped>
+@use "@/styles/variables.scss" as *;
+
 .page {
     display: flex;
     flex-direction: column;
     width: 100%;
     height: 100%;
+    background: $bg-gradient-main;
 
     .banner {
         width: 100%;
+        position: relative;
     }
 
     .tabs {
         display: flex;
-        background: #fff;
-        border-bottom: 1px solid #e5e7eb;
-        padding: 0 12px;
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        padding: 0 $spacing-md;
+        box-shadow: $shadow-sm;
 
         .tab-item {
             flex: 1;
             text-align: center;
-            padding: 12px 0;
+            padding: $spacing-md 0;
             font-size: 16px;
             font-weight: 500;
-            color: #6b7280;
+            color: $text-secondary;
             cursor: pointer;
             position: relative;
-            transition: all 0.3s ease;
+            transition: $transition-base;
 
             &:hover {
-                color: #2563eb;
+                color: $color-green-primary;
             }
 
             &.active {
-                color: #2563eb;
+                color: $color-green-primary;
                 font-weight: 600;
 
                 &::after {
@@ -259,22 +265,25 @@ async function toggleActivityFavorite(id: number, isFavorite: boolean) {
                     left: 0;
                     right: 0;
                     height: 2px;
-                    background: #2563eb;
+                    background: $color-green-primary;
                 }
             }
         }
     }
 
     .toolbar {
-        padding: 8px 12px;
+        padding: $spacing-sm $spacing-md;
+        background: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(10px);
     }
 
     .list {
         flex: 1;
-        height: 500px;
+        height: 400px;
+        padding: $spacing-sm 0 0;
 
         .scroll-list-item {
-            margin-bottom: 8px;
+            margin-bottom: $spacing-sm;
         }
     }
 }

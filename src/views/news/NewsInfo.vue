@@ -4,7 +4,7 @@
         <div v-else class="content">
             <h2 class="news-title">{{ info.title }}</h2>
             <p class="meta">
-                发布日期：{{ publishDate || "--" }}　
+                发布日期：{{ publishDate || "--" }}
                 <!-- 浏览量：{{ info.views || "--" }} -->
             </p>
             <div class="body" v-html="transHtml(info.content)"></div>
@@ -52,44 +52,59 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
-// @use "../styles/htmlNews.scss";
+@use "@/styles/variables.scss" as *;
 
 .news-info {
     height: 100%;
-    padding: 20px;
+    padding: $spacing-md;
+    background: $bg-gradient-main;
 }
+
 .loading {
     text-align: center;
-    padding: 40px 0;
-    color: #666;
+    padding: $spacing-xl 0;
+    color: $text-secondary;
 }
+
 .content {
     overflow-y: auto;
     width: 100%;
     height: 100%;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: $radius-large;
+    padding: $spacing-md;
+    box-shadow: $shadow-md;
 
     .news-title {
         text-align: center;
         font-size: 28px;
-        margin-bottom: 10px;
+        margin-bottom: $spacing-md;
+        color: $color-red-primary;
+        font-weight: 600;
     }
 }
+
 .cover {
     width: 100%;
-    border-radius: 8px;
-    margin: 20px 0;
+    border-radius: $radius-small;
+    margin: $spacing-xl 0;
 }
+
 .meta {
     text-align: right;
-    color: #888;
+    color: $text-tertiary;
     font-size: 14px;
-    margin-bottom: 10px;
+    margin-bottom: $spacing-md;
 }
+
 :deep(.body) {
     P {
         font-size: 16px;
         text-indent: 2em;
-        margin-bottom: 12px;
+        margin-bottom: $spacing-md;
+        line-height: 1.8;
+        color: $text-primary;
 
         > img {
             margin-left: -2em;
@@ -97,6 +112,8 @@ onMounted(async () => {
     }
     img {
         width: 100%;
+        border-radius: $radius-medium;
+        margin: $spacing-md 0;
     }
 }
 </style>
