@@ -73,7 +73,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
+import { computed } from "vue";
 import type { IRestaurantInfo } from "@/apis/restaurant";
 import { imgUrl } from "@/utils";
 import heartFilledIcon from "@/assets/svg/heart-filled.svg";
@@ -88,22 +88,12 @@ const emit = defineEmits<{
     favorite: [isFavorite: boolean];
 }>();
 
-// 使用接口返回的isCollect初始化收藏状态
-const isFavorite = ref(props.store.isCollect || false);
+// 直接使用父组件传递的收藏状态
+const isFavorite = computed(() => props.store.isCollect || false);
 
-// 监听store变化，更新收藏状态
-watch(
-    () => props.store.isCollect,
-    (newVal) => {
-        isFavorite.value = newVal || false;
-    },
-    { immediate: true },
-);
-
-// 本地收藏数（用于显示动态变化）
+// 收藏数
 const localFavoriteCount = computed(() => {
-    const baseCount = props.store.collectNumber || 0;
-    return isFavorite.value ? baseCount + 1 : baseCount;
+    return props.store.collectNumber || 0;
 });
 
 const handleClick = () => {
@@ -111,8 +101,7 @@ const handleClick = () => {
 };
 
 const toggleFavorite = () => {
-    isFavorite.value = !isFavorite.value;
-    emit("favorite", isFavorite.value);
+    emit("favorite", !isFavorite.value);
 };
 </script>
 

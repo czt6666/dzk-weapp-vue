@@ -61,7 +61,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed } from "vue";
 import heartFilledIcon from "@/assets/svg/heart-filled.svg";
 import heartOutlineIcon from "@/assets/svg/heart-outline.svg";
 
@@ -88,22 +88,12 @@ const emit = defineEmits<{
     (e: "favorite", isFavorite: boolean): void;
 }>();
 
-// 使用接口返回的isCollect初始化收藏状态
-const isFavorite = ref(props.info.isCollect || false);
+// 直接使用父组件传递的收藏状态
+const isFavorite = computed(() => props.info.isCollect || false);
 
-// 监听info变化，更新收藏状态
-watch(
-    () => props.info.isCollect,
-    (newVal) => {
-        isFavorite.value = newVal || false;
-    },
-    { immediate: true },
-);
-
-// 本地收藏数（用于显示动态变化）
+// 收藏数
 const localFavoriteCount = computed(() => {
-    const baseCount = props.info.collectNumber || 0;
-    return isFavorite.value ? baseCount + 1 : baseCount;
+    return props.info.collectNumber || 0;
 });
 
 const serviceTags = computed(() => props.info.serviceMode?.split(",") || []);
@@ -126,8 +116,7 @@ const handleClick = () => {
 
 // 切换收藏
 const toggleFavorite = () => {
-    isFavorite.value = !isFavorite.value;
-    emit("favorite", isFavorite.value);
+    emit("favorite", !isFavorite.value);
 };
 </script>
 

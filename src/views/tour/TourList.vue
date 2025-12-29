@@ -34,7 +34,7 @@ import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
 import { getTourRouteList } from "@/apis/tour";
 import { debounce } from "@/utils/index";
-import { createCollect, deleteCollect } from "@/apis/collect";
+import { createFavoriteToggle } from "@/utils/favorite";
 
 const router = useRouter();
 
@@ -93,13 +93,8 @@ function goDetail(id: number) {
     router.push({ name: "TourInfo", params: { id } });
 }
 
-async function toggleFavorite(id: number, isFavorite: boolean) {
-    if (isFavorite) {
-        createCollect({ userId: 1, targetId: id, targetType: "tour_route" });
-    } else {
-        deleteCollect({ userId: 1, targetId: id, targetType: "tour_route" });
-    }
-}
+// 使用生成器创建收藏切换函数
+const toggleFavorite = createFavoriteToggle("tour_route", list);
 </script>
 
 <style lang="scss" scoped>

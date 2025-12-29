@@ -9,7 +9,6 @@ export function deleteCollect(params: ICollect) {
 }
 
 export interface ICollect {
-    userId: number;
     targetId: number;
     targetType: string;
 }

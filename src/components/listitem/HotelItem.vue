@@ -20,8 +20,8 @@
                 <span class="rating">
                     <img v-for="i in info.starLevel" :key="i" :src="ratingIcon" />
                 </span>
-                <span class="favorites">
-                    <img :src="heartOutlineIcon" alt="收藏数" />
+                <span class="favorites" @click.stop="toggleFavorite">
+                    <img :src="isFavorite ? heartFilledIcon : heartOutlineIcon" alt="收藏数" />
                     {{ localFavoriteCount }}
                 </span>
             </div>
@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
+import { computed } from "vue";
 import { imgUrl } from "@/utils";
 import heartFilledIcon from "@/assets/svg/heart-filled.svg";
 import heartOutlineIcon from "@/assets/svg/heart-outline.svg";
@@ -43,22 +43,12 @@ const emit = defineEmits<{
     favorite: [isFavorite: boolean];
 }>();
 
-// 使用接口返回的isCollect初始化收藏状态
-const isFavorite = ref(props.info.isCollect || false);
+// 直接使用父组件传递的收藏状态
+const isFavorite = computed(() => props.info.isCollect || false);
 
-// 监听info变化，更新收藏状态
-watch(
-    () => props.info.isCollect,
-    (newVal) => {
-        isFavorite.value = newVal || false;
-    },
-    { immediate: true }
-);
-
-// 本地收藏数（用于显示动态变化）
+// 收藏数
 const localFavoriteCount = computed(() => {
-    const baseCount = props.info.collectNumber || 0;
-    return isFavorite.value ? baseCount + 1 : baseCount;
+    return props.info.collectNumber || 0;
 });
 
 const handleClick = () => {
@@ -66,8 +56,8 @@ const handleClick = () => {
 };
 
 const toggleFavorite = () => {
-    isFavorite.value = !isFavorite.value;
-    emit("favorite", isFavorite.value);
+    // 直接触发事件，让父组件处理状态更新
+    emit("favorite", !isFavorite.value);
 };
 </script>
 
@@ -245,9 +235,27 @@ const toggleFavorite = () => {
                     contrast(91%);
             }
 
-            .favorites img {
-                filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(334deg) brightness(100%)
-                    contrast(101%);
+            .favorites {
+                cursor: pointer;
+                transition: all 0.3s ease;
+                padding: 2px 4px;
+                border-radius: 4px;
+
+                &:hover {
+                    background: rgba(255, 107, 107, 0.1);
+                    transform: scale(1.05);
+                }
+
+                img {
+                    filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(334deg)
+                        brightness(100%) contrast(101%);
+                    transition: all 0.3s ease;
+                }
+
+                &:hover img {
+                    filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(334deg)
+                        brightness(110%) contrast(101%);
+                }
             }
         }
     }

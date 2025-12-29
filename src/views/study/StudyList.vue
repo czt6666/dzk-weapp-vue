@@ -67,7 +67,7 @@ import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
 import { getStudyPlanList, getStudyActivityList } from "@/apis/study";
 import { debounce } from "@/utils/index";
-import { createCollect, deleteCollect } from "@/apis/collect";
+import { createFavoriteToggle } from "@/utils/favorite";
 
 const router = useRouter();
 
@@ -192,23 +192,9 @@ function goActivityDetail(id: number) {
     router.push({ name: "StudyActivityInfo", params: { id } });
 }
 
-// 切换方案收藏
-async function togglePlanFavorite(id: number, isFavorite: boolean) {
-    if (isFavorite) {
-        createCollect({ userId: 1, targetId: id, targetType: "study_plan" });
-    } else {
-        deleteCollect({ userId: 1, targetId: id, targetType: "study_plan" });
-    }
-}
-
-// 切换活动收藏
-async function toggleActivityFavorite(id: number, isFavorite: boolean) {
-    if (isFavorite) {
-        createCollect({ userId: 1, targetId: id, targetType: "study_activity" });
-    } else {
-        deleteCollect({ userId: 1, targetId: id, targetType: "study_activity" });
-    }
-}
+// 使用生成器创建收藏切换函数
+const togglePlanFavorite = createFavoriteToggle("study_plan", planList);
+const toggleActivityFavorite = createFavoriteToggle("study_activity", activityList);
 </script>
 
 <style lang="scss" scoped>

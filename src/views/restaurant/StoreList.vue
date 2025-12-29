@@ -42,7 +42,7 @@ import StoreCard from "@/components/listitem/StoreListItem.vue";
 import { getRestaurantList, type IRestaurantInfo } from "@/apis/restaurant";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
-import { createCollect, deleteCollect } from "@/apis/collect";
+import { createFavoriteToggle } from "@/utils/favorite";
 
 const loading = ref(true);
 const keyword = ref("");
@@ -72,13 +72,8 @@ const goToStore = (store: IRestaurantInfo) => {
     router.push({ name: "RestaurantOrder", query: { id: store.id, name: store.name } });
 };
 
-async function toggleFavorite(id: number, isFavorite: boolean) {
-    if (isFavorite) {
-        createCollect({ userId: 1, targetId: id, targetType: "restaurant" });
-    } else {
-        deleteCollect({ userId: 1, targetId: id, targetType: "restaurant" });
-    }
-}
+// 使用生成器创建收藏切换函数
+const toggleFavorite = createFavoriteToggle("restaurant", stores);
 
 onMounted(async () => {
     await fetchData();

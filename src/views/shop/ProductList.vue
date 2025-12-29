@@ -39,6 +39,7 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import ProductCard from "@/components/listitem/ProductCard.vue";
 import SmartScrollList from "@/components/base/SmartScrollList.vue";
 import type { IProduct } from "@/views/shop/types";
@@ -47,7 +48,7 @@ import { debounce } from "@/utils/index";
 import { ElMessage } from "element-plus";
 import { useShopFavoriteStore } from "@/stores/shopFavorite";
 import SearchInput from "@/components/input/SearchInput.vue";
-import { createCollect, deleteCollect } from "@/apis/collect";
+import { createFavoriteToggle } from "@/utils/favorite";
 
 let page = 1;
 const pageSize = 10;
@@ -122,13 +123,8 @@ function goFavorites() {
     router.push("/shop/favorites");
 }
 
-async function toggleFavorite(id: number, isFavorite: boolean) {
-    if (isFavorite) {
-        createCollect({ userId: 1, targetId: id, targetType: "product" });
-    } else {
-        deleteCollect({ userId: 1, targetId: id, targetType: "product" });
-    }
-}
+// 使用生成器创建收藏切换函数
+const toggleFavorite = createFavoriteToggle("product", list);
 </script>
 
 <style lang="scss" scoped>

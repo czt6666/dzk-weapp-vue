@@ -50,7 +50,7 @@ import SearchInput from "@/components/input/SearchInput.vue";
 import WaterfallItem from "@/components/listitem/HotelItem.vue";
 import { getHotelList } from "@/apis/hotel";
 import { debounce } from "@/utils/index";
-import { createCollect, deleteCollect } from "@/apis/collect";
+import { createFavoriteToggle } from "@/utils/favorite";
 
 const router = useRouter();
 
@@ -62,6 +62,9 @@ const list = ref<any[]>([]);
 const tempList = ref<any[]>([]);
 const columns = ref<any[][]>([[], []]);
 const keyword = ref("");
+
+// 使用生成器创建收藏切换函数
+const toggleFavorite = createFavoriteToggle("homestay", list);
 
 async function fetchData(page: number, pageSize: number, keyword?: string) {
     try {
@@ -113,14 +116,6 @@ async function onLoadMore() {
     list.value.push(...newList);
 
     splitToColumns(newList);
-}
-
-async function toggleFavorite(id: number, isFavorite: boolean) {
-    if (isFavorite) {
-        createCollect({ userId: 1, targetId: id, targetType: "homestay" });
-    } else {
-        deleteCollect({ userId: 1, targetId: id, targetType: "homestay" });
-    }
 }
 
 const left: any[] = [];
