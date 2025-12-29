@@ -1,5 +1,5 @@
 <template>
-    <article class="product-card" @click="openDetail">
+    <article class="product-card" @click="openDetail" :data-waterfall-id="item.id">
         <div class="thumb">
             <img :src="imgUrl(firstImage)" alt="预览" />
             <span v-if="item.status !== 1" class="status" :class="item.status">已下架</span>
@@ -13,16 +13,21 @@
             </div>
         </div>
 
-        <div class="meta">
+        <div class="info">
             <h3 class="title">{{ item.title }}</h3>
-            <p class="desc">{{ item.description }}</p>
-
-            <div class="foot">
-                <button class="btn detail" @click.stop="openDetail">查看详情</button>
-                <div class="favorite-count" @click.stop="toggleFavorite">
-                    <img :src="heartOutlineIcon" alt="收藏" />
-                    <span>{{ localFavoriteCount }}</span>
-                </div>
+            <span class="description">{{ item.description }}</span>
+            <div class="stats">
+                <span class="price" v-if="minPrice">
+                    <svg class="price-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <line x1="12" y1="1" x2="12" y2="23"></line>
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                    </svg>
+                    ¥{{ minPrice }}
+                </span>
+                <span class="favorites" @click.stop="toggleFavorite">
+                    <img :src="isFavorite ? heartFilledIcon : heartOutlineIcon" alt="收藏数" />
+                    {{ localFavoriteCount }}
+                </span>
             </div>
         </div>
     </article>
@@ -59,6 +64,15 @@ const firstImage = computed(() => {
     return placeholder;
 });
 
+// 计算最便宜的价格
+const minPrice = computed(() => {
+    const specs = props.item.specifications || [];
+    if (specs.length === 0) return null;
+    const prices = specs.map((s: any) => s.price || 0).filter((p: number) => p > 0);
+    if (prices.length === 0) return null;
+    return Math.min(...prices).toFixed(2);
+});
+
 function openDetail() {
     emit("open", props.item);
 }
@@ -71,29 +85,33 @@ function toggleFavorite() {
 <style scoped lang="scss">
 .product-card {
     background: #fff;
-    border-radius: 12px;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
     overflow: hidden;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
     cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     &:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
     }
 }
 
 .thumb {
     position: relative;
-    height: 170px;
-    background: #f8f5ee;
+    width: 100%;
+    overflow: hidden;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
 
     img {
         width: 100%;
         height: 100%;
         object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    &:hover img {
+        transform: scale(1.05);
     }
 
     .status {
@@ -108,17 +126,16 @@ function toggleFavorite() {
         z-index: 5;
     }
 
-    // 收藏按钮
     .favorite-overlay {
         position: absolute;
-        top: 10px;
-        right: 10px;
+        top: 12px;
+        right: 12px;
         z-index: 10;
     }
 
     .favorite-btn {
-        width: 34px;
-        height: 34px;
+        width: 36px;
+        height: 36px;
         border-radius: 50%;
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(10px);
@@ -130,8 +147,8 @@ function toggleFavorite() {
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
         .heart-icon {
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
             transition: all 0.3s ease;
             filter: invert(60%) sepia(0%) saturate(0%) hue-rotate(0deg);
         }
@@ -165,16 +182,14 @@ function toggleFavorite() {
     background: #a8a8a8;
 }
 
-.meta {
-    padding: 12px 14px;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
+.info {
+    padding: 5px 10px 10px;
 
     .title {
         font-size: 16px;
         font-weight: 600;
-        color: #2f2a1f;
+        color: #2c3e50;
+        line-height: 1.5;
         margin-bottom: 6px;
 
         display: -webkit-box;
@@ -182,12 +197,14 @@ function toggleFavorite() {
         -webkit-line-clamp: 2;
         overflow: hidden;
         text-overflow: ellipsis;
-        line-height: 1.4;
+        word-break: break-word;
     }
 
-    .desc {
+    .description {
+        display: block;
         font-size: 13px;
-        color: #6f5e44;
+        color: #7f8c8d;
+        margin-bottom: 8px;
         line-height: 1.4;
 
         display: -webkit-box;
@@ -195,59 +212,69 @@ function toggleFavorite() {
         -webkit-line-clamp: 2;
         overflow: hidden;
         text-overflow: ellipsis;
-        margin-bottom: 8px;
+        word-break: break-word;
     }
 
-    .foot {
-        margin-top: auto;
-        padding-top: 8px;
+    .stats {
         display: flex;
+        align-items: center;
         justify-content: space-between;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .btn {
-        flex: 1;
-        border: none;
-        border-radius: 8px;
-        padding: 8px 12px;
-        font-size: 13px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: 0.2s ease;
-
-        &.detail {
-            background: #ece8de;
-            color: #333;
-            &:hover {
-                background: #ddd5c5;
-            }
-        }
-    }
-
-    .favorite-count {
-        width: 16%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 4px;
-        padding: 8px;
-        background: #fff5f5;
-        border-radius: 8px;
-        border: 1px solid #ffe0e0;
-
-        img {
-            width: 16px;
-            height: 16px;
-            filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(334deg) brightness(100%)
-                contrast(101%);
-        }
+        gap: 16px;
+        padding-top: 5px;
+        border-top: 1px solid #f0f0f0;
 
         span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
             font-size: 13px;
-            font-weight: 600;
+            color: #7f8c8d;
+            font-weight: 500;
+
+            img {
+                width: 16px;
+                height: 16px;
+            }
+        }
+
+        .price {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 15px;
             color: #ff6b6b;
+            font-weight: 600;
+            flex: 1;
+
+            .price-icon {
+                width: 16px;
+                height: 16px;
+                stroke-width: 2;
+                color: #ff6b6b;
+            }
+        }
+
+        .favorites {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 2px 4px;
+            border-radius: 4px;
+
+            &:hover {
+                background: rgba(255, 107, 107, 0.1);
+                transform: scale(1.05);
+            }
+
+            img {
+                filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(334deg) brightness(100%)
+                    contrast(101%);
+                transition: all 0.3s ease;
+            }
+
+            &:hover img {
+                filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(334deg) brightness(110%)
+                    contrast(101%);
+            }
         }
     }
 }
