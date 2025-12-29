@@ -1,9 +1,5 @@
 <template>
     <div class="page">
-        <div class="banner">
-            <img src="@/assets/banner/qiufen.jpg" alt="banner" />
-        </div>
-
         <div class="toolbar">
             <SearchInput
                 v-model="keyword"
@@ -47,8 +43,9 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, nextTick } from "vue";
 import { useRouter } from "vue-router";
+import { ElMessage } from "element-plus";
 import SearchInput from "@/components/input/SearchInput.vue";
 import WaterfallItem from "@/components/listitem/HotelItem.vue";
 import { getHotelList } from "@/apis/hotel";
@@ -195,31 +192,8 @@ function goDetail(id: number) {
     background: $bg-gradient-main;
 }
 
-.banner {
-    position: relative;
-    width: 100%;
-    height: 200px;
-    overflow: hidden;
-
-    > img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    &::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: $overlay-red-banner;
-        pointer-events: none;
-    }
-}
-
 .toolbar {
+    flex-shrink: 0;
     display: flex;
     flex-wrap: wrap;
     gap: $spacing-md;
@@ -251,8 +225,7 @@ function goDetail(id: number) {
 
 .waterfall-list {
     flex: 1;
-    height: 500px;
-    overflow-y: auto;
+    min-height: 0;
     padding: $spacing-sm 0 0;
 
     .columns {

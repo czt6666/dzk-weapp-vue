@@ -1,9 +1,5 @@
 <template>
     <div class="page">
-        <div class="banner">
-            <HolidayCarousel />
-        </div>
-
         <div class="toolbar">
             <SearchInput
                 v-model="keyword"
@@ -31,7 +27,6 @@
 
 <script lang="ts" setup name="TourList">
 import { ref } from "vue";
-import HolidayCarousel from "@/components/HolidayCarousel.vue";
 import RetirementListItem from "@/components/listitem/RetirementListItem.vue";
 import SmartScrollList from "@/components/base/SmartScrollList.vue";
 import SearchInput from "@/components/input/SearchInput.vue";
@@ -116,11 +111,6 @@ async function toggleFavorite(id: number, isFavorite: boolean) {
     height: 100%;
     background: $bg-gradient-main;
 
-    .banner {
-        width: 100%;
-        position: relative;
-    }
-
     .toolbar {
         padding: $spacing-sm $spacing-md;
         background: rgba(255, 255, 255, 0.5);
@@ -132,8 +122,10 @@ async function toggleFavorite(id: number, isFavorite: boolean) {
         height: 500px;
         padding: $spacing-sm 0 0;
 
-        .scroll-list-item {
-            margin-bottom: $spacing-sm;
+        .scroll-list {
+            display: flex;
+            flex-direction: column;
+            gap: $spacing-sm;
         }
     }
 }

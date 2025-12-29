@@ -1,9 +1,5 @@
 <template>
     <div class="page">
-        <div class="banner">
-            <HolidayCarousel />
-        </div>
-
         <!-- Tab栏 -->
         <div class="tabs">
             <div
@@ -63,7 +59,6 @@
 
 <script lang="ts" setup name="StudyList">
 import { ref } from "vue";
-import HolidayCarousel from "@/components/HolidayCarousel.vue";
 import StudyPlanListItem from "@/components/listitem/StudyPlanListItem.vue";
 import StudyActivityListItem from "@/components/listitem/StudyActivityListItem.vue";
 import SmartScrollList from "@/components/base/SmartScrollList.vue";
@@ -226,11 +221,6 @@ async function toggleActivityFavorite(id: number, isFavorite: boolean) {
     height: 100%;
     background: $bg-gradient-main;
 
-    .banner {
-        width: 100%;
-        position: relative;
-    }
-
     .tabs {
         display: flex;
         background: rgba(255, 255, 255, 0.8);
@@ -272,6 +262,7 @@ async function toggleActivityFavorite(id: number, isFavorite: boolean) {
     }
 
     .toolbar {
+        flex-shrink: 0;
         padding: $spacing-sm $spacing-md;
         background: rgba(255, 255, 255, 0.5);
         backdrop-filter: blur(10px);
@@ -279,11 +270,13 @@ async function toggleActivityFavorite(id: number, isFavorite: boolean) {
 
     .list {
         flex: 1;
-        height: 400px;
+        min-height: 0;
         padding: $spacing-sm 0 0;
 
-        .scroll-list-item {
-            margin-bottom: $spacing-sm;
+        .scroll-list {
+            display: flex;
+            flex-direction: column;
+            gap: $spacing-sm;
         }
     }
 }

@@ -89,8 +89,10 @@ onMounted(async () => {
 @use "@/styles/variables.scss" as *;
 
 .store-list-page {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
     background: $bg-gradient-main;
-    padding-bottom: $spacing-md;
 }
 
 // 搜索区域
@@ -102,6 +104,8 @@ onMounted(async () => {
 
 // 主列表区域
 .store-list {
+    overflow-y: auto;
+    flex: 1;
     padding: $spacing-md $spacing-lg;
 }
 

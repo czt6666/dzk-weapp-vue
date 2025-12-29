@@ -99,6 +99,8 @@ onMounted(async () => {
 
 .hotel-detail {
     font-family: "PingFang SC", sans-serif;
+    height: 100%;
+    overflow-y: auto;
     color: $text-primary;
     background: $bg-gradient-main;
 
@@ -135,6 +137,7 @@ onMounted(async () => {
         padding: $spacing-md;
         background: rgba(255, 255, 255, 0.6);
         margin: $spacing-sm;
+        margin-bottom: 80px;
         border-radius: $radius-large;
         backdrop-filter: blur(10px);
 
@@ -200,7 +203,7 @@ onMounted(async () => {
     }
 
     .bottom-bar {
-        position: fixed;
+        position: absolute;
         bottom: 0;
         left: 0;
         right: 0;

@@ -13,7 +13,7 @@
                 </div>
             </div>
             <div class="carousel-wrapper">
-                <Carousel :images="bannerImages" />
+                <HolidayCarousel />
             </div>
         </header>
 
@@ -173,19 +173,13 @@ import { getTourRouteList } from "@/apis/tour";
 import { getStudyPlanList } from "@/apis/study";
 import { getRetirementStationList } from "@/apis/retirement";
 import { imgUrl } from "@/utils";
-import Carousel from "@/components/base/Carousel.vue";
+import HolidayCarousel from "@/components/HolidayCarousel.vue";
 import HotelCarousel from "@/components/HotelCarousel.vue";
-import spring1 from "@/assets/swiper/spring1.jpg";
-import summer1 from "@/assets/swiper/summer1.jpg";
-import autumn1 from "@/assets/swiper/autumn1.png";
-import winter1 from "@/assets/swiper/winter1.jpg";
 import spring2 from "@/assets/swiper/spring2.jpg";
 import summer2 from "@/assets/swiper/summer2.jpg";
+import autumn1 from "@/assets/swiper/autumn1.png";
 
 const router = useRouter();
-
-// 轮播图
-const bannerImages = [spring1, summer1, autumn1, winter1];
 
 // 背景图
 const redTourBg = spring2;

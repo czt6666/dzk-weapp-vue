@@ -1,9 +1,5 @@
 <template>
     <div class="page">
-        <div class="banner">
-            <HolidayCarousel />
-        </div>
-
         <div class="toolbar">
             <SearchInput
                 v-model="keyword"
@@ -27,7 +23,6 @@
 
 <script lang="ts" setup name="NewsList">
 import { ref } from "vue";
-import HolidayCarousel from "@/components/HolidayCarousel.vue";
 import NewsListItem from "@/components/listitem/NewsListItem.vue";
 import SmartScrollList from "@/components/base/SmartScrollList.vue";
 import SearchInput from "@/components/input/SearchInput.vue";
@@ -102,12 +97,8 @@ function goDetail(id: number) {
     height: 100%;
     background: $bg-gradient-main;
 
-    .banner {
-        width: 100%;
-        position: relative;
-    }
-
     .toolbar {
+        flex-shrink: 0;
         padding: $spacing-sm $spacing-md;
         background: rgba(255, 255, 255, 0.5);
         backdrop-filter: blur(10px);
@@ -115,11 +106,13 @@ function goDetail(id: number) {
 
     .list {
         flex: 1;
-        height: 500px;
+        min-height: 0;
         padding: $spacing-sm 0 0;
 
-        .scroll-list-item {
-            margin-bottom: $spacing-sm;
+        .scroll-list {
+            display: flex;
+            flex-direction: column;
+            gap: $spacing-sm;
         }
     }
 }

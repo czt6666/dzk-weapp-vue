@@ -5,9 +5,9 @@
         <div class="item-header">
             <h3 class="item-title">{{ info.name }}</h3>
             <div class="header-right">
-            <span :class="['difficulty-tag', `difficulty-${info.difficulty}`]">
-                {{ info.difficulty }}
-            </span>
+                <span :class="['difficulty-tag', `difficulty-${info.difficulty}`]">
+                    {{ info.difficulty }}
+                </span>
                 <div class="favorite-overlay" @click.stop="toggleFavorite">
                     <div class="favorite-btn" :class="{ active: isFavorite }">
                         <img
@@ -152,7 +152,6 @@ const toggleFavorite = () => {
     background: #ffffff;
     border-radius: 8px;
     padding: 16px;
-    margin-bottom: 12px;
     cursor: pointer;
     border: 1px solid #e5e7eb;
     transition: all 0.2s ease;

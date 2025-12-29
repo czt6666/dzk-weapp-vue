@@ -56,6 +56,7 @@ onMounted(async () => {
 
 .news-info {
     height: 100%;
+    overflow-y: auto;
     padding: $spacing-md;
     background: $bg-gradient-main;
 }
@@ -67,14 +68,9 @@ onMounted(async () => {
 }
 
 .content {
-    overflow-y: auto;
     width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(10px);
-    border-radius: $radius-large;
-    padding: $spacing-md;
-    box-shadow: $shadow-md;
+    border-radius: 16px;
+    padding: 12px;
 
     .news-title {
         text-align: center;

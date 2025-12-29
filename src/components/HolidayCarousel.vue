@@ -1,5 +1,5 @@
 <template>
-    <Carousel :images="currentImages" :height="200" />
+    <Carousel :images="currentImages" />
 </template>
 
 <script setup>
@@ -14,15 +14,18 @@ import autumn1 from "@/assets/swiper/autumn1.png";
 import winter1 from "@/assets/swiper/winter1.jpg";
 import default1 from "@/assets/swiper/default1.jpg";
 import default2 from "@/assets/swiper/default2.png";
-import default3 from "@/assets/swiper/default3.jpg";
 import default4 from "@/assets/swiper/default4.jpg";
-import default5 from "@/assets/swiper/default5.png";
 import default6 from "@/assets/swiper/default6.png";
 import default7 from "@/assets/swiper/default7.png";
 import default8 from "@/assets/swiper/default8.png";
 import default9 from "@/assets/swiper/default9.jpg";
 // 节日
+import yuandan from "@/assets/swiper/festival/yuandan.jpg";
+import chunjie from "@/assets/swiper/festival/chunjie.jpg";
 import yuanxiao from "@/assets/swiper/festival/yuanxiao.jpg";
+import qingmingjie from "@/assets/swiper/festival/qingmingjie.jpg";
+import laodong from "@/assets/swiper/festival/laodong.jpg";
+import guoqing from "@/assets/swiper/festival/guoqing.jpg";
 
 // 24节气
 import bailu from "@/assets/swiper/24terms/bailu.jpg";
@@ -64,12 +67,12 @@ function getNow() {
 
 const imageResources = {
     // 节日
-    newYear: [yuanxiao],
-    labourDay: [],
-    qingmingFestival: [],
-    nationalDay: [],
-    springFestival: [],
-    lanternFestival: [],
+    newYear: [yuandan],
+    labourDay: [laodong],
+    qingmingFestival: [qingmingjie],
+    nationalDay: [guoqing],
+    springFestival: [chunjie],
+    lanternFestival: [yuanxiao],
     dragonBoat: [],
     qixi: [],
     midAutumn: [],
@@ -101,24 +104,7 @@ const imageResources = {
     majorSnow: [daxue],
     winterSolstice: [dongzhi],
 
-    // 季节
-    spring: [yushui, spring1, spring2],
-    summer: [yushui, summer1, summer2],
-    autumn: [yushui, autumn1],
-    winter: [yushui, winter1],
-
-    //
-    default: [
-        default1,
-        default2,
-        default3,
-        default4,
-        default5,
-        default6,
-        default7,
-        default8,
-        default9,
-    ],
+    default: [default1, default2, default4, default6, default7, default8, default9],
 };
 
 function getUpcomingFestivals() {
@@ -129,23 +115,14 @@ function getUpcomingFestivals() {
     return all.filter((item) => item.start <= now && item.end >= now);
 }
 
-function getSeasonTheme() {
-    const m = getNow().getMonth() + 1;
-    if (m >= 3 && m <= 5) return "spring";
-    if (m >= 6 && m <= 8) return "summer";
-    if (m >= 9 && m <= 11) return "autumn";
-    return "winter";
-}
-
 const currentImages = computed(() => {
     const festivals = getUpcomingFestivals();
-    const season = getSeasonTheme();
 
     // 节日图片
     const festivalImages = festivals.flatMap((f) => imageResources[f.id] || []);
 
     // 季节图片
-    const seasonImages = imageResources[season] || [];
+    const seasonImages = [spring1, summer1, autumn1, winter1];
 
     const result = [...festivalImages, ...seasonImages];
 
@@ -160,7 +137,6 @@ const currentImages = computed(() => {
             defaultImages.splice(index, 1);
         }
     }
-    console.log(result);
 
     return result;
 });

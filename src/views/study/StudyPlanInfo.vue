@@ -100,9 +100,13 @@ const formatDateTime = (datetime: string | null): string => {
 </script>
 
 <style scoped lang="scss">
+@use "@/styles/variables.scss" as *;
+
 .study-plan-detail {
+    height: 100%;
+    overflow-y: auto;
     padding: $spacing-md;
-    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    background: $bg-gradient-main;
 
     .detail-container {
         max-width: 960px;
@@ -110,17 +114,18 @@ const formatDateTime = (datetime: string | null): string => {
     }
 
     .detail-header {
-        background: #ffffff;
-        padding: 24px 28px;
-        border-radius: 14px;
-        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12);
-        margin-bottom: 20px;
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        padding: $spacing-md;
+        border-radius: $radius-large;
+        box-shadow: $shadow-md;
+        margin-bottom: $spacing-md;
 
         .detail-title {
             font-size: 26px;
             font-weight: 600;
-            color: #111827;
-            margin: 0 0 12px 0;
+            color: $color-green-primary;
+            margin: 0 0 $spacing-md 0;
         }
 
         .header-tags {
@@ -129,45 +134,46 @@ const formatDateTime = (datetime: string | null): string => {
             gap: 10px;
 
             .tag {
-                padding: 4px 10px;
+                padding: 4px $spacing-md;
                 border-radius: 999px;
                 font-size: 13px;
-                background: #eff6ff;
-                color: #1d4ed8;
+                background: rgba($color-green-primary, 0.1);
+                color: $color-green-primary;
             }
 
             .status-tag.status-active {
-                background: #d1fae5;
-                color: #047857;
+                background: $overlay-green-light;
+                color: $color-green-primary;
             }
 
             .status-tag.status-inactive {
-                background: #fee2e2;
-                color: #b91c1c;
+                background: rgba($color-red-primary, 0.1);
+                color: $color-red-primary;
             }
         }
     }
 
     .info-card {
-        background: #ffffff;
-        padding: 20px 24px;
-        border-radius: 14px;
-        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
-        margin-bottom: 18px;
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        padding: $spacing-md;
+        border-radius: $radius-large;
+        box-shadow: $shadow-md;
+        margin-bottom: $spacing-md;
 
         .card-title {
             font-size: 18px;
             font-weight: 600;
-            color: #111827;
-            margin: 0 0 14px 0;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #e5e7eb;
+            color: $color-green-primary;
+            margin: 0 0 $spacing-md 0;
+            padding-bottom: $spacing-sm;
+            border-bottom: 2px solid rgba($color-green-primary, 0.2);
         }
 
         .info-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 16px;
+            gap: $spacing-md;
 
             .info-item {
                 display: flex;
@@ -176,19 +182,19 @@ const formatDateTime = (datetime: string | null): string => {
 
                 label {
                     font-size: 13px;
-                    color: #6b7280;
+                    color: $text-tertiary;
                 }
 
                 span {
                     font-size: 15px;
-                    color: #111827;
+                    color: $text-primary;
                 }
             }
         }
 
         .content-text {
             font-size: 15px;
-            color: #374151;
+            color: $text-primary;
             line-height: 1.8;
             white-space: pre-wrap;
             margin: 0;
@@ -196,7 +202,7 @@ const formatDateTime = (datetime: string | null): string => {
 
         .empty-text {
             font-size: 14px;
-            color: #9ca3af;
+            color: $text-tertiary;
             font-style: italic;
             margin: 0;
         }

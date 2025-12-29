@@ -130,7 +130,6 @@ const toggleFavorite = () => {
     background: #ffffff;
     border-radius: 8px;
     padding: 16px;
-    margin-bottom: 12px;
     cursor: pointer;
     border: 1px solid #e5e7eb;
     transition: all 0.2s ease;
