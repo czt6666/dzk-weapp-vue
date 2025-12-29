@@ -241,7 +241,7 @@ const toggleFavorite = createFavoriteToggle("product", list);
 }
 
 .cart-float {
-    position: fixed;
+    position: absolute;
     bottom: $spacing-xxl;
     right: $spacing-xxl;
     width: 48px;
