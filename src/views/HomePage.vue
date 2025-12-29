@@ -41,6 +41,7 @@
             <section class="news-section">
                 <div class="section-header">
                     <h2 class="section-title red-theme">📰 今日新闻</h2>
+                    <span class="view-all" @click="goToNewsList">查看全部 →</span>
                 </div>
                 <div class="news-scroll-container" ref="newsScrollRef">
                     <div class="news-scroll-wrapper">
@@ -67,6 +68,7 @@
             <section class="hotel-section">
                 <div class="section-header">
                     <h2 class="section-title green-theme">🏡 推荐民宿</h2>
+                    <span class="view-all" @click="goToHotelList">查看全部 →</span>
                 </div>
                 <div class="hotel-carousel-container" ref="hotelCarouselRef">
                     <div
@@ -116,6 +118,7 @@
             <section class="product-section">
                 <div class="section-header">
                     <h2 class="section-title green-theme">🛍️ 特色特产</h2>
+                    <span class="view-all" @click="goToProductList">查看全部 →</span>
                 </div>
                 <div class="product-waterfall">
                     <div
@@ -141,6 +144,7 @@
             <section class="food-section">
                 <div class="section-header">
                     <h2 class="section-title green-theme">🍜 乡村美食</h2>
+                    <span class="view-all" @click="goToRestaurantList">查看全部 →</span>
                 </div>
                 <div class="food-list">
                     <div
@@ -360,6 +364,23 @@ function goToRetirement() {
     router.push("/retirement");
 }
 
+// 跳转到列表页
+function goToNewsList() {
+    router.push("/news");
+}
+
+function goToHotelList() {
+    router.push("/hotels");
+}
+
+function goToProductList() {
+    router.push("/shop");
+}
+
+function goToRestaurantList() {
+    router.push("/restaurant");
+}
+
 // 加载旅游数据
 async function loadTour() {
     try {
@@ -544,6 +565,9 @@ onUnmounted(() => {
 
 // 通用区块样式
 .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 16px;
 
     .section-title {
@@ -558,6 +582,24 @@ onUnmounted(() => {
 
         &.green-theme {
             color: #2e7d32;
+        }
+    }
+
+    .view-all {
+        font-size: 14px;
+        color: #666;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        user-select: none;
+        white-space: nowrap;
+
+        &:hover {
+            color: #2e7d32;
+            transform: translateX(2px);
+        }
+
+        &:active {
+            opacity: 0.7;
         }
     }
 }

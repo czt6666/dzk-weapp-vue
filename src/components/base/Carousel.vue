@@ -12,6 +12,43 @@
                 </div>
             </div>
         </div>
+
+        <!-- 左右控制按钮 -->
+        <div v-if="showButtons && images.length > 1" class="carousel-controls">
+            <button class="carousel-btn prev" @click.stop="goToPrev" :disabled="!bs">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M15 18L9 12L15 6"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    />
+                </svg>
+            </button>
+            <button class="carousel-btn next" @click.stop="goToNext" :disabled="!bs">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M9 18L15 12L9 6"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    />
+                </svg>
+            </button>
+        </div>
+
+        <!-- 底部 dot 指示器 -->
+        <div v-if="showDots && images.length > 1" class="carousel-dots">
+            <span
+                v-for="(_, idx) in images"
+                :key="idx"
+                class="dot"
+                :class="{ active: currentIndex === idx }"
+                @click.stop="goToSlide(idx, $event)"
+            ></span>
+        </div>
     </div>
 </template>
 
@@ -25,10 +62,14 @@ const props = withDefaults(
         slideWidth?: number; // 每张 slide 的宽度（px），可选
         height?: number; // 轮播图高度（px），默认200px
         imageFit?: "cover" | "contain" | "fill"; // 图片填充方式，默认cover
+        showButtons?: boolean; // 是否显示左右控制按钮，默认false
+        showDots?: boolean; // 是否显示底部dot指示器，默认true
     }>(),
     {
         height: 200,
         imageFit: "cover",
+        showButtons: false,
+        showDots: true,
     },
 );
 
@@ -36,6 +77,7 @@ const wrapper = ref<HTMLElement | null>(null);
 const content = ref<HTMLElement | null>(null);
 
 let bs: BScroll | null = null;
+const currentIndex = ref(0);
 
 // 计算每张幻灯片宽度
 const slideWidth = computed(() => {
@@ -66,8 +108,56 @@ const initScroll = async () => {
         momentum: false, // 避免惯性滚动导致跳页
         bounce: false,
         useTransition: true,
-        probeType: 2, // 滚动事件触发时机
+        probeType: 2, // 滚动事件触发时机，用于监听 slideWillChange
+        click: true, // 启用点击事件
+        stopPropagation: true, // 阻止事件冒泡
     });
+
+    // 监听滚动事件，更新当前索引
+    if (bs) {
+        // 监听 slideWillChange 事件，在用户拖动时实时更新索引
+        bs.on("slideWillChange", (page: { pageX: number; pageY: number }) => {
+            currentIndex.value = page.pageX;
+        });
+
+        // 监听 slidePageChanged 事件，当切换完成后更新索引
+        bs.on("slidePageChanged", (page: { pageX: number; pageY: number }) => {
+            currentIndex.value = page.pageX;
+        });
+
+        // 初始化当前索引
+        const page = bs.getCurrentPage();
+        currentIndex.value = page.pageX;
+    }
+};
+
+// 切换到上一张
+const goToPrev = (e?: Event) => {
+    e?.stopPropagation();
+    if (bs) {
+        bs.prev();
+    }
+};
+
+// 切换到下一张
+const goToNext = (e?: Event) => {
+    e?.stopPropagation();
+    if (bs) {
+        bs.next();
+    }
+};
+
+// 切换到指定索引
+const goToSlide = (index: number, e?: Event) => {
+    e?.stopPropagation();
+    console.log("goToSlide:", index);
+
+    if (bs && index >= 0 && index < props.images.length) {
+        // goToPage(pageX, pageY, time, easing)
+        // 横向滚动，所以 pageX 是索引，pageY 是 0
+        bs.goToPage(index, 0);
+        // 不需要手动设置 currentIndex，事件会自动更新
+    }
 };
 
 onMounted(() => {
@@ -134,6 +224,87 @@ watch(
             object-fit: v-bind(imageFit); // 使用动态绑定的填充方式
             display: block;
             transition: transform 0.3s ease;
+        }
+    }
+
+    // 左右控制按钮
+    .carousel-controls {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        padding: 0 12px;
+        pointer-events: none;
+        z-index: 10;
+
+        .carousel-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            cursor: pointer;
+            pointer-events: all;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+
+            svg {
+                width: 24px;
+                height: 24px;
+                pointer-events: none; // 确保 SVG 不阻止按钮的点击事件
+            }
+
+            &:hover:not(:disabled) {
+                background: white;
+                transform: scale(1.1);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            }
+
+            &:active:not(:disabled) {
+                transform: scale(0.95);
+            }
+
+            &:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+        }
+    }
+
+    // 底部 dot 指示器
+    .carousel-dots {
+        position: absolute;
+        bottom: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 8px;
+        z-index: 10;
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+
+            &.active {
+                background: white;
+                width: 24px;
+                border-radius: 4px;
+            }
+
+            &:hover {
+                background: rgba(255, 255, 255, 0.8);
+            }
         }
     }
 }
