@@ -30,6 +30,7 @@ declare module 'vue' {
     StoreListItem: typeof import('./src/components/listitem/StoreListItem.vue')['default']
     StudyActivityListItem: typeof import('./src/components/listitem/StudyActivityListItem.vue')['default']
     StudyPlanListItem: typeof import('./src/components/listitem/StudyPlanListItem.vue')['default']
+    TabBar: typeof import('./src/components/TabBar.vue')['default']
     TopBar: typeof import('./src/components/TopBar.vue')['default']
     TourListItem: typeof import('./src/components/listitem/TourListItem.vue')['default']
   }

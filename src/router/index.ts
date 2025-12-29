@@ -29,11 +29,13 @@ const routes = [
         path: "/",
         name: "HomePage",
         component: HomePage,
+        meta: { isTab: true },
     },
     {
         path: "/login",
         name: "LoginPage",
         component: () => import("../views/LoginPage.vue"),
+        meta: { isTab: true },
     },
     {
         path: "/news",
@@ -50,6 +52,7 @@ const routes = [
         path: "/hotels",
         name: "HotelList",
         component: () => import("../views/hotel/HotelList.vue"),
+        meta: { isTab: true },
     },
     {
         path: "/hotels/:id",
@@ -61,6 +64,7 @@ const routes = [
         path: "/shop",
         name: "ShopList",
         component: () => import("../views/shop/ProductList.vue"),
+        meta: { isTab: true },
     },
     {
         path: "/shop/:id",
@@ -82,6 +86,7 @@ const routes = [
         path: "/restaurant",
         name: "RestaurantList",
         component: () => import("../views/restaurant/StoreList.vue"),
+        meta: { isTab: true },
     },
     {
         path: "/restaurant/order",
