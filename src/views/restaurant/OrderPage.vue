@@ -24,7 +24,8 @@
                     :class="['category-item', { active: activeCategory === cat.id }]"
                     @click="activeCategory = cat.id"
                 >
-                    <span class="cat-icon">{{ cat.icon || "🍽️" }}</span>
+                    <img v-if="cat.imageUrl" class="cat-icon" :src="imgUrl(cat.imageUrl)" alt="" />
+                    <span v-else class="cat-icon">{{ "🍽️" }}</span>
                     <span class="cat-name">{{ cat.categoryName }}</span>
                 </div>
             </aside>
@@ -179,6 +180,29 @@
                         </div>
                     </div>
 
+                    <!-- 地图组件 -->
+                    <div
+                        class="store-detail-section"
+                        v-if="restaurantInfo.coordinateLng && restaurantInfo.coordinateLat"
+                    >
+                        <h4>位置地图</h4>
+                        <div class="map-wrapper">
+                            <MapMark
+                                :marks="[
+                                    {
+                                        lng: restaurantInfo.coordinateLng!,
+                                        lat: restaurantInfo.coordinateLat!,
+                                        name: restaurantInfo.name,
+                                        address: restaurantInfo.address,
+                                        phone: restaurantInfo.phone,
+                                    },
+                                ]"
+                                :showMyLocation="true"
+                                :autoFitView="true"
+                            />
+                        </div>
+                    </div>
+
                     <div class="store-detail-section">
                         <h4>店铺介绍</h4>
                         <p class="store-description">{{ restaurantInfo.notice }}</p>
@@ -201,6 +225,7 @@ import {
     type IDishItem,
 } from "@/apis/restaurant";
 import { imgUrl } from "@/utils";
+import MapMark from "@/components/base/MapMark.vue";
 
 const route = useRoute();
 const cartStore = useCartStore();
@@ -352,6 +377,8 @@ onMounted(async () => {
                 border-left: 3px solid transparent;
 
                 .cat-icon {
+                    width: 32px;
+                    height: 32px;
                     font-size: 24px;
                     margin-bottom: 4px;
                 }
@@ -896,6 +923,15 @@ onMounted(async () => {
                     font-size: 14px;
                     line-height: 1.6;
                     color: #666;
+                }
+
+                .map-wrapper {
+                    width: 100%;
+                    height: 220px;
+                    margin-top: 12px;
+                    border-radius: 8px;
+                    overflow: hidden;
+                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
                 }
             }
         }

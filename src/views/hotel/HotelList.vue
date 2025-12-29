@@ -228,6 +228,7 @@ function goDetail(id: number) {
 }
 .waterfall-list {
     flex: 1;
+    height: 500px;
     overflow-y: auto;
 
     .columns {
