@@ -1,24 +1,29 @@
 <template>
-    <div
-        class="carousel-wrapper"
-        ref="wrapper"
-        :style="{ height: height ? `${height}px` : '100%' }"
-    >
-        <div class="carousel-content" ref="content">
+    <div class="hotel-carousel-wrapper" ref="wrapper" :style="{ height: `${height}px` }">
+        <div class="hotel-carousel-content" ref="content">
             <div
-                class="carousel-slide"
-                v-for="(img, idx) in images"
-                :key="idx"
+                class="hotel-carousel-slide"
+                v-for="(hotel, idx) in hotels"
+                :key="hotel.id"
                 :style="{ width: slideWidth + 'px' }"
             >
-                <div class="carousel-image-container">
-                    <img :src="img" class="carousel-image" :alt="`Slide ${idx + 1}`" />
+                <div class="hotel-card" @click="handleItemClick(hotel)">
+                    <div class="hotel-image">
+                        <img
+                            :src="getImageUrl(hotel.imageUrl || hotel.coverImage)"
+                            :alt="hotel.name"
+                        />
+                        <div class="hotel-label">
+                            <h3 class="hotel-name">{{ hotel.contactName }}</h3>
+                            <p class="hotel-highlight">{{ hotel.homestayName }}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- 左右控制按钮 -->
-        <div v-if="showButtons && images.length > 1" class="carousel-controls">
+        <div v-if="showButtons && hotels.length > 1" class="carousel-controls">
             <button class="carousel-btn prev" @click.stop="goToPrev" :disabled="!bs">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -42,95 +47,74 @@
                 </svg>
             </button>
         </div>
-
-        <!-- 底部 dot 指示器 -->
-        <div v-if="showDots && images.length > 1" class="carousel-dots">
-            <span
-                v-for="(_, idx) in images"
-                :key="idx"
-                class="dot"
-                :class="{ active: currentIndex === idx }"
-                @click.stop="goToSlide(idx, $event)"
-            ></span>
-        </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, watch, nextTick, computed, onUnmounted } from "vue";
 import BScroll from "better-scroll";
+import { imgUrl } from "@/utils";
 
 const props = withDefaults(
     defineProps<{
-        images: string[];
-        slideWidth?: number; // 每张 slide 的宽度（px），可选
-        height?: number; // 轮播图高度（px）
-        showButtons?: boolean; // 是否显示左右控制按钮，默认false
-        showDots?: boolean; // 是否显示底部dot指示器，默认true
+        hotels: any[];
+        height?: number;
+        showButtons?: boolean;
+        getImageUrl?: (url: string) => string;
     }>(),
     {
-        height: undefined,
-        showButtons: false,
-        showDots: true,
+        height: 240,
+        showButtons: true,
     },
 );
+
+const emit = defineEmits<{
+    (e: "item-click", hotel: any): void;
+}>();
 
 const wrapper = ref<HTMLElement | null>(null);
 const content = ref<HTMLElement | null>(null);
 
 let bs: BScroll | null = null;
-const currentIndex = ref(0);
 
 // 计算每张幻灯片宽度
 const slideWidth = computed(() => {
-    if (props.slideWidth) return props.slideWidth;
     return wrapper.value?.clientWidth ?? 0;
 });
 
+// 获取图片 URL
+const getImageUrl = (url: string) => {
+    if (props.getImageUrl) {
+        return props.getImageUrl(url);
+    }
+    return imgUrl(url);
+};
+
 // 初始化 better-scroll
 const initScroll = async () => {
-    await nextTick(); // 确保 DOM 完全渲染
-    if (!wrapper.value || !props.images.length) return;
+    await nextTick();
+    if (!wrapper.value || !props.hotels.length) return;
 
-    // 销毁旧实例
     if (bs) {
         bs.destroy();
         bs = null;
     }
 
-    // 创建新实例
     bs = new BScroll(wrapper.value, {
         scrollX: true,
         scrollY: false,
         slide: {
-            loop: true, // 循环滚动
-            threshold: 100, // 滑动阈值
-            speed: 400, // 滑动速度
+            loop: true,
+            threshold: 100,
+            speed: 400,
         },
-        momentum: false, // 避免惯性滚动导致跳页
+        momentum: false,
         bounce: false,
         useTransition: true,
-        probeType: 2, // 滚动事件触发时机，用于监听 slideWillChange
-        click: true, // 启用点击事件
-        stopPropagation: true, // 阻止事件冒泡
+        probeType: 2,
+        click: true,
+        stopPropagation: true,
     });
-
-    // 监听滚动事件，更新当前索引
-    if (bs) {
-        // 监听 slideWillChange 事件，在用户拖动时实时更新索引
-        bs.on("slideWillChange", (page: { pageX: number; pageY: number }) => {
-            currentIndex.value = page.pageX;
-        });
-
-        // 监听 slidePageChanged 事件，当切换完成后更新索引
-        bs.on("slidePageChanged", (page: { pageX: number; pageY: number }) => {
-            currentIndex.value = page.pageX;
-        });
-
-        // 初始化当前索引
-        const page = bs.getCurrentPage();
-        currentIndex.value = page.pageX;
-    }
 };
 
 // 切换到上一张
@@ -149,26 +133,16 @@ const goToNext = (e?: Event) => {
     }
 };
 
-// 切换到指定索引
-const goToSlide = (index: number, e?: Event) => {
-    e?.stopPropagation();
-
-    if (bs && index >= 0 && index < props.images.length) {
-        // goToPage(pageX, pageY, time, easing)
-        // 横向滚动，所以 pageX 是索引，pageY 是 0
-        bs.goToPage(index, 0);
-        // 不需要手动设置 currentIndex，事件会自动更新
-    }
+// 处理项目点击
+const handleItemClick = (hotel: any) => {
+    emit("item-click", hotel);
 };
 
 onMounted(() => {
     initScroll();
-
-    // 监听窗口 resize，重新计算宽度
     window.addEventListener("resize", initScroll);
 });
 
-// 组件卸载时清理
 onUnmounted(() => {
     if (bs) {
         bs.destroy();
@@ -177,16 +151,14 @@ onUnmounted(() => {
     window.removeEventListener("resize", initScroll);
 });
 
-// 监听图片列表变化，重新初始化
 watch(
-    () => props.images,
+    () => props.hotels,
     () => {
         initScroll();
     },
     { deep: true },
 );
 
-// 监听高度变化，重新初始化
 watch(
     () => props.height,
     () => {
@@ -196,39 +168,69 @@ watch(
 </script>
 
 <style lang="scss" scoped>
-.carousel-wrapper {
+.hotel-carousel-wrapper {
     overflow: hidden;
     width: 100%;
     position: relative;
+    border-radius: 16px;
 
-    .carousel-content {
+    .hotel-carousel-content {
         height: 100%;
         white-space: nowrap;
         display: inline-block;
     }
 
-    .carousel-slide {
+    .hotel-carousel-slide {
         display: inline-block;
         vertical-align: top;
         height: 100%;
 
-        .carousel-image-container {
+        .hotel-card {
             width: 100%;
             height: 100%;
-            overflow: hidden;
             position: relative;
-        }
+            cursor: pointer;
 
-        .carousel-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; // 使用动态绑定的填充方式
-            display: block;
-            transition: transform 0.3s ease;
+            .hotel-image {
+                width: 100%;
+                height: 100%;
+                position: relative;
+
+                img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+
+                .hotel-label {
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+                    padding: 10px 16px;
+                    background: linear-gradient(
+                        to top,
+                        rgba(46, 125, 50, 0.9),
+                        rgba(46, 125, 50, 0.6)
+                    );
+                    color: white;
+
+                    .hotel-name {
+                        font-size: 18px;
+                        font-weight: 600;
+                        margin: 0 0 2px 0;
+                    }
+
+                    .hotel-highlight {
+                        font-size: 13px;
+                        margin: 0;
+                        opacity: 0.9;
+                    }
+                }
+            }
         }
     }
 
-    // 左右控制按钮
     .carousel-controls {
         position: absolute;
         top: 50%;
@@ -258,7 +260,7 @@ watch(
             svg {
                 width: 24px;
                 height: 24px;
-                pointer-events: none; // 确保 SVG 不阻止按钮的点击事件
+                pointer-events: none;
             }
 
             &:hover:not(:disabled) {
@@ -274,37 +276,6 @@ watch(
             &:disabled {
                 opacity: 0.5;
                 cursor: not-allowed;
-            }
-        }
-    }
-
-    // 底部 dot 指示器
-    .carousel-dots {
-        position: absolute;
-        bottom: 16px;
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        gap: 8px;
-        z-index: 10;
-
-        .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.5);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            flex-shrink: 0;
-
-            &.active {
-                background: white;
-                width: 24px;
-                border-radius: 4px;
-            }
-
-            &:hover {
-                background: rgba(255, 255, 255, 0.8);
             }
         }
     }

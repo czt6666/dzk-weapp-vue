@@ -13,25 +13,7 @@
                 </div>
             </div>
             <div class="carousel-wrapper">
-                <div class="carousel-container" ref="carouselRef">
-                    <div
-                        v-for="(img, index) in bannerImages"
-                        :key="index"
-                        class="carousel-item"
-                        :class="{ active: currentBannerIndex === index }"
-                    >
-                        <img :src="img" :alt="`风景图${index + 1}`" />
-                    </div>
-                </div>
-                <div class="carousel-dots">
-                    <span
-                        v-for="(_, index) in bannerImages"
-                        :key="index"
-                        class="dot"
-                        :class="{ active: currentBannerIndex === index }"
-                        @click="switchBanner(index)"
-                    ></span>
-                </div>
+                <Carousel :images="bannerImages" />
             </div>
         </header>
 
@@ -70,48 +52,12 @@
                     <h2 class="section-title green-theme">🏡 推荐民宿</h2>
                     <span class="view-all" @click="goToHotelList">查看全部 →</span>
                 </div>
-                <div class="hotel-carousel-container" ref="hotelCarouselRef">
-                    <div
-                        class="hotel-carousel-wrapper"
-                        :style="{ transform: `translateX(-${hotelCarouselIndex * 100}%)` }"
-                    >
-                        <div
-                            v-for="hotel in hotelList"
-                            :key="hotel.id"
-                            class="hotel-card"
-                            @click="goToHotel(hotel.id)"
-                        >
-                            <div class="hotel-image">
-                                <img
-                                    :src="imgUrl(hotel.imageUrl || hotel.coverImage)"
-                                    :alt="hotel.name"
-                                />
-                                <div class="hotel-label green-label">
-                                    <h3 class="hotel-name">{{ hotel.name }}</h3>
-                                    <p class="hotel-highlight">
-                                        {{ hotel.highlight || "舒适宜居" }}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-controls">
-                        <button
-                            class="carousel-btn prev"
-                            @click="prevHotel"
-                            :disabled="hotelCarouselIndex === 0"
-                        >
-                            ‹
-                        </button>
-                        <button
-                            class="carousel-btn next"
-                            @click="nextHotel"
-                            :disabled="hotelCarouselIndex >= hotelList.length - 1"
-                        >
-                            ›
-                        </button>
-                    </div>
-                </div>
+                <HotelCarousel
+                    :hotels="hotelList"
+                    :height="240"
+                    :show-buttons="true"
+                    @item-click="(hotel) => goToHotel(hotel.id)"
+                />
             </section>
 
             <!-- 3. 特色特产 - 瀑布流 -->
@@ -227,6 +173,8 @@ import { getTourRouteList } from "@/apis/tour";
 import { getStudyPlanList } from "@/apis/study";
 import { getRetirementStationList } from "@/apis/retirement";
 import { imgUrl } from "@/utils";
+import Carousel from "@/components/base/Carousel.vue";
+import HotelCarousel from "@/components/HotelCarousel.vue";
 import spring1 from "@/assets/swiper/spring1.jpg";
 import summer1 from "@/assets/swiper/summer1.jpg";
 import autumn1 from "@/assets/swiper/autumn1.png";
@@ -238,8 +186,6 @@ const router = useRouter();
 
 // 轮播图
 const bannerImages = [spring1, summer1, autumn1, winter1];
-const currentBannerIndex = ref(0);
-let bannerTimer: number | null = null;
 
 // 背景图
 const redTourBg = spring2;
@@ -254,38 +200,6 @@ const restaurantList = ref<any[]>([]);
 const tourDesc = ref("");
 const studyDesc = ref("");
 const retirementDesc = ref("");
-
-// 民宿轮播
-const hotelCarouselIndex = ref(0);
-const hotelCarouselRef = ref<HTMLElement | null>(null);
-
-// 轮播图自动切换
-function startBannerCarousel() {
-    bannerTimer = window.setInterval(() => {
-        currentBannerIndex.value = (currentBannerIndex.value + 1) % bannerImages.length;
-    }, 4000);
-}
-
-function switchBanner(index: number) {
-    currentBannerIndex.value = index;
-    if (bannerTimer) {
-        clearInterval(bannerTimer);
-        startBannerCarousel();
-    }
-}
-
-// 民宿轮播控制
-function prevHotel() {
-    if (hotelCarouselIndex.value > 0) {
-        hotelCarouselIndex.value--;
-    }
-}
-
-function nextHotel() {
-    if (hotelCarouselIndex.value < hotelList.value.length - 1) {
-        hotelCarouselIndex.value++;
-    }
-}
 
 // 格式化日期
 function formatDate(dateStr: string) {
@@ -421,7 +335,6 @@ async function loadRetirement() {
 }
 
 onMounted(() => {
-    startBannerCarousel();
     loadNews();
     loadHotels();
     loadProducts();
@@ -429,12 +342,6 @@ onMounted(() => {
     loadTour();
     loadStudy();
     loadRetirement();
-});
-
-onUnmounted(() => {
-    if (bannerTimer) {
-        clearInterval(bannerTimer);
-    }
 });
 </script>
 
@@ -460,6 +367,7 @@ onUnmounted(() => {
         bottom: 0;
         background: linear-gradient(to bottom, rgba(198, 40, 40, 0.3), rgba(255, 255, 255, 0.1));
         z-index: 2;
+        pointer-events: none;
     }
 
     .logo-section {
@@ -503,56 +411,6 @@ onUnmounted(() => {
         position: relative;
         width: 100%;
         height: 100%;
-
-        .carousel-container {
-            width: 100%;
-            height: 100%;
-
-            .carousel-item {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                opacity: 0;
-                transition: opacity 1s ease-in-out;
-
-                &.active {
-                    opacity: 1;
-                }
-
-                img {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                }
-            }
-        }
-
-        .carousel-dots {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 8px;
-            z-index: 3;
-
-            .dot {
-                width: 8px;
-                height: 8px;
-                border-radius: 50%;
-                background: rgba(255, 255, 255, 0.5);
-                cursor: pointer;
-                transition: all 0.3s ease;
-
-                &.active {
-                    background: white;
-                    width: 24px;
-                    border-radius: 4px;
-                }
-            }
-        }
     }
 }
 
@@ -706,102 +564,6 @@ onUnmounted(() => {
 // 2. 民宿概览 - 横向轮播
 .hotel-section {
     margin-bottom: 32px;
-
-    .hotel-carousel-container {
-        position: relative;
-        width: 100%;
-        height: 240px;
-        border-radius: 16px;
-        overflow: hidden;
-
-        .hotel-carousel-wrapper {
-            display: flex;
-            width: 100%;
-            height: 100%;
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-
-            .hotel-card {
-                flex-shrink: 0;
-                width: 100%;
-                height: 100%;
-                position: relative;
-                cursor: pointer;
-
-                .hotel-image {
-                    width: 100%;
-                    height: 100%;
-                    position: relative;
-
-                    img {
-                        width: 100%;
-                        height: 100%;
-                        object-fit: cover;
-                    }
-
-                    .hotel-label {
-                        position: absolute;
-                        bottom: 0;
-                        left: 0;
-                        right: 0;
-                        padding: 16px;
-                        background: linear-gradient(
-                            to top,
-                            rgba(46, 125, 50, 0.9),
-                            rgba(46, 125, 50, 0.6)
-                        );
-                        color: white;
-
-                        .hotel-name {
-                            font-size: 18px;
-                            font-weight: 600;
-                            margin: 0 0 4px 0;
-                        }
-
-                        .hotel-highlight {
-                            font-size: 13px;
-                            margin: 0;
-                            opacity: 0.9;
-                        }
-                    }
-                }
-            }
-        }
-
-        .carousel-controls {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            padding: 0 12px;
-            pointer-events: none;
-
-            .carousel-btn {
-                width: 40px;
-                height: 40px;
-                border-radius: 50%;
-                background: rgba(255, 255, 255, 0.9);
-                border: none;
-                font-size: 24px;
-                color: #2e7d32;
-                cursor: pointer;
-                pointer-events: all;
-                transition: all 0.3s ease;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-
-                &:hover:not(:disabled) {
-                    background: white;
-                    transform: scale(1.1);
-                }
-
-                &:disabled {
-                    opacity: 0.5;
-                    cursor: not-allowed;
-                }
-            }
-        }
-    }
 }
 
 // 3. 特色特产 - 瀑布流

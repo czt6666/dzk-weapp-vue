@@ -1,5 +1,5 @@
 <template>
-    <Carousel :images="currentImages" />
+    <Carousel :images="currentImages" :height="200" />
 </template>
 
 <script setup>

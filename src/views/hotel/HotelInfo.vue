@@ -5,7 +5,6 @@
         <div class="cover-wrapper">
             <img class="cover" :src="imgUrl(info.coverImage)" alt="封面" />
             <div class="title-bar">
-                <div class="back" @click="router.back()">←</div>
                 <div class="title">{{ info.homestayName }}</div>
             </div>
         </div>
@@ -122,11 +121,6 @@ onMounted(async () => {
             color: #fff;
             text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
 
-            .back {
-                font-size: 20px;
-                cursor: pointer;
-                margin-right: 8px;
-            }
             .title {
                 font-size: 18px;
                 font-weight: bold;
