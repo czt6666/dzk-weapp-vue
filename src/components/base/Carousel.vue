@@ -12,7 +12,12 @@
                 :style="{ width: slideWidth + 'px' }"
             >
                 <div class="carousel-image-container">
-                    <el-image :src="img" class="carousel-image" :alt="`Slide ${idx + 1}`" fit="cover" />
+                    <el-image
+                        :src="img"
+                        class="carousel-image"
+                        :alt="`Slide ${idx + 1}`"
+                        fit="cover"
+                    />
                 </div>
             </div>
         </div>
@@ -110,6 +115,7 @@ const initScroll = async () => {
         momentum: false, // 避免惯性滚动导致跳页
         bounce: false,
         useTransition: true,
+        eventPassthrough: "vertical",
         probeType: 2, // 滚动事件触发时机，用于监听 slideWillChange
         click: true, // 启用点击事件
         stopPropagation: true, // 阻止事件冒泡

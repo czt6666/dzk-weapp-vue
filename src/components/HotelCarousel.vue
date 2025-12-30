@@ -112,6 +112,7 @@ const initScroll = async () => {
         momentum: false,
         bounce: false,
         useTransition: true,
+        eventPassthrough: "vertical",
         probeType: 2,
         click: true,
         stopPropagation: true,

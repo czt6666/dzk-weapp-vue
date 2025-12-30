@@ -24,7 +24,13 @@
                     :class="['category-item', { active: activeCategory === cat.id }]"
                     @click="activeCategory = cat.id"
                 >
-                    <el-image v-if="cat.imageUrl" class="cat-icon" :src="imgUrl(cat.imageUrl)" alt="" fit="cover" />
+                    <el-image
+                        v-if="cat.imageUrl"
+                        class="cat-icon"
+                        :src="imgUrl(cat.imageUrl)"
+                        alt=""
+                        fit="cover"
+                    />
                     <span v-else class="cat-icon">{{ "🍽️" }}</span>
                     <span class="cat-name">{{ cat.categoryName }}</span>
                 </div>

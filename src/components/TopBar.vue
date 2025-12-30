@@ -57,6 +57,11 @@ const goBack = () => {
 .back-btn {
     background: transparent;
     cursor: pointer;
+    padding: 8px;
+    margin: -8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .title {
