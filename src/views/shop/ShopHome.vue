@@ -2,7 +2,7 @@
     <div class="shop-page">
         <!-- Header -->
         <div class="header">
-            <img :src="avatarUrl" alt="店铺头像" class="avatar" />
+            <el-image :src="avatarUrl" alt="店铺头像" class="avatar" fit="cover" />
             <div class="shop-info">
                 <h2 class="shop-name">{{ shop.shopName }}</h2>
                 <p class="sub-info">乡村 · {{ shop.village }}</p>
@@ -28,7 +28,7 @@
             <h3 class="section-title">商品</h3>
             <div class="product-list">
                 <div v-for="item in products" :key="item.id" class="product-card">
-                    <img :src="item.img" class="product-img" />
+                    <el-image :src="item.img" class="product-img" fit="cover" />
                     <p class="product-name">{{ item.name }}</p>
                     <p class="product-price">￥{{ item.price }}</p>
                 </div>
@@ -87,12 +87,17 @@ const products = ref([
     box-shadow: $shadow-md;
 }
 
-.avatar {
+:deep(.avatar) {
     width: 60px;
     height: 60px;
     border-radius: 50%;
     border: 3px solid #d39f5a; /* 乡村泥土色 */
-    object-fit: cover;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 }
 
 .shop-info {
@@ -172,11 +177,16 @@ const products = ref([
     }
 }
 
-.product-img {
+:deep(.product-img) {
     width: 100%;
     height: 120px;
-    object-fit: cover;
     border-radius: 8px;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 }
 
 .product-name {

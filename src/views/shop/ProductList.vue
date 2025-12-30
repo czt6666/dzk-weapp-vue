@@ -179,11 +179,11 @@ function waitForAllImagesLoaded(): Promise<void> {
 }
 
 function openProduct(item: IProduct) {
-    router.push(`/shop/${item.id}`);
+    router.push({ name: "ShopInfo", params: { id: item.id } });
 }
 
 function goFavorites() {
-    router.push("/shop/favorites");
+    router.push({ name: "ShopFavorites" });
 }
 
 // 使用生成器创建收藏切换函数

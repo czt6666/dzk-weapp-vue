@@ -81,7 +81,7 @@
         <section class="section" v-if="photos.length">
             <h2 class="title">🖼 环境照片</h2>
             <div class="gallery">
-                <img v-for="p in photos" :key="p" :src="p" alt="环境照片" />
+                <el-image v-for="p in photos" :key="p" :src="p" alt="环境照片" fit="cover" />
             </div>
         </section>
     </div>
@@ -253,11 +253,16 @@ const photos = computed(() =>
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 10px;
 
-    img {
+    :deep(.el-image) {
         width: 100%;
         height: 110px;
-        object-fit: cover;
         border-radius: 10px;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
     }
 }
 </style>

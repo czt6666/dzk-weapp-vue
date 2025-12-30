@@ -3,16 +3,17 @@
         <!-- 预览区：轮播主图 + 缩略图 -->
         <div class="preview">
             <div class="main-img-box">
-                <img :src="imgUrl(currentImage)" class="main-img" />
+                <el-image :src="imgUrl(currentImage)" class="main-img" fit="contain" />
             </div>
 
             <div class="thumbs">
-                <img
+                <el-image
                     v-for="(img, idx) in product.previewImages"
                     :key="idx"
                     :src="imgUrl(img)"
                     :class="{ active: idx === currentIndex }"
                     @click="setCurrentImage(idx)"
+                    fit="cover"
                 />
             </div>
         </div>
@@ -26,18 +27,19 @@
 
         <!-- 详情长图 -->
         <div class="detail">
-            <img
+            <el-image
                 v-for="(img, idx) in product.detailImages"
                 :key="idx"
                 :src="imgUrl(img)"
                 class="detail-img"
+                fit="contain"
             />
         </div>
     </div>
     <!-- 底部操作栏 -->
     <div class="bottom-bar">
         <div class="merchant" @click="goToShopInfo">
-            <img :src="imgUrl(product.shopAvatar)" />
+            <el-image :src="imgUrl(product.shopAvatar)" fit="cover" />
             <span>{{ product.storeName }}</span>
         </div>
 
@@ -186,13 +188,18 @@ function goToShopInfo() {
             background: #f6f6f6;
             border-radius: 12px;
 
-            .main-img {
+            :deep(.main-img) {
                 position: absolute;
                 inset: 0;
                 width: 100%;
                 height: 100%;
-                object-fit: contain;
-                border-radius: $radius-medium;
+
+                img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: contain;
+                    border-radius: $radius-medium;
+                }
             }
         }
 
@@ -202,15 +209,20 @@ function goToShopInfo() {
             gap: $spacing-md;
             justify-content: center;
 
-            img {
+            :deep(.el-image) {
                 width: 70px;
                 height: 70px;
                 border-radius: $radius-small;
-                object-fit: cover;
                 opacity: 0.6;
                 cursor: pointer;
                 transition: $transition-fast;
                 border: 2px solid transparent;
+
+                img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
 
                 &.active {
                     opacity: 1;
@@ -246,13 +258,17 @@ function goToShopInfo() {
 
     /* 商品长图 */
     .detail {
-        .detail-img {
+        :deep(.detail-img) {
             width: 100%;
             border-radius: $radius-small;
             background: rgba(255, 255, 255, 0.8);
             margin-bottom: $spacing-md;
-            object-fit: contain;
             box-shadow: $shadow-sm;
+
+            img {
+                width: 100%;
+                object-fit: contain;
+            }
         }
     }
 }
@@ -283,10 +299,16 @@ function goToShopInfo() {
         cursor: pointer;
         flex: 1;
 
-        img {
+        :deep(.el-image) {
             width: 32px;
             height: 32px;
             border-radius: 50%;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
         }
         span {
             font-size: 14px;

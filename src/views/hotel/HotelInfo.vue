@@ -3,7 +3,7 @@
     <div v-else class="hotel-detail">
         <!-- 顶部封面 -->
         <div class="cover-wrapper">
-            <img class="cover" :src="imgUrl(info.coverImage)" alt="封面" />
+            <el-image class="cover" :src="imgUrl(info.coverImage)" alt="封面" fit="cover" />
             <div class="title-bar">
                 <div class="title">{{ info.homestayName }}</div>
             </div>
@@ -107,10 +107,15 @@ onMounted(async () => {
     .cover-wrapper {
         position: relative;
 
-        .cover {
+        :deep(.cover) {
             width: 100%;
             height: 220px;
-            object-fit: cover;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
         }
 
         .title-bar {

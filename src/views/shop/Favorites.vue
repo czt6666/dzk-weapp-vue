@@ -9,7 +9,7 @@
         <section v-if="favorite.list.length" class="favorites-grid">
             <div v-for="item in favorite.list" :key="item.id" class="favorite-card">
                 <div class="thumb" @click="goDetail(item)">
-                    <img :src="imgUrl(item.previewImage)" alt="商品图片" />
+                    <el-image :src="imgUrl(item.previewImage)" alt="商品图片" fit="cover" />
                 </div>
                 <div class="info">
                     <h3>{{ item.title }}</h3>
@@ -60,7 +60,7 @@ function openLink(link: string) {
 
 // 跳转商品详情
 function goDetail(item: any) {
-    router.push(`/shop/detail/${item.spuId || item.id}`);
+    router.push({ name: "ShopInfo", params: { id: item.spuId || item.id } });
 }
 </script>
 
@@ -122,17 +122,22 @@ function goDetail(item: any) {
     cursor: pointer;
 }
 
-.thumb img {
+.thumb :deep(.el-image) {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
 }
 
-.thumb:hover img {
+.thumb:hover :deep(.el-image img) {
     transform: scale(1.05);
 }
 

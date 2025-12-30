@@ -9,9 +9,10 @@
             >
                 <div class="hotel-card" @click="handleItemClick(hotel)">
                     <div class="hotel-image">
-                        <img
+                        <el-image
                             :src="getImageUrl(hotel.imageUrl || hotel.coverImage)"
                             :alt="hotel.name"
+                            fit="cover"
                         />
                         <div class="hotel-label">
                             <h3 class="hotel-name">{{ hotel.contactName }}</h3>
@@ -198,10 +199,15 @@ watch(
                 height: 100%;
                 position: relative;
 
-                img {
+                :deep(.el-image) {
                     width: 100%;
                     height: 100%;
-                    object-fit: cover;
+
+                    img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                    }
                 }
 
                 .hotel-label {

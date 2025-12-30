@@ -83,7 +83,7 @@ async function onLoadMore() {
 }
 
 function goDetail(id: number) {
-    router.push(`/news/${id}`);
+    router.push({ name: "NewsInfo", params: { id } });
 }
 </script>
 

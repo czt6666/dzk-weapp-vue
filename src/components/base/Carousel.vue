@@ -12,7 +12,7 @@
                 :style="{ width: slideWidth + 'px' }"
             >
                 <div class="carousel-image-container">
-                    <img :src="img" class="carousel-image" :alt="`Slide ${idx + 1}`" />
+                    <el-image :src="img" class="carousel-image" :alt="`Slide ${idx + 1}`" fit="cover" />
                 </div>
             </div>
         </div>
@@ -219,12 +219,17 @@ watch(
             position: relative;
         }
 
-        .carousel-image {
+        :deep(.carousel-image) {
             width: 100%;
             height: 100%;
-            object-fit: cover; // 使用动态绑定的填充方式
             display: block;
-            transition: transform 0.3s ease;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: transform 0.3s ease;
+            }
         }
     }
 

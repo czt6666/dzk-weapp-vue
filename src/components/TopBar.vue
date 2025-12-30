@@ -19,12 +19,14 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 const router = useRouter();
 const route = useRoute();
 
-const title = (route.meta.title as string) || "";
+// 使用computed让title响应式更新
+const title = computed(() => (route.meta.title as string) || "");
 
 const showBack = ref(false);
 
@@ -45,9 +47,6 @@ const goBack = () => {
 
 <style scoped lang="scss">
 .mobile-header {
-    // position: fixed;
-    // top: 0;
-    // left: 0;
     width: 100%;
     display: flex;
     align-items: center;

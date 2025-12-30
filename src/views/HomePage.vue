@@ -34,7 +34,11 @@
                             @click="goToNews(item.id)"
                         >
                             <div class="news-image">
-                                <img :src="imgUrl(item.imageUrl)" :alt="item.title" />
+                                <el-image
+                                    :src="imgUrl(item.imageUrl)"
+                                    :alt="item.title"
+                                    fit="cover"
+                                />
                                 <div class="news-overlay red-overlay"></div>
                             </div>
                             <div class="news-content">
@@ -60,33 +64,7 @@
                 />
             </section>
 
-            <!-- 3. 特色特产 - 瀑布流 -->
-            <section class="product-section">
-                <div class="section-header">
-                    <h2 class="section-title green-theme">🛍️ 特色特产</h2>
-                    <span class="view-all" @click="goToProductList">查看全部 →</span>
-                </div>
-                <div class="product-waterfall">
-                    <div
-                        v-for="product in productList"
-                        :key="product.id"
-                        class="product-item"
-                        @click="goToProduct(product.id)"
-                    >
-                        <div class="product-image">
-                            <img :src="imgUrl(product.previewImages[0])" :alt="product.title" />
-                            <div class="product-label green-label">
-                                <span class="product-price"
-                                    >¥{{ product.specifications[0].price || "询价" }}</span
-                                >
-                            </div>
-                        </div>
-                        <h4 class="product-title">{{ product.title }}</h4>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 4. 乡村美食 - 竖向列表 -->
+            <!-- 3. 乡村美食 - 竖向列表 -->
             <section class="food-section">
                 <div class="section-header">
                     <h2 class="section-title green-theme">🍜 乡村美食</h2>
@@ -100,12 +78,46 @@
                         @click="goToRestaurant(restaurant.id)"
                     >
                         <div class="food-image">
-                            <img :src="imgUrl(restaurant.logoUrl)" :alt="restaurant.name" />
+                            <el-image
+                                :src="imgUrl(restaurant.logoUrl)"
+                                :alt="restaurant.name"
+                                fit="cover"
+                            />
                         </div>
                         <div class="food-content green-content">
                             <h3 class="food-name">{{ restaurant.name }}</h3>
                             <p class="food-desc">{{ restaurant.notice || "田园风味，健康美味" }}</p>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. 特色特产 - 瀑布流 -->
+            <section class="product-section">
+                <div class="section-header">
+                    <h2 class="section-title green-theme">🛍️ 特色特产</h2>
+                    <span class="view-all" @click="goToProductList">查看全部 →</span>
+                </div>
+                <div class="product-waterfall">
+                    <div
+                        v-for="product in productList"
+                        :key="product.id"
+                        class="product-item"
+                        @click="goToProduct(product.id)"
+                    >
+                        <div class="product-image">
+                            <el-image
+                                :src="imgUrl(product.previewImages[0])"
+                                :alt="product.title"
+                                fit="cover"
+                            />
+                            <div class="product-label green-label">
+                                <span class="product-price"
+                                    >¥{{ product.specifications[0].price || "询价" }}</span
+                                >
+                            </div>
+                        </div>
+                        <h4 class="product-title">{{ product.title }}</h4>
                     </div>
                 </div>
             </section>
@@ -242,15 +254,15 @@ async function loadRestaurants() {
 
 // 导航
 function goToNews(id: number) {
-    router.push(`/news/${id}`);
+    router.push({ name: "NewsInfo", params: { id } });
 }
 
 function goToHotel(id: number) {
-    router.push(`/hotels/${id}`);
+    router.push({ name: "HotelInfo", params: { id } });
 }
 
 function goToProduct(id: number) {
-    router.push(`/shop/${id}`);
+    router.push({ name: "ShopInfo", params: { id } });
 }
 
 function goToRestaurant(id: number) {
@@ -261,32 +273,32 @@ function goToRestaurant(id: number) {
 }
 
 function goToTour() {
-    router.push("/tour");
+    router.push({ name: "TourList" });
 }
 
 function goToStudy() {
-    router.push("/study");
+    router.push({ name: "StudyList" });
 }
 
 function goToRetirement() {
-    router.push("/retirement");
+    router.push({ name: "RetirementList" });
 }
 
 // 跳转到列表页
 function goToNewsList() {
-    router.push("/news");
+    router.push({ name: "NewsList" });
 }
 
 function goToHotelList() {
-    router.push("/hotels");
+    router.push({ name: "HotelList" });
 }
 
 function goToProductList() {
-    router.push("/shop");
+    router.push({ name: "ShopList" });
 }
 
 function goToRestaurantList() {
-    router.push("/restaurant");
+    router.push({ name: "RestaurantList" });
 }
 
 // 加载旅游数据
@@ -500,11 +512,16 @@ onMounted(() => {
                 width: 100%;
                 height: 100%;
 
-                img {
+                :deep(.el-image) {
                     width: 100%;
                     height: 100%;
-                    object-fit: cover;
-                    transition: transform 0.3s ease;
+
+                    img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                        transition: transform 0.3s ease;
+                    }
                 }
 
                 .news-overlay {
@@ -547,7 +564,7 @@ onMounted(() => {
                 }
             }
 
-            &:hover .news-image img {
+            &:hover .news-image :deep(.el-image img) {
                 transform: scale(1.05);
             }
         }
@@ -584,11 +601,16 @@ onMounted(() => {
                 overflow: hidden;
                 margin-bottom: 8px;
 
-                img {
+                :deep(.el-image) {
                     width: 100%;
                     height: 100%;
-                    object-fit: cover;
-                    transition: transform 0.3s ease;
+
+                    img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                        transition: transform 0.3s ease;
+                    }
                 }
 
                 .product-label {
@@ -617,7 +639,7 @@ onMounted(() => {
                 overflow: hidden;
             }
 
-            &:hover .product-image img {
+            &:hover .product-image :deep(.el-image img) {
                 transform: scale(1.05);
             }
         }
@@ -652,10 +674,15 @@ onMounted(() => {
                 width: 140px;
                 height: 100%;
 
-                img {
+                :deep(.el-image) {
                     width: 100%;
                     height: 100%;
-                    object-fit: cover;
+
+                    img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                    }
                 }
             }
 

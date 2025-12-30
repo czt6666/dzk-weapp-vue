@@ -173,7 +173,7 @@ function waitForAllImagesLoaded(): Promise<void> {
 }
 
 function goDetail(id: number) {
-    router.push(`/hotels/${id}`);
+    router.push({ name: "HotelInfo", params: { id } });
 }
 </script>
 

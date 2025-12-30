@@ -9,18 +9,24 @@
                 <component v-else :is="Component" :key="currentRoute.path" />
             </RouterView>
         </div>
-        <TabBar />
+        <TabBar v-show="showTabBar" />
     </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { ref, computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import TopBar from "@/components/TopBar.vue";
 import TabBar from "@/components/TabBar.vue";
 
 const router = useRouter();
+const route = useRoute();
 const shouldTransition = ref(false);
+
+// 根据路由meta.isTab控制TabBar显示
+const showTabBar = computed(() => {
+    return route.meta.isTab === true;
+});
 
 // 使用路由守卫来检测是否是 tab 之间的切换
 router.beforeEach((to, from) => {

@@ -4,8 +4,8 @@
             v-for="item in tabItems"
             :key="item.name"
             class="tab-item"
-            :class="{ active: isActive(item.route) }"
-            @click="handleTabClick(item.route)"
+            :class="{ active: isActive(item.routeName) }"
+            @click="handleTabClick(item.routeName)"
         >
             <div class="tab-icon">
                 <span class="icon">{{ item.icon }}</span>
@@ -23,28 +23,24 @@ const route = useRoute();
 
 interface TabItem {
     name: string;
-    route: string;
+    routeName: string;
     icon: string;
 }
 
 const tabItems: TabItem[] = [
-    { name: "首页", route: "/", icon: "🌟" },
-    { name: "民宿", route: "/hotels", icon: "🏡" },
-    { name: "商城", route: "/shop", icon: "🛍️" },
-    { name: "美食", route: "/restaurant", icon: "🍜" },
-    { name: "登录", route: "/login", icon: "👤" },
+    { name: "首页", routeName: "HomePage", icon: "🌟" },
+    { name: "新闻", routeName: "NewsList", icon: "📰" },
+    { name: "民宿", routeName: "HotelList", icon: "🏡" },
+    { name: "登录", routeName: "LoginPage", icon: "👤" },
 ];
 
-function isActive(routePath: string): boolean {
-    if (routePath === "/") {
-        return route.path === "/";
-    }
-    return route.path.startsWith(routePath);
+function isActive(routeName: string): boolean {
+    return route.name === routeName;
 }
 
-function handleTabClick(routePath: string) {
-    if (route.path !== routePath) {
-        router.push(routePath);
+function handleTabClick(routeName: string) {
+    if (route.name !== routeName) {
+        router.push({ name: routeName });
     }
 }
 </script>

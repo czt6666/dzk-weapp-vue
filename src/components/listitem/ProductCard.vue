@@ -1,7 +1,7 @@
 <template>
     <article class="product-card" @click="openDetail" :data-waterfall-id="item.id">
         <div class="thumb">
-            <img :src="imgUrl(firstImage)" alt="预览" />
+            <el-image :src="imgUrl(firstImage)" alt="预览" fit="cover" />
             <span v-if="item.status !== 1" class="status" :class="item.status">已下架</span>
 
             <!-- 收藏按钮 -->
@@ -103,14 +103,19 @@ function toggleFavorite() {
     overflow: hidden;
     background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
 
-    img {
+    :deep(.el-image) {
         width: 100%;
         height: 100%;
-        object-fit: cover;
-        transition: transform 0.3s ease;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
     }
 
-    &:hover img {
+    &:hover :deep(.el-image img) {
         transform: scale(1.05);
     }
 

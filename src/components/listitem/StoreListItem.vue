@@ -2,11 +2,12 @@
     <div class="store-card" @click="handleClick">
         <!-- 店铺logo和基本信息 -->
         <div class="store-header">
-            <img
+            <el-image
                 v-if="store.logoUrl"
                 :src="imgUrl(store.logoUrl)"
                 :alt="store.name"
                 class="store-logo"
+                fit="cover"
             />
             <div v-else class="store-logo-placeholder">🏪</div>
 
@@ -133,13 +134,18 @@ const toggleFavorite = () => {
     padding-bottom: 10px;
     border-bottom: 1px solid #f0f0f0;
 
-    .store-logo {
+    :deep(.store-logo) {
         width: 56px;
         height: 56px;
         border-radius: 8px;
-        object-fit: cover;
         flex-shrink: 0;
         border: 1px solid #f0f0f0;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
     }
 
     .store-logo-placeholder {
