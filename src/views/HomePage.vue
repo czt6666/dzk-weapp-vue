@@ -1,5 +1,5 @@
 <template>
-    <div class="home">
+    <div class="home" ref="homeRef">
         <!-- 顶部横幅：Logo + 风景轮播图 -->
         <header class="header-banner">
             <div class="banner-overlay"></div>
@@ -174,7 +174,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import { getNewsList } from "@/apis/news";
@@ -185,6 +185,7 @@ import { getTourRouteList } from "@/apis/tour";
 import { getStudyPlanList } from "@/apis/study";
 import { getRetirementStationList } from "@/apis/retirement";
 import { imgUrl } from "@/utils";
+import { useScrollPosition } from "@/composables/useScrollPosition";
 import HolidayCarousel from "@/components/HolidayCarousel.vue";
 import HotelCarousel from "@/components/HotelCarousel.vue";
 import spring2 from "@/assets/swiper/spring2.jpg";
@@ -192,6 +193,10 @@ import summer2 from "@/assets/swiper/summer2.jpg";
 import autumn1 from "@/assets/swiper/autumn1.png";
 
 const router = useRouter();
+
+// 滚动位置记忆
+const homeRef = ref<HTMLElement | null>(null);
+useScrollPosition(homeRef, "homePage");
 
 // 背景图
 const redTourBg = spring2;

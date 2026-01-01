@@ -26,7 +26,7 @@ service.interceptors.request.use(
         // 如果有 token，可以统一加到 headers
         const token = localStorage.getItem(STORAGE_TOKEN_KEY);
         if (token && config.headers) {
-            // config.headers["Authorization"] = `Bearer ${token}`;
+            config.headers["Authorization"] = `Bearer ${token}`;
         }
         return config;
     },

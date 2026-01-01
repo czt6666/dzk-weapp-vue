@@ -54,13 +54,13 @@ const handleReset = () => {
 
     .search-input {
         flex: 1;
-        height: 36px;
+        height: 44px;
         display: flex;
         align-items: center;
         background: #fff;
         border-radius: 28px;
         border: 1px solid #d4d4d4;
-        padding: 6px 14px;
+        padding: 8px 16px;
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08) inset;
 
         .search-icon {
@@ -92,7 +92,7 @@ const handleReset = () => {
     }
 
     .search-btn {
-        height: 36px;
+        height: 44px;
         border: none;
         background: linear-gradient(135deg, #7fb069, #6da757);
         color: #fff;
