@@ -81,7 +81,13 @@
         <section class="section" v-if="photos.length">
             <h2 class="title">🖼 环境照片</h2>
             <div class="gallery">
-                <el-image v-for="p in photos" :key="p" :src="p" alt="环境照片" fit="cover" />
+                <el-image
+                    v-for="(p, idx) in photos"
+                    :key="idx"
+                    :src="imgUrl(p)"
+                    alt="环境照片"
+                    fit="cover"
+                />
             </div>
         </section>
     </div>
@@ -92,6 +98,7 @@ import { ref, computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { ElMessage } from "element-plus";
 import { getRetirementStationDetail, type IRetirementStation } from "@/apis/retirement";
+import { imgUrl } from "@/utils";
 
 const route = useRoute();
 const info = ref<IRetirementStation>();
@@ -122,9 +129,11 @@ const statusClass = computed(() => (info.value?.businessStatus === 1 ? "open" : 
 
 const serviceModes = computed(() => info.value?.serviceMode?.split(",") || []);
 
-const photos = computed(() =>
-    info.value?.environmentPhotos ? info.value.environmentPhotos.split(",") : [],
-);
+const photos = computed(() => {
+    const photos = info.value?.environmentPhotos;
+    if (!photos) return [];
+    return photos;
+});
 </script>
 
 <style scoped lang="scss">

@@ -10,10 +10,10 @@ import type { Ref } from "vue";
  */
 enum FavoriteStatusCode {
     SUCCESS = 200,
-    ALREADY_COLLECTED = 400,
-    NOT_LOGGED_IN = 401,
-    TOKEN_EXPIRED = 403,
-    OTHER_ERROR = 500,
+    ALREADY_COLLECTED = 400, // 已收藏（收藏操作） or 未收藏（删除操作）
+    NOT_LOGGED_IN = 401, // 未登录
+    TOKEN_EXPIRED = 403, // 登录过期
+    OTHER_ERROR = 500, // 其他错误
 }
 
 /**
