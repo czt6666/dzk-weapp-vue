@@ -46,6 +46,7 @@ export interface IDishCategory {
     id: number;
     categoryName: string;
     restaurantName: string;
+    imageUrl?: string;
 }
 
 export interface IDishItem {

@@ -246,6 +246,7 @@ async function handleRegister() {
 
 <style scoped lang="scss">
 @use "@/styles/variables.scss" as *;
+@use "sass:color";
 
 .login-page {
     position: relative;
@@ -490,7 +491,7 @@ async function handleRegister() {
             &:hover:not(:disabled) {
                 transform: translateY(-2px);
                 box-shadow: $shadow-lg;
-                background: darken($color-green-primary, 5%);
+                background: color.adjust($color-green-primary, $lightness: -5%);
             }
 
             &:active:not(:disabled) {

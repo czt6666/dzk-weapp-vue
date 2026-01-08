@@ -76,12 +76,12 @@ export function createFavoriteToggle(targetType: string, list: Ref<any[]> | any[
     }
 
     return async function toggleFavorite(id: number, isFavorite: boolean) {
-        const userId = userStore.userInfo?.id || 1;
-        // if (!userId) {
-        //     ElMessage.warning("请先登录");
-        //     router.push({ name: "LoginPage" });
-        //     return;
-        // }
+        const userId = userStore.userInfo?.userId;
+        if (!userId) {
+            ElMessage.warning("请先登录");
+            router.push({ name: "LoginPage" });
+            return;
+        }
 
         // 乐观更新UI
         updateItemFavoriteStatus(id, isFavorite);

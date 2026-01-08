@@ -66,6 +66,7 @@ function goDetail(item: any) {
 
 <style scoped lang="scss">
 @use "@/styles/variables.scss" as *;
+@use "sass:color";
 
 .favorites-page {
     overflow-y: auto;
@@ -197,7 +198,7 @@ button.buy {
 }
 
 button.buy:hover {
-    background-color: darken($color-green-primary, 10%);
+    background-color: color.adjust($color-green-primary, $lightness: -10%);
 }
 
 button.remove {

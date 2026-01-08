@@ -96,6 +96,7 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
 @use "@/styles/variables.scss" as *;
+@use "sass:color";
 
 .hotel-detail {
     font-family: "PingFang SC", sans-serif;
@@ -230,7 +231,7 @@ onMounted(async () => {
             transition: $transition-base;
 
             &:hover {
-                background: darken($color-green-primary, 10%);
+                background: color.adjust($color-green-primary, $lightness: -10%);
             }
 
             &:active {

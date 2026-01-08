@@ -167,6 +167,7 @@ function goToShopInfo() {
 
 <style lang="scss" scoped>
 @use "@/styles/variables.scss" as *;
+@use "sass:color";
 
 .product-detail {
     overflow-y: auto;
@@ -345,7 +346,7 @@ function goToShopInfo() {
         color: #fff;
 
         &:hover {
-            background: darken($color-green-primary, 10%);
+            background: color.adjust($color-green-primary, $lightness: -10%);
         }
     }
 }

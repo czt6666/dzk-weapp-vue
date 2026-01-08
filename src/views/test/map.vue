@@ -33,13 +33,13 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import MapComponent, { type RestaurantMarker } from "../../components/base/MapMark.vue";
+import MapComponent, { type MapMarker } from "../../components/base/MapMark.vue";
 
 const showMyLocation = ref(false);
 const currentIndex = ref(-1); // -1 表示显示全部
 
 // 美食商家数据
-const allRestaurants = ref<RestaurantMarker[]>([
+const allRestaurants = ref<MapMarker[]>([
     {
         id: 1,
         lng: 116.404,
