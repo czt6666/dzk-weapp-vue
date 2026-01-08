@@ -227,7 +227,11 @@ async function handleRegister() {
 
     try {
         registering.value = true;
-        await userStore.register(registerPhone.value, registerPassword.value);
+        await userStore.register(
+            registerPhone.value,
+            registerPassword.value,
+            confirmPassword.value,
+        );
         ElMessage.success("注册成功，请登录");
         // 注册成功后切换到登录页面，并填充手机号
         loginPhone.value = registerPhone.value;
