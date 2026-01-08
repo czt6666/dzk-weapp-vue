@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from "vue-router";
 import HomePage from "@/views/HomePage.vue";
+import RecommendPage from "@/views/RecommendPage.vue";
 
 const pages = import.meta.glob("../views/test/**/*.vue");
 
@@ -32,6 +33,12 @@ const routes: RouteRecordRaw[] = [
         meta: { isTab: true, title: "首页" },
     },
     {
+        path: "/recommend",
+        name: "RecommendPage",
+        component: RecommendPage,
+        meta: { isTab: true, title: "推荐" },
+    },
+    {
         path: "/login",
         name: "LoginPage",
         component: () => import("../views/LoginPage.vue"),
@@ -41,7 +48,7 @@ const routes: RouteRecordRaw[] = [
         path: "/news",
         name: "NewsList",
         component: () => import("../views/news/NewsList.vue"),
-        meta: { isTab: true, title: "新闻" },
+        meta: { isTab: false, title: "新闻" },
     },
     {
         path: "/news/:id",
@@ -67,7 +74,7 @@ const routes: RouteRecordRaw[] = [
         path: "/shop",
         name: "ShopList",
         component: () => import("../views/shop/ProductList.vue"),
-        meta: { isTab: true, title: "商品" },
+        meta: { isTab: false, title: "商品" },
     },
     {
         path: "/shop/:id",
@@ -93,7 +100,7 @@ const routes: RouteRecordRaw[] = [
         path: "/restaurant",
         name: "RestaurantList",
         component: () => import("../views/restaurant/StoreList.vue"),
-        meta: { isTab: true, title: "美食" },
+        meta: { isTab: false, title: "美食" },
     },
     {
         path: "/restaurant/order",

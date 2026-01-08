@@ -1,945 +1,102 @@
 <template>
-    <div class="home" ref="homeRef">
-        <!-- 顶部横幅：Logo + 风景轮播图 -->
-        <header class="header-banner">
-            <div class="banner-overlay"></div>
-            <div class="logo-section">
-                <div class="logo">
-                    <span class="logo-icon">🚩</span>
-                    <div class="logo-text">
-                        <h1>大庄科乡</h1>
-                        <p>传承·振兴</p>
-                    </div>
-                </div>
-            </div>
-            <div class="carousel-wrapper">
-                <HolidayCarousel />
-            </div>
-        </header>
+    <div class="home-page">
+        <img class="background-image" :src="homeBg" />
 
-        <!-- 主内容区域 -->
-        <main class="main-content">
-            <!-- 1. 今日新闻 - 横向滚动 -->
-            <section class="news-section">
-                <div class="section-header">
-                    <h2 class="section-title red-theme">📰 今日新闻</h2>
-                    <span class="view-all" @click="goToNewsList">查看全部 →</span>
-                </div>
-                <div class="news-scroll-container" ref="newsScrollRef">
-                    <div class="news-scroll-wrapper">
-                        <div
-                            v-for="item in newsList"
-                            :key="item.id"
-                            class="news-item"
-                            @click="goToNews(item.id)"
-                        >
-                            <div class="news-image">
-                                <el-image
-                                    :src="imgUrl(item.imageUrl)"
-                                    :alt="item.title"
-                                    fit="cover"
-                                />
-                                <div class="news-overlay red-overlay"></div>
-                            </div>
-                            <div class="news-content">
-                                <h3 class="news-title">{{ item.title }}</h3>
-                                <span class="news-date">{{ formatDate(item.createTime) }}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 2. 民宿概览 - 横向轮播 -->
-            <section class="hotel-section">
-                <div class="section-header">
-                    <h2 class="section-title green-theme">🏡 推荐民宿</h2>
-                    <span class="view-all" @click="goToHotelList">查看全部 →</span>
-                </div>
-                <HotelCarousel
-                    :hotels="hotelList"
-                    :height="240"
-                    :show-buttons="true"
-                    @item-click="(hotel) => goToHotel(hotel.id)"
-                />
-            </section>
-
-            <!-- 3. 乡村美食 - 竖向列表 -->
-            <section class="food-section">
-                <div class="section-header">
-                    <h2 class="section-title green-theme">🍜 乡村美食</h2>
-                    <span class="view-all" @click="goToRestaurantList">查看全部 →</span>
-                </div>
-                <div class="food-list">
-                    <div
-                        v-for="restaurant in restaurantList"
-                        :key="restaurant.id"
-                        class="food-item"
-                        @click="goToRestaurant(restaurant.id)"
-                    >
-                        <div class="food-image">
-                            <el-image
-                                :src="imgUrl(restaurant.logoUrl)"
-                                :alt="restaurant.name"
-                                fit="cover"
-                            />
-                        </div>
-                        <div class="food-content green-content">
-                            <h3 class="food-name">{{ restaurant.name }}</h3>
-                            <p class="food-desc">{{ restaurant.notice || "田园风味，健康美味" }}</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 4. 特色特产 - 瀑布流 -->
-            <section class="product-section">
-                <div class="section-header">
-                    <h2 class="section-title green-theme">🛍️ 特色特产</h2>
-                    <span class="view-all" @click="goToProductList">查看全部 →</span>
-                </div>
-                <div class="product-waterfall">
-                    <div
-                        v-for="product in productList"
-                        :key="product.id"
-                        class="product-item"
-                        @click="goToProduct(product.id)"
-                    >
-                        <div class="product-image">
-                            <el-image
-                                :src="imgUrl(product.previewImages[0])"
-                                :alt="product.title"
-                                fit="cover"
-                            />
-                            <div class="product-label green-label">
-                                <span class="product-price"
-                                    >¥{{ product.specifications[0].price || "询价" }}</span
-                                >
-                            </div>
-                        </div>
-                        <h4 class="product-title">{{ product.title }}</h4>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 5. 红色旅游 - 叠加式长图 -->
-            <section class="red-tour-section">
-                <div
-                    class="red-tour-banner"
-                    :style="{ backgroundImage: `url(${redTourBg})` }"
-                    @click="goToTour"
-                >
-                    <div class="red-tour-overlay"></div>
-                    <div class="red-tour-content">
-                        <h2 class="red-tour-title">🗺️ 红色旅游</h2>
-                        <p class="red-tour-desc">{{ tourDesc || "传承红色精神，体验革命文化" }}</p>
-                        <div class="red-tour-arrow">→</div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 6. 研学基地 - 叠加式长图 -->
-            <section class="study-section">
-                <div
-                    class="study-banner"
-                    :style="{ backgroundImage: `url(${studyBg})` }"
-                    @click="goToStudy"
-                >
-                    <div class="study-overlay"></div>
-                    <div class="study-content">
-                        <h2 class="study-title">📚 研学基地</h2>
-                        <p class="study-desc">{{ studyDesc || "探索知识，传承文化" }}</p>
-                        <div class="study-arrow">→</div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 7. 康养生活 - 叠加式长图 -->
-            <section class="retirement-section">
-                <div
-                    class="retirement-banner"
-                    :style="{ backgroundImage: `url(${retirementBg})` }"
-                    @click="goToRetirement"
-                >
-                    <div class="retirement-overlay"></div>
-                    <div class="retirement-content">
-                        <h2 class="retirement-title">🌿 康养生活</h2>
-                        <p class="retirement-desc">{{ retirementDesc || "健康生活，颐养天年" }}</p>
-                        <div class="retirement-arrow">→</div>
-                    </div>
-                </div>
-            </section>
-        </main>
+        <svg
+            class="svg-overlay"
+            viewBox="0 0 1672 2508"
+            preserveAspectRatio="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <path
+                d="M3.5 355V468.5L812.5 614.5L864 561V0.5H259L3.5 355Z"
+                class="hot-area"
+                @click="goToModule('NewsList')"
+            />
+            <path
+                d="M0.5 493.5V1365.5C74.5 1349.5 247.075 1303.52 284.5 1291.5C353 1269.5 505 1234 539 1200C573 1166 620 1126.5 652.5 1043.5C679.322 975 694 831 732.5 749L805 637.5L40.5 493.5H0.5Z"
+                class="hot-area"
+                @click="goToModule('RetirementList')"
+            />
+            <path
+                d="M886.5 2V596C886.5 596 1086.5 495 1110.5 489.5C1134.5 484 1320.5 462.5 1356.5 449C1392.5 435.5 1382.5 424.5 1414 413.5C1445.5 402.5 1665.5 44 1665.5 44V2H886.5Z"
+                class="hot-area"
+                @click="goToModule('TourList')"
+            />
+            <path
+                d="M1615.5 1801H814V1363H1130.5L1615.5 1429.5V1801Z"
+                class="hot-area"
+                @click="goToModule('ShopList')"
+            />
+            <path
+                d="M1673 1836.5H813V2195.5C813 2224 822 2323 887.5 2378C939.9 2422 1041.67 2452 1086 2461.5H1673V1836.5Z"
+                class="hot-area"
+                @click="goToModule('RestaurantList')"
+            />
+            <path
+                d="M61 2321.5V1796.5H718C721.333 1877.17 726 2048.4 718 2088C708 2137.5 672 2188.5 631 2239C598.2 2279.4 514.667 2310.83 477 2321.5H61Z"
+                class="hot-area"
+                @click="goToModule('HotelList')"
+            />
+            <path
+                d="M1674 1345V488.5C1644 547 1563 590.5 1550.5 603C1540.5 613 1421.67 651.5 1363.5 669.5C1306.17 678.333 1186.7 696.7 1167.5 699.5C1143.5 703 1135.5 722 1103 730.5C1070.5 739 999 853 994 863.5C989 874 882 1134 875 1154.5C869.4 1170.9 810 1257 781 1298C806.167 1292.67 836 1272.5 882 1275C928 1277.5 1225 1326.5 1284.5 1334.5C1344 1342.5 1626.8 1374.4 1640 1368C1653.2 1361.6 1668.17 1350 1674 1345Z"
+                class="hot-area"
+                @click="goToModule('StudyList')"
+            />
+        </svg>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { ElMessage } from "element-plus";
-import { getNewsList } from "@/apis/news";
-import { getHotelList } from "@/apis/hotel";
-import { getProductList } from "@/apis/shop";
-import { getRestaurantList } from "@/apis/restaurant";
-import { getTourRouteList } from "@/apis/tour";
-import { getStudyPlanList } from "@/apis/study";
-import { getRetirementStationList } from "@/apis/retirement";
-import { imgUrl } from "@/utils";
-import { useScrollPosition } from "@/composables/useScrollPosition";
-import HolidayCarousel from "@/components/HolidayCarousel.vue";
-import HotelCarousel from "@/components/HotelCarousel.vue";
-import spring2 from "@/assets/swiper/spring2.jpg";
-import summer2 from "@/assets/swiper/summer2.jpg";
-import autumn1 from "@/assets/swiper/autumn1.png";
+import homeBg from "@/assets/home.jpg";
 
 const router = useRouter();
 
-// 滚动位置记忆
-const homeRef = ref<HTMLElement | null>(null);
-useScrollPosition(homeRef, "homePage");
-
-// 背景图
-const redTourBg = spring2;
-const studyBg = summer2;
-const retirementBg = autumn1;
-
-// 数据
-const newsList = ref<any[]>([]);
-const hotelList = ref<any[]>([]);
-const productList = ref<any[]>([]);
-const restaurantList = ref<any[]>([]);
-const tourDesc = ref("");
-const studyDesc = ref("");
-const retirementDesc = ref("");
-
-// 格式化日期
-function formatDate(dateStr: string) {
-    const date = new Date(dateStr);
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${month}-${day}`;
-}
-
-// 数据加载
-async function loadNews() {
+function goToModule(routeName: string) {
     try {
-        const res = await getNewsList({ page: 1, pageSize: 10 });
-        newsList.value = (res.data?.list || []).slice(0, 5);
-    } catch (err: any) {
-        console.error("加载新闻失败:", err);
+        router.push({ name: routeName });
+    } catch (error) {
+        console.error("路由跳转失败:", error);
     }
 }
-
-async function loadHotels() {
-    try {
-        const res = await getHotelList({ page: 1, pageSize: 5 });
-        hotelList.value = res.data?.records || [];
-    } catch (err: any) {
-        console.error("加载民宿失败:", err);
-    }
-}
-
-async function loadProducts() {
-    try {
-        const res = await getProductList({ page: 1, pageRow: 6 });
-        productList.value = res.data?.list || res.data?.records || [];
-    } catch (err: any) {
-        console.error("加载特产失败:", err);
-    }
-}
-
-async function loadRestaurants() {
-    try {
-        const res = await getRestaurantList({});
-        restaurantList.value = (res.data.records || []).slice(0, 3);
-    } catch (err: any) {
-        console.error("加载美食失败:", err);
-    }
-}
-
-// 导航
-function goToNews(id: number) {
-    router.push({ name: "NewsInfo", params: { id } });
-}
-
-function goToHotel(id: number) {
-    router.push({ name: "HotelInfo", params: { id } });
-}
-
-function goToProduct(id: number) {
-    router.push({ name: "ShopInfo", params: { id } });
-}
-
-function goToRestaurant(id: number) {
-    router.push({
-        name: "RestaurantOrder",
-        query: { id, name: restaurantList.value.find((r) => r.id === id)?.name },
-    });
-}
-
-function goToTour() {
-    router.push({ name: "TourList" });
-}
-
-function goToStudy() {
-    router.push({ name: "StudyList" });
-}
-
-function goToRetirement() {
-    router.push({ name: "RetirementList" });
-}
-
-// 跳转到列表页
-function goToNewsList() {
-    router.push({ name: "NewsList" });
-}
-
-function goToHotelList() {
-    router.push({ name: "HotelList" });
-}
-
-function goToProductList() {
-    router.push({ name: "ShopList" });
-}
-
-function goToRestaurantList() {
-    router.push({ name: "RestaurantList" });
-}
-
-// 加载旅游数据
-async function loadTour() {
-    try {
-        const res = await getTourRouteList({ page: 1, pageSize: 1 });
-        const tour = res.data?.records?.[0] || res.data?.list?.[0];
-        if (tour) {
-            tourDesc.value = tour.name || "传承红色精神，体验革命文化";
-        }
-    } catch (err: any) {
-        console.error("加载旅游数据失败:", err);
-    }
-}
-
-// 加载研学数据
-async function loadStudy() {
-    try {
-        const res = await getStudyPlanList({ page: 1, pageSize: 1 });
-        const study = res.data?.list?.[0] || res.data?.records?.[0];
-        if (study) {
-            studyDesc.value = study.planName || "探索知识，传承文化";
-        }
-    } catch (err: any) {
-        console.error("加载研学数据失败:", err);
-    }
-}
-
-// 加载康养数据
-async function loadRetirement() {
-    try {
-        const res = await getRetirementStationList({ page: 1, pageSize: 1 });
-        const retirement = res.data?.records?.[0];
-        if (retirement) {
-            retirementDesc.value = retirement.name || "健康生活，颐养天年";
-        }
-    } catch (err: any) {
-        console.error("加载康养数据失败:", err);
-    }
-}
-
-onMounted(() => {
-    loadNews();
-    loadHotels();
-    loadProducts();
-    loadRestaurants();
-    loadTour();
-    loadStudy();
-    loadRetirement();
-});
 </script>
 
 <style lang="scss" scoped>
-@use "@/styles/variables.scss" as *;
-
-.home {
-    height: 100%;
-    background: $bg-gradient-main;
-    overflow-x: hidden;
-    overflow-y: auto;
-}
-
-// 顶部横幅
-.header-banner {
+.home-page {
     position: relative;
     width: 100%;
-    height: 280px;
+    height: 100%;
     overflow: hidden;
-
-    .banner-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: $overlay-red-banner;
-        z-index: 2;
-        pointer-events: none;
-    }
-
-    .logo-section {
-        position: absolute;
-        top: 20px;
-        left: 20px;
-        z-index: 3;
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-
-            .logo-icon {
-                font-size: 40px;
-                filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-            }
-
-            .logo-text {
-                color: white;
-                text-shadow: $shadow-text;
-
-                h1 {
-                    font-size: 28px;
-                    font-weight: 600;
-                    margin: 0;
-                    letter-spacing: 2px;
-                }
-
-                p {
-                    font-size: 14px;
-                    margin: 4px 0 0 0;
-                    opacity: 0.95;
-                    letter-spacing: 4px;
-                }
-            }
-        }
-    }
-
-    .carousel-wrapper {
-        position: relative;
-        width: 100%;
-        height: 100%;
-    }
+    background-color: pink;
 }
 
-// 主内容区域
-.main-content {
-    padding: $spacing-md $spacing-md $spacing-md;
-    max-width: 1200px;
-    margin: 0 auto;
+.background-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
 }
 
-// 通用区块样式
-.section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
+.svg-overlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    pointer-events: none;
+    background: rgba(255, 0, 0, 0.05);
 
-    .section-title {
-        font-size: 22px;
-        font-weight: 600;
-        margin: 0;
-        letter-spacing: 1px;
-
-        &.red-theme {
-            color: $color-red-primary;
-        }
-
-        &.green-theme {
-            color: $color-green-primary;
-        }
-    }
-
-    .view-all {
-        font-size: 14px;
-        color: #666;
+    .hot-area {
+        // fill: rgba(0, 255, 0, 0.3);
+        // stroke: red;
+        // stroke-width: 4;
+        // transition: all 0.3s ease;
+        fill: transparent;
         cursor: pointer;
-        transition: all 0.3s ease;
-        user-select: none;
-        white-space: nowrap;
-
-        &:hover {
-            color: $color-green-primary;
-            transform: translateX(2px);
-        }
-
-        &:active {
-            opacity: 0.7;
-        }
-    }
-}
-
-// 1. 今日新闻 - 横向滚动
-.news-section {
-    margin-bottom: 32px;
-
-    .news-scroll-container {
-        overflow-x: auto;
-        overflow-y: hidden;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-
-        &::-webkit-scrollbar {
-            display: none;
-        }
-
-        .news-scroll-wrapper {
-            display: flex;
-            gap: 12px;
-            padding-bottom: 8px;
-        }
-
-        .news-item {
-            flex-shrink: 0;
-            width: 280px;
-            height: 140px;
-            position: relative;
-            border-radius: $radius-medium;
-            overflow: hidden;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-
-            &:active {
-                transform: scale(0.98);
-            }
-
-            .news-image {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-
-                :deep(.el-image) {
-                    width: 100%;
-                    height: 100%;
-
-                    img {
-                        width: 100%;
-                        height: 100%;
-                        object-fit: cover;
-                        transition: transform 0.3s ease;
-                    }
-                }
-
-                .news-overlay {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                }
-
-                .red-overlay {
-                    background: $overlay-red-gradient;
-                }
-            }
-
-            .news-content {
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                padding: 12px;
-                color: white;
-                z-index: 2;
-
-                .news-title {
-                    font-size: 15px;
-                    font-weight: 600;
-                    margin: 0 0 4px 0;
-                    line-height: 1.3;
-                    display: -webkit-box;
-                    -webkit-line-clamp: 2;
-                    line-clamp: 2;
-                    -webkit-box-orient: vertical;
-                    overflow: hidden;
-                }
-
-                .news-date {
-                    font-size: 12px;
-                    opacity: 0.9;
-                }
-            }
-
-            &:hover .news-image :deep(.el-image img) {
-                transform: scale(1.05);
-            }
-        }
-    }
-}
-
-// 2. 民宿概览 - 横向轮播
-.hotel-section {
-    margin-bottom: 32px;
-}
-
-// 3. 特色特产 - 瀑布流
-.product-section {
-    margin-bottom: 32px;
-
-    .product-waterfall {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-
-        .product-item {
-            cursor: pointer;
-            transition: transform 0.3s ease;
-
-            &:active {
-                transform: scale(0.98);
-            }
-
-            .product-image {
-                position: relative;
-                width: 100%;
-                aspect-ratio: 3/4;
-                border-radius: $radius-medium;
-                overflow: hidden;
-                margin-bottom: 8px;
-
-                :deep(.el-image) {
-                    width: 100%;
-                    height: 100%;
-
-                    img {
-                        width: 100%;
-                        height: 100%;
-                        object-fit: cover;
-                        transition: transform 0.3s ease;
-                    }
-                }
-
-                .product-label {
-                    position: absolute;
-                    bottom: 8px;
-                    left: 8px;
-                    padding: 6px 12px;
-                    background: $overlay-green-label;
-                    color: white;
-                    border-radius: 20px;
-                    font-size: 14px;
-                    font-weight: 600;
-                }
-            }
-
-            .product-title {
-                font-size: 14px;
-                font-weight: 500;
-                color: #333;
-                margin: 0;
-                line-height: 1.4;
-                display: -webkit-box;
-                -webkit-line-clamp: 2;
-                line-clamp: 2;
-                -webkit-box-orient: vertical;
-                overflow: hidden;
-            }
-
-            &:hover .product-image :deep(.el-image img) {
-                transform: scale(1.05);
-            }
-        }
-    }
-}
-
-// 4. 乡村美食 - 竖向列表
-.food-section {
-    margin-bottom: 32px;
-
-    .food-list {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-
-        .food-item {
-            display: flex;
-            width: 100%;
-            height: 140px;
-            border-radius: $radius-large;
-            overflow: hidden;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-            background: linear-gradient(135deg, rgba(255, 229, 229, 0.3), rgba(255, 248, 248, 0.2));
-
-            &:active {
-                transform: scale(0.98);
-            }
-
-            .food-image {
-                flex-shrink: 0;
-                width: 140px;
-                height: 100%;
-
-                :deep(.el-image) {
-                    width: 100%;
-                    height: 100%;
-
-                    img {
-                        width: 100%;
-                        height: 100%;
-                        object-fit: cover;
-                    }
-                }
-            }
-
-            .food-content {
-                flex: 1;
-                padding: 16px;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-
-                &.green-content {
-                    background: $overlay-green-light;
-                }
-
-                .food-name {
-                    font-size: 18px;
-                    font-weight: 600;
-                    color: $color-green-primary;
-                    margin: 0 0 8px 0;
-                }
-
-                .food-desc {
-                    font-size: 13px;
-                    color: #666;
-                    margin: 0;
-                    line-height: 1.5;
-                    display: -webkit-box;
-                    -webkit-line-clamp: 2;
-                    line-clamp: 2;
-                    -webkit-box-orient: vertical;
-                    overflow: hidden;
-                }
-            }
-        }
-    }
-}
-
-// 5. 红色旅游 - 叠加式长图
-.red-tour-section {
-    margin-bottom: 32px;
-
-    .red-tour-banner {
-        position: relative;
-        width: 100%;
-        height: 200px;
-        border-radius: 16px;
-        overflow: hidden;
-        cursor: pointer;
-        transition: transform 0.3s ease;
-
-        &:active {
-            transform: scale(0.98);
-        }
-
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-
-        .red-tour-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: $overlay-red-strong;
-        }
-
-        .red-tour-content {
-            position: relative;
-            z-index: 2;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            text-align: center;
-            padding: $spacing-md;
-
-            .red-tour-title {
-                font-size: 24px;
-                font-weight: 600;
-                margin: 0 0 8px 0;
-                text-shadow: $shadow-text;
-            }
-
-            .red-tour-desc {
-                font-size: 14px;
-                margin: 0 0 12px 0;
-                opacity: 0.95;
-            }
-
-            .red-tour-arrow {
-                font-size: 32px;
-                opacity: 0.9;
-                animation: arrow-bounce 2s infinite;
-            }
-        }
-    }
-}
-
-// 6. 研学基地 - 叠加式长图
-.study-section {
-    margin-bottom: 32px;
-
-    .study-banner {
-        position: relative;
-        width: 100%;
-        height: 200px;
-        border-radius: 16px;
-        overflow: hidden;
-        cursor: pointer;
-        transition: transform 0.3s ease;
-
-        &:active {
-            transform: scale(0.98);
-        }
-
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-
-        .study-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: $overlay-red-strong;
-        }
-
-        .study-content {
-            position: relative;
-            z-index: 2;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            text-align: center;
-            padding: $spacing-md;
-
-            .study-title {
-                font-size: 24px;
-                font-weight: 600;
-                margin: 0 0 8px 0;
-                text-shadow: $shadow-text;
-            }
-
-            .study-desc {
-                font-size: 14px;
-                margin: 0 0 12px 0;
-                opacity: 0.95;
-            }
-
-            .study-arrow {
-                font-size: 32px;
-                opacity: 0.9;
-                animation: arrow-bounce 2s infinite;
-            }
-        }
-    }
-}
-
-// 7. 康养生活 - 叠加式长图
-.retirement-section {
-    margin-bottom: 32px;
-
-    .retirement-banner {
-        position: relative;
-        width: 100%;
-        height: 200px;
-        border-radius: 16px;
-        overflow: hidden;
-        cursor: pointer;
-        transition: transform 0.3s ease;
-
-        &:active {
-            transform: scale(0.98);
-        }
-
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-
-        .retirement-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: $overlay-green-strong;
-        }
-
-        .retirement-content {
-            position: relative;
-            z-index: 2;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            text-align: center;
-            padding: $spacing-md;
-
-            .retirement-title {
-                font-size: 24px;
-                font-weight: 600;
-                margin: 0 0 8px 0;
-                text-shadow: $shadow-text;
-            }
-
-            .retirement-desc {
-                font-size: 14px;
-                margin: 0 0 12px 0;
-                opacity: 0.95;
-            }
-
-            .retirement-arrow {
-                font-size: 32px;
-                opacity: 0.9;
-                animation: arrow-bounce 2s infinite;
-            }
-        }
-    }
-}
-
-@keyframes arrow-bounce {
-    0%,
-    100% {
-        transform: translateX(0);
-    }
-    50% {
-        transform: translateX(8px);
-    }
-}
-
-// 响应式
-@media (max-width: 768px) {
-    .header-banner {
-        height: 240px;
-    }
-
-    .news-section .news-scroll-container .news-scroll-wrapper .news-item {
-        width: 240px;
-        height: 120px;
-    }
-
-    .hotel-section .hotel-carousel-container {
-        height: 200px;
+        pointer-events: all;
     }
 }
 </style>

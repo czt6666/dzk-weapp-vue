@@ -28,9 +28,9 @@ interface TabItem {
 }
 
 const tabItems: TabItem[] = [
-    { name: "首页", routeName: "HomePage", icon: "🌟" },
-    { name: "新闻", routeName: "NewsList", icon: "📰" },
-    { name: "民宿", routeName: "HotelList", icon: "🏡" },
+    { name: "首页", routeName: "HomePage", icon: "🏠" },
+    { name: "推荐", routeName: "RecommendPage", icon: "✨" },
+    { name: "民宿", routeName: "HotelList", icon: "🏨" },
     { name: "登录", routeName: "LoginPage", icon: "👤" },
 ];
 
@@ -73,12 +73,19 @@ function handleTabClick(routeName: string) {
         margin-bottom: 4px;
         position: relative;
         transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
         .icon {
-            font-size: 24px;
+            font-size: 26px;
             display: block;
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             transform-origin: center;
+            line-height: 1;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
         }
     }
 
@@ -91,7 +98,8 @@ function handleTabClick(routeName: string) {
 
     &.active {
         .tab-icon .icon {
-            transform: scale(1.15) translateY(-2px);
+            transform: scale(1.2) translateY(-2px);
+            filter: drop-shadow(0 2px 4px rgba(198, 40, 40, 0.3));
         }
 
         .tab-label {

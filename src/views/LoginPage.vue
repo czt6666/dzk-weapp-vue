@@ -7,68 +7,145 @@
             <div class="circle circle-3"></div>
         </div>
 
-        <div class="login-card">
-            <div class="card-header">
-                <div class="logo-wrapper">
-                    <div class="logo-icon">🔐</div>
-                </div>
-                <h1 class="title">账号登录</h1>
-                <p class="subtitle">使用手机号 + 验证码登录系统</p>
-            </div>
+        <div class="card-container">
+            <div class="flip-card" :class="{ flipped: isRegister }">
+                <div class="flip-card-inner">
+                    <!-- 登录卡片 - 正面 -->
+                    <div class="flip-card-front login-card">
+                        <div class="card-header">
+                            <div class="logo-wrapper">
+                                <div class="logo-icon">🔐</div>
+                            </div>
+                            <h1 class="title">账号登录</h1>
+                            <p class="subtitle">使用手机号 + 密码登录系统</p>
+                        </div>
 
-            <div class="form-container">
-                <div class="form-item">
-                    <label class="label">
-                        <span class="label-icon">📱</span>
-                        手机号
-                    </label>
-                    <el-input
-                        v-model="phone"
-                        maxlength="11"
-                        placeholder="请输入手机号"
-                        clearable
-                        size="large"
-                        class="custom-input"
-                    />
-                </div>
+                        <div class="form-container">
+                            <div class="form-item">
+                                <label class="label">
+                                    <span class="label-icon">📱</span>
+                                    手机号
+                                </label>
+                                <el-input
+                                    v-model="loginPhone"
+                                    maxlength="11"
+                                    placeholder="请输入手机号"
+                                    clearable
+                                    size="large"
+                                    class="custom-input"
+                                />
+                            </div>
 
-                <div class="form-item code-row">
-                    <div class="code-input">
-                        <label class="label">
-                            <span class="label-icon">🔑</span>
-                            验证码
-                        </label>
-                        <el-input 
-                            v-model="code" 
-                            maxlength="6" 
-                            placeholder="请输入短信验证码"
-                            size="large"
-                            class="custom-input"
-                        />
+                            <div class="form-item">
+                                <label class="label">
+                                    <span class="label-icon">🔑</span>
+                                    密码
+                                </label>
+                                <el-input
+                                    v-model="loginPassword"
+                                    type="password"
+                                    placeholder="请输入密码"
+                                    show-password
+                                    size="large"
+                                    class="custom-input"
+                                    @keyup.enter="handleLogin"
+                                />
+                            </div>
+
+                            <el-button
+                                class="submit-btn"
+                                type="primary"
+                                size="large"
+                                :loading="loggingIn"
+                                @click="handleLogin"
+                            >
+                                <span v-if="!loggingIn">登录</span>
+                                <span v-else>登录中...</span>
+                            </el-button>
+
+                            <div class="switch-tip">
+                                <span>还没有账号？</span>
+                                <el-link type="primary" @click="switchToRegister">立即注册</el-link>
+                            </div>
+                        </div>
                     </div>
-                    <el-button
-                        class="code-btn"
-                        type="primary"
-                        plain
-                        size="large"
-                        :disabled="sendingCode || countdown > 0"
-                        @click="handleSendCode"
-                    >
-                        <span v-if="countdown === 0">获取验证码</span>
-                        <span v-else>{{ countdown }}s后重试</span>
-                    </el-button>
-                </div>
 
-                <el-button
-                    class="login-btn"
-                    type="primary"
-                    size="large"
-                    :loading="loggingIn"
-                    @click="handleLogin"
-                >
-                    <span v-if="!loggingIn">登录</span>
-                    <span v-else>登录中...</span>
-                </el-button>
+                    <!-- 注册卡片 - 背面 -->
+                    <div class="flip-card-back register-card">
+                        <div class="card-header">
+                            <div class="logo-wrapper">
+                                <div class="logo-icon">✨</div>
+                            </div>
+                            <h1 class="title">账号注册</h1>
+                            <p class="subtitle">使用手机号 + 密码注册账号</p>
+                        </div>
+
+                        <div class="form-container">
+                            <div class="form-item">
+                                <label class="label">
+                                    <span class="label-icon">📱</span>
+                                    手机号
+                                </label>
+                                <el-input
+                                    v-model="registerPhone"
+                                    maxlength="11"
+                                    placeholder="请输入手机号"
+                                    clearable
+                                    size="large"
+                                    class="custom-input"
+                                />
+                            </div>
+
+                            <div class="form-item">
+                                <label class="label">
+                                    <span class="label-icon">🔑</span>
+                                    密码
+                                </label>
+                                <el-input
+                                    v-model="registerPassword"
+                                    type="password"
+                                    placeholder="请输入密码（至少6位）"
+                                    show-password
+                                    size="large"
+                                    class="custom-input"
+                                    @keyup.enter="handleRegister"
+                                />
+                            </div>
+
+                            <div class="form-item">
+                                <label class="label">
+                                    <span class="label-icon">🔒</span>
+                                    确认密码
+                                </label>
+                                <el-input
+                                    v-model="confirmPassword"
+                                    type="password"
+                                    placeholder="请再次输入密码"
+                                    show-password
+                                    size="large"
+                                    class="custom-input"
+                                    @keyup.enter="handleRegister"
+                                />
+                            </div>
+
+                            <el-button
+                                class="submit-btn"
+                                type="primary"
+                                size="large"
+                                :loading="registering"
+                                @click="handleRegister"
+                            >
+                                <span v-if="!registering">注册</span>
+                                <span v-else>注册中...</span>
+                            </el-button>
+
+                            <div class="switch-tip">
+                                <span>已有账号？</span>
+                                <el-link type="primary" @click="switchToLogin">立即登录</el-link>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -79,67 +156,86 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import { useUserStore } from "@/stores/user";
-import { sendSmsCode } from "@/apis/user";
+import { register, loginByUsername } from "@/apis/user";
 
 const router = useRouter();
 const userStore = useUserStore();
 
-const phone = ref("");
-const code = ref("");
-const sendingCode = ref(false);
-const countdown = ref(0);
+// 登录表单
+const loginPhone = ref("");
+const loginPassword = ref("");
 const loggingIn = ref(false);
-let timer: number | null = null;
 
-function validatePhone(): boolean {
+// 注册表单
+const registerPhone = ref("");
+const registerPassword = ref("");
+const confirmPassword = ref("");
+const registering = ref(false);
+
+// 切换状态
+const isRegister = ref(false);
+
+function validatePhone(phone: string): boolean {
     const reg = /^1\d{10}$/;
-    if (!reg.test(phone.value)) {
+    if (!reg.test(phone)) {
         ElMessage.warning("请输入正确的手机号");
         return false;
     }
     return true;
 }
 
-async function handleSendCode() {
-    if (!validatePhone()) return;
-    if (countdown.value > 0 || sendingCode.value) return;
-    try {
-        sendingCode.value = true;
-        await sendSmsCode({ phone: phone.value });
-        ElMessage.success("验证码已发送");
-        countdown.value = 60;
-        timer && window.clearInterval(timer);
-        timer = window.setInterval(() => {
-            if (countdown.value <= 1) {
-                countdown.value = 0;
-                timer && window.clearInterval(timer);
-                timer = null;
-            } else {
-                countdown.value -= 1;
-            }
-        }, 1000);
-    } catch (err: any) {
-        ElMessage.error(err.msg || "发送验证码失败");
-    } finally {
-        sendingCode.value = false;
+function validatePassword(password: string, minLength: number = 6): boolean {
+    if (!password || password.length < minLength) {
+        ElMessage.warning(`密码至少需要${minLength}位`);
+        return false;
     }
+    return true;
+}
+
+function switchToRegister() {
+    isRegister.value = true;
+}
+
+function switchToLogin() {
+    isRegister.value = false;
 }
 
 async function handleLogin() {
-    if (!validatePhone()) return;
-    if (!code.value.trim()) {
-        ElMessage.warning("请输入验证码");
-        return;
-    }
+    if (!validatePhone(loginPhone.value)) return;
+    if (!validatePassword(loginPassword.value)) return;
+
     try {
         loggingIn.value = true;
-        await userStore.login(phone.value, code.value);
+        await userStore.loginByPassword(loginPhone.value, loginPassword.value);
         ElMessage.success("登录成功");
         router.push({ name: "HomePage" });
     } catch (err: any) {
         ElMessage.error(err.msg || err.message || "登录失败");
     } finally {
         loggingIn.value = false;
+    }
+}
+
+async function handleRegister() {
+    if (!validatePhone(registerPhone.value)) return;
+    if (!validatePassword(registerPassword.value)) return;
+
+    if (registerPassword.value !== confirmPassword.value) {
+        ElMessage.warning("两次输入的密码不一致");
+        return;
+    }
+
+    try {
+        registering.value = true;
+        await userStore.register(registerPhone.value, registerPassword.value);
+        ElMessage.success("注册成功，请登录");
+        // 注册成功后切换到登录页面，并填充手机号
+        loginPhone.value = registerPhone.value;
+        switchToLogin();
+    } catch (err: any) {
+        ElMessage.error(err.msg || err.message || "注册失败");
+    } finally {
+        registering.value = false;
     }
 }
 </script>
@@ -156,6 +252,7 @@ async function handleLogin() {
     padding: $spacing-md;
     background: $bg-gradient-main;
     overflow: hidden;
+    perspective: 1000px;
 
     // 背景装饰圆圈
     .bg-decoration {
@@ -206,7 +303,8 @@ async function handleLogin() {
 
     // 浮动动画
     @keyframes float {
-        0%, 100% {
+        0%,
+        100% {
             transform: translate(0, 0) scale(1);
         }
         33% {
@@ -218,11 +316,44 @@ async function handleLogin() {
     }
 }
 
-.login-card {
+.card-container {
     position: relative;
     z-index: 1;
     width: 100%;
     max-width: 420px;
+    height: 600px;
+}
+
+.flip-card {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+
+    &.flipped {
+        transform: rotateY(180deg);
+    }
+}
+
+.flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+
+.flip-card-front,
+.flip-card-back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
     padding: $spacing-xxxl $spacing-xl;
     background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(20px);
@@ -230,17 +361,27 @@ async function handleLogin() {
     box-shadow: $shadow-xl;
     border: 1px solid rgba(255, 255, 255, 0.5);
     animation: cardFadeIn 0.6s ease-out;
+}
 
-    @keyframes cardFadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+.flip-card-back {
+    transform: rotateY(180deg);
+}
+
+@keyframes cardFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
     }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.login-card,
+.register-card {
+    display: flex;
+    flex-direction: column;
 
     .card-header {
         text-align: center;
@@ -263,7 +404,8 @@ async function handleLogin() {
             }
 
             @keyframes logoPulse {
-                0%, 100% {
+                0%,
+                100% {
                     transform: scale(1);
                     box-shadow: $shadow-lg;
                 }
@@ -290,6 +432,10 @@ async function handleLogin() {
     }
 
     .form-container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+
         .form-item {
             margin-bottom: $spacing-xxl;
 
@@ -325,32 +471,7 @@ async function handleLogin() {
             }
         }
 
-        .code-row {
-            display: flex;
-            align-items: flex-end;
-            gap: $spacing-md;
-
-            .code-input {
-                flex: 1;
-            }
-
-            .code-btn {
-                white-space: nowrap;
-                border-radius: $radius-medium;
-                font-weight: 500;
-                border-color: $color-green-primary;
-                color: $color-green-primary;
-                transition: $transition-base;
-
-                &:hover:not(:disabled) {
-                    transform: translateY(-2px);
-                    box-shadow: $shadow-md;
-                    background: $overlay-green-light;
-                }
-            }
-        }
-
-        .login-btn {
+        .submit-btn {
             width: 100%;
             margin-top: $spacing-sm;
             height: 48px;
@@ -376,6 +497,22 @@ async function handleLogin() {
                 opacity: 0.7;
             }
         }
+
+        .switch-tip {
+            margin-top: $spacing-lg;
+            text-align: center;
+            font-size: 14px;
+            color: $text-secondary;
+
+            a {
+                vertical-align: top;
+            }
+
+            :deep(.el-link) {
+                font-size: 14px;
+                margin-left: 4px;
+            }
+        }
     }
 }
 
@@ -384,10 +521,32 @@ async function handleLogin() {
     .login-page {
         padding: $spacing-md;
 
-        .login-card {
+        .card-container {
+            height: auto;
+            min-height: 500px;
+        }
+
+        .flip-card-front,
+        .flip-card-back {
             padding: $spacing-xxl $spacing-lg;
             border-radius: $radius-large;
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: auto;
+            min-height: 500px;
+        }
 
+        .flip-card {
+            height: auto;
+        }
+
+        .flip-card-inner {
+            height: auto;
+        }
+
+        .login-card,
+        .register-card {
             .card-header {
                 margin-bottom: $spacing-xxl;
 

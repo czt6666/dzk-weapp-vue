@@ -16,7 +16,7 @@ export function getStudyActivityList(params: {
 
 // 研学方案详情
 export function getStudyPlanDetail(id: number) {
-    return service.get(`/study/tour/plan/${id}`);
+    return service.get(`/study/tour/plan/get/${id}`);
 }
 
 // 研学活动详情

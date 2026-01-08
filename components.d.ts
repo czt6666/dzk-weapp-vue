@@ -14,6 +14,7 @@ declare module 'vue' {
     ElIcon: typeof import('element-plus/es')['ElIcon']
     ElImage: typeof import('element-plus/es')['ElImage']
     ElInput: typeof import('element-plus/es')['ElInput']
+    ElLink: typeof import('element-plus/es')['ElLink']
     HolidayCarousel: typeof import('./src/components/HolidayCarousel.vue')['default']
     HotelCarousel: typeof import('./src/components/HotelCarousel.vue')['default']
     HotelItem: typeof import('./src/components/listitem/HotelItem.vue')['default']
