@@ -1,42 +1,46 @@
 <template>
-    <!-- 未登录：显示登录页面 -->
-    <LoginPage v-if="!userStore.userInfo?.userId" />
-
-    <!-- 已登录：显示个人信息 -->
-    <div v-else class="my-page">
-        <div class="profile-header">
-            <div class="avatar-section">
-                <div class="avatar-wrapper">
-                    <el-image
-                        v-if="userStore.userInfo?.avatar"
-                        :src="imgUrl(userStore.userInfo.avatar)"
-                        class="avatar"
-                        fit="cover"
-                    />
-                    <div v-else class="avatar-placeholder">
-                        <span class="avatar-icon">👤</span>
-                    </div>
-                </div>
-                <div class="user-info">
-                    <h2 class="user-name">
-                        {{ userStore.userInfo?.phone || userStore.userInfo?.username || "用户" }}
-                    </h2>
-                </div>
-            </div>
+    <div class="login-container">
+        <!-- 未登录：显示登录页面 -->
+        <div v-if="!userStore.userInfo?.userId" class="login-container">
+            <LoginPage />
         </div>
 
-        <div class="content-section">
-            <!-- 功能菜单 -->
-            <div class="menu-list">
-                <div class="menu-item" @click="goToCart">
-                    <span class="menu-text">购物车</span>
-                    <span class="menu-arrow">→</span>
+        <!-- 已登录：显示个人信息 -->
+        <div v-else class="my-page">
+            <div class="profile-header">
+                <div class="avatar-section">
+                    <div class="avatar-wrapper">
+                        <el-image
+                            v-if="userStore.userInfo?.avatar"
+                            :src="imgUrl(userStore.userInfo.avatar)"
+                            class="avatar"
+                            fit="cover"
+                        />
+                        <div v-else class="avatar-placeholder">
+                            <img src="@/assets/defaultAvatar.jpg" alt="" />
+                        </div>
+                    </div>
+                    <div class="user-info">
+                        <h2 class="user-name">
+                            {{
+                                userStore.userInfo?.phone || userStore.userInfo?.username || "用户"
+                            }}
+                        </h2>
+                    </div>
                 </div>
             </div>
 
-            <!-- 退出登录 -->
-            <div class="logout-section">
-                <el-button class="logout-btn" @click="handleLogout">退出登录</el-button>
+            <div class="content-section">
+                <div class="menu-list">
+                    <div class="menu-item" @click="goToCart">
+                        <span class="menu-text">购物车</span>
+                        <span class="menu-arrow">→</span>
+                    </div>
+                </div>
+
+                <div class="logout-section">
+                    <el-button class="logout-btn" @click="handleLogout">退出登录</el-button>
+                </div>
             </div>
         </div>
     </div>
@@ -45,7 +49,7 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user";
-import { ElMessage, ElMessageBox } from "element-plus";
+import { ElMessage } from "element-plus";
 import { imgUrl } from "@/utils";
 import LoginPage from "@/views/LoginPage.vue";
 
@@ -57,25 +61,19 @@ function goToCart() {
 }
 
 async function handleLogout() {
-    try {
-        await ElMessageBox.confirm("确定要退出登录吗？", "提示", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning",
-        });
-        userStore.logout();
-        ElMessage.success("已退出登录");
-        router.push({ name: "HomePage" });
-        // 刷新页面
-        window.location.reload();
-    } catch {
-        // 用户取消
-    }
+    userStore.logout();
+    ElMessage.success("已退出登录");
+    router.push({ name: "HomePage" });
 }
 </script>
 
 <style lang="scss" scoped>
 @use "@/styles/variables.scss" as *;
+
+.login-container {
+    width: 100%;
+    height: 100%;
+}
 
 .my-page {
     height: 100%;
@@ -104,6 +102,11 @@ async function handleLogout() {
                 border: 2px solid rgba(255, 255, 255, 0.3);
                 overflow: hidden;
                 background: rgba(255, 255, 255, 0.2);
+
+                > img {
+                    width: 100%;
+                    height: 100%;
+                }
             }
 
             .avatar-placeholder {

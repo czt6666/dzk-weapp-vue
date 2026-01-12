@@ -47,6 +47,7 @@ export const useUserStore = defineStore("user", () => {
             username: data.username,
             avatar: data.avatar,
         });
+        console.log("登录成功，用户信息:", userInfo.value);
     }
 
     // 注册

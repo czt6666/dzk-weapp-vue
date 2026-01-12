@@ -52,8 +52,14 @@ router.beforeEach((to, from) => {
         position: relative;
         height: 0;
         flex: 1 1 0;
+        overflow-x: hidden;
         overflow-y: auto;
     }
+}
+
+.full {
+    width: 100%;
+    height: 100%;
 }
 
 // 路由切换过渡动画

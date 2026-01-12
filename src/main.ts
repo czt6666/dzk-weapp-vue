@@ -6,6 +6,7 @@ import router from "./router";
 
 import "@/styles/main.scss";
 import ElementPlus from "element-plus";
+import "element-plus/dist/index.css";
 import { STORAGE_TOKEN_KEY } from "@/utils/constence";
 import { useUserStore } from "@/stores/user";
 

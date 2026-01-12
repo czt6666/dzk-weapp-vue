@@ -2,7 +2,6 @@
     <div class="home" ref="homeRef">
         <!-- 顶部横幅：Logo + 风景轮播图 -->
         <header class="header-banner">
-            <div class="banner-overlay"></div>
             <div class="logo-section">
                 <div class="logo">
                     <span class="logo-icon">🚩</span>
@@ -43,7 +42,7 @@
                     <div class="news-column">
                         <div class="section-header">
                             <h2 class="section-title red-theme">
-                                <img :src="newsIcon" alt="红色庄科" class="title-icon" />
+                                <!-- <img :src="newsIcon" alt="红色庄科" class="title-icon" /> -->
                                 红色庄科
                             </h2>
                             <span class="view-all" @click="goToNewsList">更多 →</span>
@@ -78,7 +77,7 @@
                     <div class="news-column">
                         <div class="section-header">
                             <h2 class="section-title red-theme">
-                                <img :src="newsIcon" alt="时事资讯" class="title-icon" />
+                                <!-- <img :src="newsIcon" alt="时事资讯" class="title-icon" /> -->
                                 时事资讯
                             </h2>
                             <span class="view-all" @click="goToActualTimeList">更多 →</span>
@@ -119,7 +118,7 @@
                     <div class="food-column">
                         <div class="section-header">
                             <h2 class="section-title green-theme">
-                                <img :src="foodIcon" alt="乡村美食" class="title-icon" />
+                                <!-- <img :src="foodIcon" alt="乡村美食" class="title-icon" /> -->
                                 乡村美食
                             </h2>
                         </div>
@@ -150,7 +149,7 @@
                     <div class="product-column">
                         <div class="section-header">
                             <h2 class="section-title green-theme">
-                                <img :src="shopIcon" alt="特色特产" class="title-icon" />
+                                <!-- <img :src="shopIcon" alt="特色特产" class="title-icon" /> -->
                                 特色特产
                             </h2>
                         </div>
@@ -193,7 +192,7 @@
                             <div class="tour-overlay"></div>
                             <div class="tour-content">
                                 <h2 class="tour-title">
-                                    <img :src="tourIcon" alt="红色旅游" class="title-icon" />
+                                    <!-- <img :src="tourIcon" alt="红色旅游" class="title-icon" /> -->
                                     红色旅游
                                 </h2>
                                 <p class="tour-desc">
@@ -209,7 +208,7 @@
                             <div class="study-overlay"></div>
                             <div class="study-content">
                                 <h2 class="study-title">
-                                    <img :src="studyIcon" alt="研学基地" class="title-icon" />
+                                    <!-- <img :src="studyIcon" alt="研学基地" class="title-icon" /> -->
                                     研学基地
                                 </h2>
                                 <p class="study-desc">{{ studyDesc || "探索知识，传承文化" }}</p>
@@ -227,7 +226,7 @@
                         <div class="retirement-overlay"></div>
                         <div class="retirement-content">
                             <h2 class="retirement-title">
-                                <img :src="retirementIcon" alt="康养生活" class="title-icon" />
+                                <!-- <img :src="retirementIcon" alt="康养生活" class="title-icon" /> -->
                                 康养生活
                             </h2>
                             <p class="retirement-desc">
@@ -243,7 +242,7 @@
             <section class="hotel-section">
                 <div class="section-header">
                     <h2 class="section-title green-theme">
-                        <img :src="hotelIcon" alt="推荐民宿" class="title-icon" />
+                        <!-- <img :src="hotelIcon" alt="推荐民宿" class="title-icon" /> -->
                         推荐民宿
                     </h2>
                     <span class="view-all" @click="goToHotelList">更多 →</span>
@@ -508,17 +507,6 @@ onMounted(() => {
     width: 100%;
     height: 290px;
     overflow: hidden;
-
-    .banner-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: $overlay-red-banner;
-        z-index: 2;
-        pointer-events: none;
-    }
 
     .logo-section {
         position: absolute;
@@ -1176,7 +1164,7 @@ onMounted(() => {
 
             .hotel-image {
                 width: 100%;
-                height: 180px;
+                height: 120px;
                 overflow: hidden;
 
                 :deep(.el-image) {

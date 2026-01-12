@@ -41,7 +41,7 @@ const routes: RouteRecordRaw[] = [
         path: "/news",
         name: "NewsList",
         component: () => import("../views/news/NewsList.vue"),
-        meta: { isTab: true, title: "资讯" },
+        meta: { isTab: true, title: "红色庄科" },
     },
     {
         path: "/news/actualtime",

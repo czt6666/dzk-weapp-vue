@@ -120,7 +120,6 @@ async function doLoadMore() {
 // ---------- better-scroll init ----------
 function initBScroll() {
     if (!bsWrapper.value) return;
-    console.log(props);
 
     bscroll = new BScroll(bsWrapper.value, {
         scrollY: true,

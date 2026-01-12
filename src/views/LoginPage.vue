@@ -208,7 +208,6 @@ async function handleLogin() {
         loggingIn.value = true;
         await userStore.loginByPassword(loginPhone.value, loginPassword.value);
         ElMessage.success("登录成功");
-        router.push({ name: "MyPage" });
     } catch (err: any) {
         ElMessage.error(err.msg || err.message || "登录失败");
     } finally {
