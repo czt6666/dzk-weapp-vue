@@ -8,7 +8,7 @@
             @click="handleTabClick(item.routeName)"
         >
             <div class="tab-icon">
-                <span class="icon">{{ item.icon }}</span>
+                <img :src="item.icon" :alt="item.name" class="icon" />
             </div>
             <span class="tab-label">{{ item.name }}</span>
         </div>
@@ -17,6 +17,10 @@
 
 <script setup lang="ts">
 import { useRoute, useRouter } from "vue-router";
+import homeIcon from "@/assets/svg/home.png";
+import shopIcon from "@/assets/svg/shop.png";
+import newsIcon from "@/assets/svg/news.png";
+import userIcon from "@/assets/svg/user.png";
 
 const router = useRouter();
 const route = useRoute();
@@ -28,10 +32,10 @@ interface TabItem {
 }
 
 const tabItems: TabItem[] = [
-    { name: "首页", routeName: "HomePage", icon: "🏠" },
-    { name: "推荐", routeName: "RecommendPage", icon: "✨" },
-    { name: "民宿", routeName: "HotelList", icon: "🏨" },
-    { name: "登录", routeName: "LoginPage", icon: "👤" },
+    { name: "首页", routeName: "HomePage", icon: homeIcon },
+    { name: "特产", routeName: "ShopList", icon: shopIcon },
+    { name: "资讯", routeName: "NewsList", icon: newsIcon },
+    { name: "我的", routeName: "MyPage", icon: userIcon },
 ];
 
 function isActive(routeName: string): boolean {
@@ -80,12 +84,13 @@ function handleTabClick(routeName: string) {
         justify-content: center;
 
         .icon {
-            font-size: 26px;
+            width: 26px;
+            height: 26px;
             display: block;
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             transform-origin: center;
-            line-height: 1;
             filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+            opacity: 0.7;
         }
     }
 
@@ -100,6 +105,7 @@ function handleTabClick(routeName: string) {
         .tab-icon .icon {
             transform: scale(1.2) translateY(-2px);
             filter: drop-shadow(0 2px 4px rgba(198, 40, 40, 0.3));
+            opacity: 1;
         }
 
         .tab-label {

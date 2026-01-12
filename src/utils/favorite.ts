@@ -56,12 +56,12 @@ export function createFavoriteToggle(targetType: string, list: Ref<any[]> | any[
                 break;
             case FavoriteStatusCode.NOT_LOGGED_IN:
                 errorMsg = msg || "请先登录";
-                router.push({ name: "LoginPage" });
+                router.push({ name: "MyPage" });
                 break;
             case FavoriteStatusCode.TOKEN_EXPIRED:
                 errorMsg = msg || "登录已过期，请重新登录";
                 userStore.logout();
-                router.push({ name: "LoginPage" });
+                router.push({ name: "MyPage" });
                 break;
             default:
                 errorMsg = msg || "操作失败，请稍后重试";
@@ -79,7 +79,7 @@ export function createFavoriteToggle(targetType: string, list: Ref<any[]> | any[
         const userId = userStore.userInfo?.userId;
         if (!userId) {
             ElMessage.warning("请先登录");
-            router.push({ name: "LoginPage" });
+            router.push({ name: "MyPage" });
             return;
         }
 

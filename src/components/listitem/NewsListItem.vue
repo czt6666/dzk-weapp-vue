@@ -15,6 +15,7 @@
 </template>
 
 <script lang="ts" setup>
+import { computed } from "vue";
 import { imgUrl } from "@/utils";
 
 interface INewsListItem {

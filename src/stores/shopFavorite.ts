@@ -1,15 +1,27 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import { ElMessage } from "element-plus";
 import { addToCart, getCartList, removeCartItem } from "@/apis/shop";
+import { useUserStore } from "@/stores/user";
 import type { IProduct, ISpecItem } from "@/views/shop/types";
 
 export const useShopFavoriteStore = defineStore("shopFavorite", () => {
     const list = ref<any[]>([]);
-    const userId = 1;
+    const userStore = useUserStore();
+
+    // 获取真实用户ID
+    const userId = computed(() => {
+        return userStore.userInfo?.userId;
+    });
 
     async function fetchFavorites() {
+        const currentUserId = userId.value;
+        if (!currentUserId) {
+            ElMessage.warning("请先登录");
+            return;
+        }
         try {
-            const res = await getCartList(userId);
+            const res = await getCartList(currentUserId);
             if (res.code === 200) list.value = res.data || [];
         } catch (err: any) {
             ElMessage.error(err.msg || "获取收藏夹列表失败");
@@ -17,8 +29,13 @@ export const useShopFavoriteStore = defineStore("shopFavorite", () => {
     }
 
     async function add(spec: ISpecItem) {
+        const currentUserId = userId.value;
+        if (!currentUserId) {
+            ElMessage.warning("请先登录");
+            return;
+        }
         try {
-            const res = await addToCart({ userId, skuId: spec.id });
+            const res = await addToCart({ userId: currentUserId, skuId: spec.id });
             if (res.code === 200) {
                 await fetchFavorites();
                 ElMessage.success("已添加到收藏夹！");
@@ -31,8 +48,13 @@ export const useShopFavoriteStore = defineStore("shopFavorite", () => {
     }
 
     async function remove(skuId: number) {
+        const currentUserId = userId.value;
+        if (!currentUserId) {
+            ElMessage.warning("请先登录");
+            return;
+        }
         try {
-            const res = await removeCartItem(userId, skuId);
+            const res = await removeCartItem(currentUserId, skuId);
             if (res.code === 200) {
                 await fetchFavorites();
             } else {
