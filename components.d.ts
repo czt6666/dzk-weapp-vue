@@ -20,6 +20,7 @@ declare module 'vue' {
     HotelItem: typeof import('./src/components/listitem/HotelItem.vue')['default']
     InertiaScroll: typeof import('./src/components/base/InertiaScroll.vue')['default']
     MapMark: typeof import('./src/components/base/MapMark.vue')['default']
+    NewsCarousel: typeof import('./src/components/base/NewsCarousel.vue')['default']
     NewsListItem: typeof import('./src/components/listitem/NewsListItem.vue')['default']
     ProductCard: typeof import('./src/components/listitem/ProductCard.vue')['default']
     RetirementListItem: typeof import('./src/components/listitem/RetirementListItem.vue')['default']

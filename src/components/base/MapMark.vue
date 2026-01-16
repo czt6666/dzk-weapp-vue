@@ -2,7 +2,11 @@
 <template>
     <div class="map-container">
         <div id="amap" class="map"></div>
-        <div v-if="showMyLocation && !myLocationLoading" class="location-btn" @click="locateMe">
+        <div
+            v-if="showMyLocation && !myLocationLoading"
+            class="location-btn"
+            @click="locateMe(true)"
+        >
             <svg viewBox="0 0 24 24" width="20" height="20">
                 <path
                     fill="currentColor"
@@ -16,6 +20,7 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from "vue";
 import { wgs84ToGcj02 } from "@/utils/coord";
+import { AMAP_API_KEY } from "@/utils/constence";
 
 // 定义商家标记的类型
 export interface MapMarker {
@@ -104,64 +109,84 @@ const addMapMarkers = () => {
 
         restaurantMarkers.value.push(marker);
     });
+};
 
-    // 自动调整视野以显示所有商家
-    if (props.autoFitView && props.marks.length > 0) {
-        if (props.marks.length === 1) {
-            // 只有一个商家时，居中并设置合适的缩放级别
-            const restaurant = props.marks[0] as MapMarker;
-            const [mapLng, mapLat] = wgs84ToGcj02(restaurant.lng, restaurant.lat);
-            map.value.setZoomAndCenter(16, [mapLng, mapLat]);
-        } else {
-            // 多个商家时，自动适应所有标记
-            map.value.setFitView();
-        }
+// 调整视野以同时显示所有标记（包括商家和我的位置）
+const fitAllMarkers = () => {
+    if (!map.value) return;
+
+    const allMarkers: any[] = [...restaurantMarkers.value];
+
+    // 如果我的位置标记存在，也加入数组
+    if (myLocationMarker.value) {
+        allMarkers.push(myLocationMarker.value);
+    }
+
+    if (allMarkers.length === 0) return;
+
+    if (allMarkers.length === 1) {
+        // 只有一个标记时，居中并设置合适的缩放级别
+        const position = allMarkers[0].getPosition();
+        map.value.setZoomAndCenter(16, [position.lng, position.lat]);
+    } else {
+        // 多个标记时，自动适应所有标记
+        map.value.setFitView(allMarkers, false, [40, 40, 40, 40], 16);
     }
 };
 
 // 定位到我的位置
-const locateMe = () => {
-    myLocationLoading.value = true;
+const locateMe = (isClick: boolean = false): Promise<void> => {
+    return new Promise((resolve, reject) => {
+        myLocationLoading.value = true;
 
-    (window as any).AMap.plugin("AMap.Geolocation", () => {
-        const geolocation = new (window as any).AMap.Geolocation({
-            enableHighAccuracy: true,
-            timeout: 10000,
-        });
+        (window as any).AMap.plugin("AMap.Geolocation", () => {
+            const geolocation = new (window as any).AMap.Geolocation({
+                enableHighAccuracy: true,
+                timeout: 10000,
+            });
 
-        geolocation.getCurrentPosition((status: string, result: any) => {
-            myLocationLoading.value = false;
+            geolocation.getCurrentPosition((status: string, result: any) => {
+                myLocationLoading.value = false;
 
-            if (status === "complete") {
-                const position = result.position;
-                const [gcjLng, gcjLat] = wgs84ToGcj02(position.lng, position.lat);
+                if (status === "complete") {
+                    const position = result.position;
+                    const [gcjLng, gcjLat] = wgs84ToGcj02(position.lng, position.lat);
 
-                // 移除旧的位置标记
-                if (myLocationMarker.value) {
-                    map.value.remove(myLocationMarker.value);
-                }
+                    // 移除旧的位置标记
+                    if (myLocationMarker.value) {
+                        map.value.remove(myLocationMarker.value);
+                    }
 
-                // 创建我的位置标记
-                const myMarkerContent = `
+                    // 创建我的位置标记
+                    const myMarkerContent = `
           <div class="my-location-marker">
             <div class="location-dot"></div>
             <div class="location-ring"></div>
           </div>
         `;
 
-                myLocationMarker.value = new (window as any).AMap.Marker({
-                    position: [gcjLng, gcjLat],
-                    content: myMarkerContent,
-                    offset: new (window as any).AMap.Pixel(-10, -10),
-                    map: map.value,
-                });
+                    myLocationMarker.value = new (window as any).AMap.Marker({
+                        position: [gcjLng, gcjLat],
+                        content: myMarkerContent,
+                        offset: new (window as any).AMap.Pixel(-10, -10),
+                        map: map.value,
+                    });
 
-                // 移动地图到当前位置
-                map.value.setZoomAndCenter(15, [gcjLng, gcjLat]);
-            } else {
-                console.error("定位失败:", result);
-                alert("定位失败，请检查是否允许浏览器获取位置信息");
-            }
+                    // 如果是点击按钮，只移动到我的位置；否则如果开启了自动适应视野，会在后面统一处理
+                    if (isClick) {
+                        map.value.setZoomAndCenter(15, [gcjLng, gcjLat]);
+                    }
+
+                    resolve();
+                } else {
+                    console.error("定位失败:", result);
+                    const errorMsg = "定位失败，请检查是否允许浏览器获取位置信息";
+                    if (isClick) {
+                        alert(errorMsg);
+                    }
+                    reject(new Error(errorMsg));
+                }
+            });
         });
     });
 };
@@ -175,9 +200,7 @@ const loadAMapScript = (): Promise<void> => {
         }
 
         const script = document.createElement("script");
-        // 请替换为你自己的高德地图API Key
-        script.src =
-            "https://webapi.amap.com/maps?v=2.0&key=cace0c9b67dbbaebc5f2d68d371ccfdf&plugin=AMap.Geolocation";
+        script.src = `https://webapi.amap.com/maps?v=2.0&key=${AMAP_API_KEY}&plugin=AMap.Geolocation`;
         script.async = true;
         script.onload = () => resolve();
         script.onerror = () => reject(new Error("高德地图加载失败"));
@@ -202,9 +225,22 @@ onMounted(async () => {
         initMap();
         addMapMarkers();
 
-        // 如果开启了显示我的位置，自动定位
+        // 如果开启了显示我的位置，先定位
         if (props.showMyLocation) {
-            setTimeout(() => locateMe(), 500);
+            try {
+                await locateMe();
+            } catch (error) {
+                // 定位失败不影响后续流程
+                console.warn("定位失败，继续显示商家位置", error);
+            }
+        }
+
+        // 自动调整视野以显示所有标记（包括商家和我的位置）
+        if (props.autoFitView && props.marks.length > 0) {
+            // 等待标记完全添加到地图后再调整视野
+            setTimeout(() => {
+                fitAllMarkers();
+            }, 200);
         }
     } catch (error) {
         console.error("地图初始化失败:", error);

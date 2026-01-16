@@ -11,3 +11,7 @@ export function getNewsItem(params: { id: number }) {
 export function getActualTimeList(params: { page: number; pageSize: number; keyword?: string }) {
     return service.get("/village/actualtime/list", { params });
 }
+
+export function getActualTimeItem(params: { id: number }) {
+    return service.get("/village/actualtime/detail", { params });
+}

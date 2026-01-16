@@ -50,6 +50,13 @@ const routes: RouteRecordRaw[] = [
         meta: { title: "时事资讯" },
     },
     {
+        path: "/news/actualtime/:id",
+        name: "ActualTimeInfo",
+        component: () => import("../views/news/ActualTimeInfo.vue"),
+        props: true,
+        meta: { title: "时事资讯详情" },
+    },
+    {
         path: "/news/:id",
         name: "NewsInfo",
         component: () => import("../views/news/NewsInfo.vue"),
@@ -99,13 +106,19 @@ const routes: RouteRecordRaw[] = [
         path: "/restaurant",
         name: "RestaurantList",
         component: () => import("../views/restaurant/StoreList.vue"),
-        meta: { title: "美食" },
+        meta: { isTab: true, title: "美食" },
     },
     {
         path: "/restaurant/order",
         name: "RestaurantOrder",
         component: () => import("../views/restaurant/OrderPage.vue"),
         meta: { title: "点餐" },
+    },
+    {
+        path: "/map",
+        name: "Map",
+        component: () => import("../views/map/RestaurantMap.vue"),
+        meta: { title: "位置地图" },
     },
     {
         path: "/tour",

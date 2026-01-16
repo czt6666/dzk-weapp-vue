@@ -3,34 +3,13 @@
         <!-- 顶部横幅：Logo + 风景轮播图 -->
         <header class="header-banner">
             <div class="logo-section">
-                <div class="logo">
-                    <span class="logo-icon">🚩</span>
-                    <div class="logo-text">
-                        <h1>大庄科乡</h1>
-                        <p>传承·振兴</p>
-                    </div>
-                </div>
+                <img src="@/assets/logo1.png" alt="大庄科乡" class="logo" />
             </div>
             <div class="carousel-wrapper">
                 <HolidayCarousel />
             </div>
-            <!-- 底部渐变遮罩和快捷按钮 -->
-            <div class="banner-bottom-gradient">
-                <div class="quick-buttons">
-                    <div class="quick-btn" @click="goToRestaurantList">
-                        <img :src="foodIcon" alt="美食" class="btn-icon" />
-                        <span class="btn-text">美食</span>
-                    </div>
-                    <div class="quick-btn" @click="goToProductList">
-                        <img :src="shopIcon" alt="特产" class="btn-icon" />
-                        <span class="btn-text">特产</span>
-                    </div>
-                    <div class="quick-btn" @click="goToHotelList">
-                        <img :src="hotelIcon" alt="民宿" class="btn-icon" />
-                        <span class="btn-text">民宿</span>
-                    </div>
-                </div>
-            </div>
+            <!-- 底部渐变遮罩 -->
+            <div class="banner-bottom-gradient"></div>
         </header>
 
         <!-- 主内容区域 -->
@@ -47,31 +26,7 @@
                             </h2>
                             <span class="view-all" @click="goToNewsList">更多 →</span>
                         </div>
-                        <div class="news-scroll-container" ref="newsScrollRef">
-                            <div class="news-scroll-wrapper">
-                                <div
-                                    v-for="item in newsList"
-                                    :key="item.id"
-                                    class="news-item"
-                                    @click="goToNews(item.id)"
-                                >
-                                    <div class="news-image">
-                                        <el-image
-                                            :src="imgUrl(item.imageUrl)"
-                                            :alt="item.title"
-                                            fit="cover"
-                                        />
-                                        <div class="news-overlay red-overlay"></div>
-                                    </div>
-                                    <div class="news-content">
-                                        <h3 class="news-title">{{ item.title }}</h3>
-                                        <span class="news-date">{{
-                                            formatDate(item.createTime)
-                                        }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <NewsCarousel :items="newsList" @item-click="(item) => goToNews(item.id)" />
                     </div>
                     <!-- 时事资讯 -->
                     <div class="news-column">
@@ -82,31 +37,10 @@
                             </h2>
                             <span class="view-all" @click="goToActualTimeList">更多 →</span>
                         </div>
-                        <div class="news-scroll-container" ref="actualTimeScrollRef">
-                            <div class="news-scroll-wrapper">
-                                <div
-                                    v-for="item in actualTimeList"
-                                    :key="item.id"
-                                    class="news-item"
-                                    @click="goToActualTime(item.id)"
-                                >
-                                    <div class="news-image">
-                                        <el-image
-                                            :src="imgUrl(item.imageUrl)"
-                                            :alt="item.title"
-                                            fit="cover"
-                                        />
-                                        <div class="news-overlay red-overlay"></div>
-                                    </div>
-                                    <div class="news-content">
-                                        <h3 class="news-title">{{ item.title }}</h3>
-                                        <span class="news-date">{{
-                                            formatDate(item.createTime)
-                                        }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <NewsCarousel
+                            :items="actualTimeList"
+                            @item-click="(item) => goToActualTime(item.id)"
+                        />
                     </div>
                 </div>
             </section>
@@ -114,13 +48,14 @@
             <!-- 2. 美食和特产 - 左右排列，竖着展示三个 -->
             <section class="food-product-section">
                 <div class="food-product-dual">
-                    <!-- 乡村美食 -->
+                    <!-- 美食推荐 -->
                     <div class="food-column">
                         <div class="section-header">
                             <h2 class="section-title green-theme">
-                                <!-- <img :src="foodIcon" alt="乡村美食" class="title-icon" /> -->
-                                乡村美食
+                                <!-- <img :src="foodIcon" alt="美食推荐" class="title-icon" /> -->
+                                美食推荐
                             </h2>
+                            <span class="view-all" @click="goToRestaurantList">更多 →</span>
                         </div>
                         <div class="food-vertical-list">
                             <div
@@ -145,13 +80,14 @@
                             </div>
                         </div>
                     </div>
-                    <!-- 特色特产 -->
+                    <!-- 特产推荐 -->
                     <div class="product-column">
                         <div class="section-header">
                             <h2 class="section-title green-theme">
-                                <!-- <img :src="shopIcon" alt="特色特产" class="title-icon" /> -->
-                                特色特产
+                                <!-- <img :src="shopIcon" alt="特产推荐" class="title-icon" /> -->
+                                特产推荐
                             </h2>
+                            <span class="view-all" @click="goToProductList">更多 →</span>
                         </div>
                         <div class="product-vertical-list">
                             <div
@@ -242,8 +178,8 @@
             <section class="hotel-section">
                 <div class="section-header">
                     <h2 class="section-title green-theme">
-                        <!-- <img :src="hotelIcon" alt="推荐民宿" class="title-icon" /> -->
-                        推荐民宿
+                        <!-- <img :src="hotelIcon" alt="民宿推荐" class="title-icon" /> -->
+                        民宿推荐
                     </h2>
                     <span class="view-all" @click="goToHotelList">更多 →</span>
                 </div>
@@ -273,7 +209,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onUnmounted, nextTick } from "vue";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import { getNewsList, getActualTimeList } from "@/apis/news";
@@ -287,12 +223,10 @@ import { imgUrl } from "@/utils";
 import { useScrollPosition } from "@/composables/useScrollPosition";
 import HolidayCarousel from "@/components/HolidayCarousel.vue";
 import HotelCarousel from "@/components/HotelCarousel.vue";
+import NewsCarousel from "@/components/base/NewsCarousel.vue";
 import spring2 from "@/assets/swiper/spring2.jpg";
 import summer2 from "@/assets/swiper/summer2.jpg";
 import autumn1 from "@/assets/swiper/autumn1.png";
-import foodIcon from "@/assets/svg/food.png";
-import shopIcon from "@/assets/svg/shop.png";
-import hotelIcon from "@/assets/svg/hotel.png";
 import newsIcon from "@/assets/svg/news.png";
 import tourIcon from "@/assets/svg/tour.png";
 import studyIcon from "@/assets/svg/study.png";
@@ -302,8 +236,6 @@ const router = useRouter();
 
 // 滚动位置记忆
 const homeRef = ref<HTMLElement | null>(null);
-const newsScrollRef = ref<HTMLElement | null>(null);
-const actualTimeScrollRef = ref<HTMLElement | null>(null);
 useScrollPosition(homeRef, "homePage");
 
 // 背景图
@@ -425,7 +357,7 @@ function goToActualTimeList() {
 }
 
 function goToActualTime(id: number) {
-    router.push({ name: "NewsInfo", params: { id } });
+    router.push({ name: "ActualTimeInfo", params: { id } });
 }
 
 function goToHotelList() {
@@ -515,43 +447,19 @@ onMounted(() => {
         z-index: 3;
 
         .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-
-            .logo-icon {
-                font-size: 40px;
-                filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-            }
-
-            .logo-text {
-                color: white;
-                text-shadow: $shadow-text;
-
-                h1 {
-                    font-size: 28px;
-                    font-weight: 600;
-                    margin: 0;
-                    letter-spacing: 2px;
-                }
-
-                p {
-                    font-size: 14px;
-                    margin: 4px 0 0 0;
-                    opacity: 0.95;
-                    letter-spacing: 4px;
-                }
-            }
+            height: auto;
+            max-width: 100px;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
         }
     }
 
     .carousel-wrapper {
         position: relative;
         width: 100%;
-        height: 93%;
+        height: 100%;
     }
 
-    // 底部渐变遮罩和快捷按钮
+    // 底部渐变遮罩
     .banner-bottom-gradient {
         position: absolute;
         bottom: 0;
@@ -560,52 +468,7 @@ onMounted(() => {
         height: 120px;
         background: linear-gradient(to top, #ffe5e5 0%, transparent 100%);
         z-index: 99;
-        display: flex;
-        align-items: flex-end;
-        padding: 0 20px 0px;
         pointer-events: none;
-
-        .quick-buttons {
-            display: flex;
-            gap: 20px;
-            width: 100%;
-            justify-content: center;
-            pointer-events: all;
-
-            .quick-btn {
-                flex: 1;
-                max-width: 100px;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                cursor: pointer;
-                transition: all 0.3s ease;
-
-                &:active {
-                    transform: scale(0.95);
-                }
-
-                &:hover {
-                    transform: translateY(-2px);
-                }
-
-                .btn-icon {
-                    width: 32px;
-                    height: 32px;
-                    margin-bottom: 6px;
-                    display: block;
-                    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-                }
-
-                .btn-text {
-                    font-size: 14px;
-                    font-weight: 600;
-                    color: white;
-                    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-                }
-            }
-        }
     }
 }
 
@@ -686,103 +549,6 @@ onMounted(() => {
 
                 .section-title {
                     font-size: 18px;
-                }
-            }
-
-            .news-scroll-container {
-                overflow-x: auto;
-                overflow-y: hidden;
-                -webkit-overflow-scrolling: touch;
-                scrollbar-width: none;
-                width: 100%;
-
-                &::-webkit-scrollbar {
-                    display: none;
-                }
-
-                .news-scroll-wrapper {
-                    display: flex;
-                    gap: 10px;
-                    padding-bottom: 8px;
-                }
-
-                .news-item {
-                    flex-shrink: 0;
-                    width: 200px;
-                    height: 120px;
-                    position: relative;
-                    border-radius: $radius-medium;
-                    overflow: hidden;
-                    cursor: pointer;
-                    transition: transform 0.3s ease;
-                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-
-                    &:active {
-                        transform: scale(0.98);
-                    }
-
-                    .news-image {
-                        position: absolute;
-                        top: 0;
-                        left: 0;
-                        width: 100%;
-                        height: 100%;
-
-                        :deep(.el-image) {
-                            width: 100%;
-                            height: 100%;
-
-                            img {
-                                width: 100%;
-                                height: 100%;
-                                object-fit: cover;
-                                transition: transform 0.3s ease;
-                            }
-                        }
-
-                        .news-overlay {
-                            position: absolute;
-                            top: 0;
-                            left: 0;
-                            width: 100%;
-                            height: 100%;
-                        }
-
-                        .red-overlay {
-                            background: $overlay-red-gradient;
-                        }
-                    }
-
-                    .news-content {
-                        position: absolute;
-                        bottom: 0;
-                        left: 0;
-                        right: 0;
-                        padding: 10px;
-                        color: white;
-                        z-index: 2;
-
-                        .news-title {
-                            font-size: 13px;
-                            font-weight: 600;
-                            margin: 0 0 4px 0;
-                            line-height: 1.3;
-                            display: -webkit-box;
-                            -webkit-line-clamp: 2;
-                            line-clamp: 2;
-                            -webkit-box-orient: vertical;
-                            overflow: hidden;
-                        }
-
-                        .news-date {
-                            font-size: 11px;
-                            opacity: 0.9;
-                        }
-                    }
-
-                    &:hover .news-image :deep(.el-image img) {
-                        transform: scale(1.05);
-                    }
                 }
             }
         }
@@ -988,7 +754,7 @@ onMounted(() => {
             .study-banner {
                 position: relative;
                 width: 100%;
-                height: 160px;
+                height: 120px;
                 border-radius: 16px;
                 overflow: hidden;
                 cursor: pointer;

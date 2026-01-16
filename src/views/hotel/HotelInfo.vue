@@ -14,25 +14,18 @@
             <h1 class="hotel-name">{{ info.homestayName }}</h1>
             <div class="meta">
                 <span class="star">⭐ {{ info.starLevel }} 星</span>
-                <span class="address">{{ info.address }}</span>
+                <span
+                    v-if="info.longitude && info.latitude"
+                    class="address address-clickable"
+                    @click="goToMap"
+                >
+                    {{ info.address }}
+                    <span class="map-icon">🗺️</span>
+                </span>
+                <span v-else class="address">{{ info.address }}</span>
             </div>
 
             <div class="desc">{{ info.description }}</div>
-
-            <div class="map-wrapper" v-if="info.longitude && info.latitude">
-                <MapMark
-                    :marks="[
-                        {
-                            lng: info.longitude,
-                            lat: info.latitude,
-                            name: info.homestayName,
-                            address: info.address,
-                        },
-                    ]"
-                    :showMyLocation="true"
-                    :autoFitView="true"
-                />
-            </div>
 
             <div class="info-section">
                 <h2>民宿信息</h2>
@@ -58,9 +51,9 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { ElMessage } from "element-plus";
 import { getHotelItem } from "@/apis/hotel";
 import { imgUrl } from "@/utils/index";
-import MapMark from "@/components/base/MapMark.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -78,6 +71,22 @@ const publishDate = computed(() => {
 function callPhone(phone: string) {
     if (!phone) return;
     window.location.href = `tel:${phone}`;
+}
+
+// 跳转到地图页面
+function goToMap() {
+    if (info.value.longitude && info.value.latitude) {
+        router.push({
+            name: "Map",
+            query: {
+                lng: info.value.longitude.toString(),
+                lat: info.value.latitude.toString(),
+                name: info.value.homestayName,
+                address: info.value.address,
+                phone: info.value.contactPhone || "",
+            },
+        });
+    }
 }
 
 onMounted(async () => {
@@ -162,6 +171,28 @@ onMounted(async () => {
                 color: #ff9900;
                 margin-right: 10px;
             }
+
+            .address {
+                &.address-clickable {
+                    cursor: pointer;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    transition: color 0.2s;
+                    border-radius: 4px;
+                    padding: 4px 8px;
+                    margin: -4px -8px;
+
+                    &:active {
+                        background-color: #f5f5f5;
+                        color: $color-green-primary;
+                    }
+
+                    .map-icon {
+                        font-size: 16px;
+                    }
+                }
+            }
         }
 
         .desc {
@@ -169,15 +200,6 @@ onMounted(async () => {
             line-height: 1.6;
             color: #555;
             margin-bottom: 16px;
-        }
-
-        .map-wrapper {
-            width: 100%;
-            height: 220px;
-            margin-bottom: $spacing-lg;
-            border-radius: $radius-medium;
-            overflow: hidden;
-            box-shadow: $shadow-lg;
         }
 
         .info-section {

@@ -15,7 +15,7 @@
 <script setup lang="ts">
 import { onMounted, ref, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { getNewsItem } from "@/apis/news";
+import { getActualTimeItem } from "@/apis/news";
 import { transHtml } from "@/utils/transHtml";
 
 const route = useRoute();
@@ -27,7 +27,7 @@ const loading = ref(true);
 
 async function fetchNewsDetail() {
     try {
-        const res = await getNewsItem({ id });
+        const res = await getActualTimeItem({ id });
         if (!res.data) {
             return ElMessage.error("新闻获取失败");
         }

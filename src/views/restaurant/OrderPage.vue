@@ -47,7 +47,10 @@
                         <el-image
                             class="product-image"
                             :src="imgUrl(item.coverImgUrl)"
+                            :preview-src-list="[imgUrl(item.coverImgUrl)]"
+                            :preview-teleported="true"
                             alt="商品图片"
+                            fit="cover"
                         />
 
                         <div class="product-info">
@@ -169,7 +172,16 @@
                     </div>
 
                     <div class="store-detail-section">
-                        <div class="detail-item">
+                        <div
+                            class="detail-item address-item"
+                            v-if="restaurantInfo.coordinateLng && restaurantInfo.coordinateLat"
+                            @click="goToMap"
+                        >
+                            <span class="label">📍 地址</span>
+                            <span class="value">{{ restaurantInfo.address }}</span>
+                            <span class="map-icon">🗺️</span>
+                        </div>
+                        <div v-else class="detail-item">
                             <span class="label">📍 地址</span>
                             <span class="value">{{ restaurantInfo.address }}</span>
                         </div>
@@ -186,29 +198,6 @@
                         </div>
                     </div>
 
-                    <!-- 地图组件 -->
-                    <div
-                        class="store-detail-section"
-                        v-if="restaurantInfo.coordinateLng && restaurantInfo.coordinateLat"
-                    >
-                        <h4>位置地图</h4>
-                        <div class="map-wrapper">
-                            <MapMark
-                                :marks="[
-                                    {
-                                        lng: restaurantInfo.coordinateLng!,
-                                        lat: restaurantInfo.coordinateLat!,
-                                        name: restaurantInfo.name,
-                                        address: restaurantInfo.address,
-                                        phone: restaurantInfo.phone,
-                                    },
-                                ]"
-                                :showMyLocation="true"
-                                :autoFitView="true"
-                            />
-                        </div>
-                    </div>
-
                     <div class="store-detail-section">
                         <h4>店铺介绍</h4>
                         <p class="store-description">{{ restaurantInfo.notice }}</p>
@@ -221,6 +210,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { useCartStore } from "@/stores/orderCart";
 import {
     getRestaurantDetail,
@@ -231,9 +221,9 @@ import {
     type IDishItem,
 } from "@/apis/restaurant";
 import { imgUrl } from "@/utils";
-import MapMark from "@/components/base/MapMark.vue";
 
 const route = useRoute();
+const router = useRouter();
 const cartStore = useCartStore();
 const activeCategory = ref<number>(0);
 const showCart = ref(false);
@@ -255,6 +245,22 @@ const restaurantId = computed(() => {
 const currentProducts = computed(() => {
     return menuItems.value.filter((item) => item.categoryId === activeCategory.value);
 });
+
+// 跳转到地图页面
+function goToMap() {
+    if (restaurantInfo.value?.coordinateLng && restaurantInfo.value?.coordinateLat) {
+        router.push({
+            name: "Map",
+            query: {
+                lng: restaurantInfo.value.coordinateLng.toString(),
+                lat: restaurantInfo.value.coordinateLat.toString(),
+                name: restaurantInfo.value.name,
+                address: restaurantInfo.value.address,
+                phone: restaurantInfo.value.phone || "",
+            },
+        });
+    }
+}
 
 onMounted(async () => {
     try {
@@ -478,6 +484,18 @@ onMounted(async () => {
                         justify-content: center;
                         font-size: 40px;
                         flex-shrink: 0;
+
+                        :deep(.el-image) {
+                            width: 100%;
+                            height: 100%;
+
+                            img {
+                                width: 100%;
+                                height: 100%;
+                                object-fit: cover;
+                                border-radius: 4px;
+                            }
+                        }
                     }
 
                     .product-info {
@@ -792,8 +810,23 @@ onMounted(async () => {
                     border-radius: 6px;
 
                     .item-image {
-                        img {
+                        width: 60px;
+                        height: 60px;
+                        flex-shrink: 0;
+                        border-radius: 6px;
+                        overflow: hidden;
+
+                        :deep(.el-image) {
                             width: 100%;
+                            height: 100%;
+
+                            img {
+                                width: 100%;
+                                height: 100%;
+                                object-fit: cover;
+                                max-width: 60px;
+                                max-height: 60px;
+                            }
                         }
                     }
 
@@ -928,6 +961,24 @@ onMounted(async () => {
                         border-bottom: none;
                     }
 
+                    &.address-item {
+                        cursor: pointer;
+                        transition: background-color 0.2s;
+                        border-radius: 6px;
+                        padding: 8px;
+                        margin: -8px;
+                        align-items: center;
+
+                        &:active {
+                            background-color: #f5f5f5;
+                        }
+
+                        .map-icon {
+                            margin-left: auto;
+                            font-size: 18px;
+                        }
+                    }
+
                     .label {
                         width: 100px;
                         color: #666;
@@ -956,6 +1007,61 @@ onMounted(async () => {
                 }
             }
         }
+    }
+}
+</style>
+
+<style lang="scss">
+// 移动端图片预览器样式修复
+.el-image-viewer__wrapper {
+    .el-image-viewer__mask {
+        background-color: rgba(0, 0, 0, 0.8) !important;
+    }
+
+    .el-image-viewer__canvas {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100vw;
+        height: 100vh;
+        padding: 0;
+        margin: 0;
+
+        img {
+            max-width: 100vw;
+            max-height: 100vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+        }
+    }
+
+    .el-image-viewer__actions {
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: 20px;
+        padding: 8px 16px;
+
+        .el-image-viewer__actions__inner {
+            display: flex;
+            gap: 20px;
+        }
+    }
+
+    .el-image-viewer__close {
+        top: 20px;
+        right: 20px;
+        width: 40px;
+        height: 40px;
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: 50%;
+        color: white;
+        font-size: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 }
 </style>

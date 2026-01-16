@@ -18,6 +18,7 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from "vue-router";
 import homeIcon from "@/assets/svg/home.png";
+import foodIcon from "@/assets/svg/food.png";
 import shopIcon from "@/assets/svg/shop.png";
 import hotelIcon from "@/assets/svg/hotel.png";
 import userIcon from "@/assets/svg/user.png";
@@ -33,6 +34,7 @@ interface TabItem {
 
 const tabItems: TabItem[] = [
     { name: "首页", routeName: "HomePage", icon: homeIcon },
+    { name: "美食", routeName: "RestaurantList", icon: foodIcon },
     { name: "特产", routeName: "ShopList", icon: shopIcon },
     { name: "民宿", routeName: "HotelList", icon: hotelIcon },
     { name: "我的", routeName: "MyPage", icon: userIcon },

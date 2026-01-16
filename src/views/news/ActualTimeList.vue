@@ -83,7 +83,7 @@ async function onLoadMore() {
 }
 
 function goDetail(id: number) {
-    router.push({ name: "NewsInfo", params: { id } });
+    router.push({ name: "ActualTimeInfo", params: { id } });
 }
 </script>
 
@@ -117,4 +117,3 @@ function goDetail(id: number) {
     }
 }
 </style>
-
