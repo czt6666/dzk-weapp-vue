@@ -31,10 +31,7 @@
                     <line x1="3" y1="10" x2="21" y2="10"></line>
                 </svg>
                 <span class="label">报名时间：</span>
-                <span class="value"
-                    >{{ info.applyStartDate }} -
-                    {{ info.applyEndDate }}</span
-                >
+                <span class="value">{{ info.applyStartDate }} - {{ info.applyEndDate }}</span>
             </div>
 
             <div class="info-row">
@@ -45,10 +42,7 @@
                     <line x1="3" y1="10" x2="21" y2="10"></line>
                 </svg>
                 <span class="label">活动时间：</span>
-                <span class="value"
-                    >{{ info.activityStartDate }} -
-                    {{ info.activityEndDate }}</span
-                >
+                <span class="value">{{ info.activityStartDate }} - {{ info.activityEndDate }}</span>
             </div>
         </div>
 
@@ -153,10 +147,8 @@ const toggleFavorite = () => {
     border: 1px solid #e5e7eb;
     transition: all 0.2s ease;
 
-    &:hover {
-        box-shadow:
-            0 4px 6px -1px rgba(0, 0, 0, 0.1),
-            0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    &:active {
+        opacity: 0.8;
     }
 
     .item-header {
@@ -221,9 +213,9 @@ const toggleFavorite = () => {
                 filter: invert(60%) sepia(0%) saturate(0%) hue-rotate(0deg);
             }
 
-            &:hover {
-                transform: scale(1.1);
-                background: rgba(255, 255, 255, 1);
+            &:active {
+                transform: scale(0.95);
+            }
 
                 .heart-icon {
                     filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(334deg)

@@ -438,7 +438,7 @@ onMounted(async () => {
                     }
                 }
 
-                &:hover:not(.active) {
+                &:active:not(.active) {
                     background: #f0f0f0;
                 }
             }
@@ -484,7 +484,7 @@ onMounted(async () => {
                     padding: $spacing-md;
                     border-bottom: 1px solid #f0f0f0;
 
-                    &:hover {
+                    &:active {
                         background: #fafafa;
                     }
 
@@ -585,7 +585,7 @@ onMounted(async () => {
                                         padding-bottom: 2px;
                                         color: #ff6b35;
 
-                                        &:hover {
+                                        &:active {
                                             border-color: #ff6b35;
                                             background: #fff5f0;
                                         }
@@ -596,7 +596,7 @@ onMounted(async () => {
                                         border-color: #ff6b35;
                                         color: white;
 
-                                        &:hover {
+                                        &:active {
                                             background: #ff5722;
                                         }
                                     }
@@ -624,9 +624,9 @@ onMounted(async () => {
                                 align-items: center;
                                 justify-content: center;
 
-                                &:hover {
+                                &:active {
                                     background: #ff5722;
-                                    transform: scale(1.05);
+                                    transform: scale(0.95);
                                 }
                             }
                         }
@@ -717,7 +717,7 @@ onMounted(async () => {
                 cursor: pointer;
                 transition: all 0.2s;
 
-                &:hover:not(:disabled) {
+                &:active:not(:disabled) {
                     background: #ff5722;
                 }
 
@@ -783,7 +783,7 @@ onMounted(async () => {
                 align-items: center;
                 justify-content: center;
 
-                &:hover {
+                &:active {
                     background: #e8e8e8;
                 }
             }
@@ -909,7 +909,7 @@ onMounted(async () => {
                 font-weight: 500;
                 cursor: pointer;
 
-                &:hover {
+                &:active {
                     background: #e8e8e8;
                 }
             }

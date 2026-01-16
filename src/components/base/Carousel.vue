@@ -272,10 +272,8 @@ watch(
                 pointer-events: none; // 确保 SVG 不阻止按钮的点击事件
             }
 
-            &:hover:not(:disabled) {
-                background: white;
-                transform: scale(1.1);
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            &:active:not(:disabled) {
+                transform: scale(0.95);
             }
 
             &:active:not(:disabled) {
@@ -314,7 +312,7 @@ watch(
                 border-radius: 4px;
             }
 
-            &:hover {
+            &:active {
                 background: rgba(255, 255, 255, 0.8);
             }
         }

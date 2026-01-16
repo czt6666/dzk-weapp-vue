@@ -463,9 +463,6 @@ async function handleRegister() {
                     box-shadow: $shadow-sm;
                     transition: $transition-base;
 
-                    &:hover {
-                        box-shadow: $shadow-md;
-                    }
 
                     &.is-focus {
                         box-shadow: 0 4px 16px rgba($color-green-primary, 0.25);
@@ -487,9 +484,7 @@ async function handleRegister() {
             box-shadow: $shadow-md;
             transition: $transition-base;
 
-            &:hover:not(:disabled) {
-                transform: translateY(-2px);
-                box-shadow: $shadow-lg;
+            &:active:not(:disabled) {
                 background: color.adjust($color-green-primary, $lightness: -5%);
             }
 

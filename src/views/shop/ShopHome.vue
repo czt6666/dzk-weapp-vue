@@ -171,9 +171,8 @@ const products = ref([
     box-shadow: $shadow-sm;
     transition: $transition-base;
 
-    &:hover {
-        transform: translateY(-2px);
-        box-shadow: $shadow-md;
+    &:active {
+        opacity: 0.8;
     }
 }
 

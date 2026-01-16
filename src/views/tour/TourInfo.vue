@@ -377,10 +377,8 @@ onMounted(async () => {
             padding: 8px;
             border-radius: 8px;
 
-            &:hover {
-                background: #f3f4f6;
-                transform: translateY(-2px);
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            &:active {
+                opacity: 0.8;
             }
 
             .location-section {
@@ -388,10 +386,6 @@ onMounted(async () => {
                 background: #f9fafb;
                 border-radius: 8px;
                 transition: all 0.3s;
-
-                &:hover {
-                    background: #f3f4f6;
-                }
 
                 .location-label {
                     display: flex;
@@ -461,7 +455,7 @@ onMounted(async () => {
                 margin-top: 8px;
                 transition: $transition-base;
 
-                &:hover {
+                &:active {
                     background: $overlay-red-strong;
                 }
 

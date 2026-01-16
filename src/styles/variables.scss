@@ -68,6 +68,13 @@ $spacing-xxxl: 32px;
 $transition-base: all 0.3s ease;
 $transition-fast: all 0.2s ease;
 
+// Hover mixin - 只在非触摸设备上生效
+@mixin hover-supported {
+    @media (hover: hover) and (pointer: fine) {
+        @content;
+    }
+}
+
 // CSS变量（用于在JS中访问）
 :root {
     --color-primary: #1890ff;

@@ -518,9 +518,8 @@ onMounted(() => {
         user-select: none;
         white-space: nowrap;
 
-        &:hover {
-            color: $color-green-primary;
-            transform: translateX(2px);
+        &:active {
+            opacity: 0.8;
         }
 
         &:active {
@@ -923,9 +922,8 @@ onMounted(() => {
                 transform: scale(0.98);
             }
 
-            &:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+            &:active {
+                opacity: 0.8;
             }
 
             .hotel-image {
@@ -973,10 +971,6 @@ onMounted(() => {
                     -webkit-box-orient: vertical;
                     overflow: hidden;
                 }
-            }
-
-            &:hover .hotel-image :deep(.el-image img) {
-                transform: scale(1.05);
             }
         }
     }

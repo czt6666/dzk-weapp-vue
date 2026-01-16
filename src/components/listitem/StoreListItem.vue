@@ -115,13 +115,8 @@ const toggleFavorite = () => {
     cursor: pointer;
     transition: all 0.3s ease;
 
-    &:hover {
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-        transform: translateY(-2px);
-    }
-
     &:active {
-        transform: translateY(0);
+        opacity: 0.8;
     }
 }
 
@@ -214,15 +209,8 @@ const toggleFavorite = () => {
             filter: invert(60%) sepia(0%) saturate(0%) hue-rotate(0deg);
         }
 
-        &:hover {
-            transform: scale(1.1);
-            background: #fff;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-
-            .heart-icon {
-                filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(334deg) brightness(100%)
-                    contrast(101%);
-            }
+        &:active {
+            transform: scale(0.95);
         }
 
         &.active {
@@ -247,13 +235,8 @@ const toggleFavorite = () => {
         transition: all 0.3s ease;
         flex-shrink: 0;
 
-        &:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(164, 179, 154, 0.4);
-        }
-
         &:active {
-            transform: translateY(0);
+            transform: scale(0.98);
         }
     }
 }

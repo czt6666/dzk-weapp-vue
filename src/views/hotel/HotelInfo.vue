@@ -146,10 +146,6 @@ onMounted(async () => {
             cursor: pointer;
             transition: transform 0.2s ease;
 
-            &:hover {
-                transform: scale(1.01);
-            }
-
             img {
                 width: 100%;
                 height: 100%;
@@ -289,7 +285,7 @@ onMounted(async () => {
             cursor: pointer;
             transition: $transition-base;
 
-            &:hover {
+            &:active {
                 background: color.adjust($color-green-primary, $lightness: -10%);
             }
 

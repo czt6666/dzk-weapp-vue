@@ -7,18 +7,10 @@
         <span class="el-image-viewer__index" v-if="imageUrls.length > 1">
             {{ currentIndex + 1 }} / {{ imageUrls.length }}
         </span>
-        <button
-            v-if="imageUrls.length > 1"
-            class="el-image-viewer__prev"
-            @click.stop="prevImage"
-        >
+        <button v-if="imageUrls.length > 1" class="el-image-viewer__prev" @click.stop="prevImage">
             ‹
         </button>
-        <button
-            v-if="imageUrls.length > 1"
-            class="el-image-viewer__next"
-            @click.stop="nextImage"
-        >
+        <button v-if="imageUrls.length > 1" class="el-image-viewer__next" @click.stop="nextImage">
             ›
         </button>
         <span class="el-image-viewer__close" @click.stop="close">×</span>
@@ -159,10 +151,7 @@ defineExpose({
     align-items: center;
     justify-content: center;
     transition: background-color 0.2s ease;
-
-    &:hover {
-        background-color: rgba(0, 0, 0, 0.7);
-    }
+    -webkit-tap-highlight-color: transparent;
 
     &:active {
         background-color: rgba(0, 0, 0, 0.9);
@@ -192,14 +181,10 @@ defineExpose({
     justify-content: center;
     cursor: pointer;
     transition: background-color 0.2s ease;
-
-    &:hover {
-        background-color: rgba(0, 0, 0, 0.7);
-    }
+    -webkit-tap-highlight-color: transparent;
 
     &:active {
         background-color: rgba(0, 0, 0, 0.9);
     }
 }
 </style>
-

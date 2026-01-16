@@ -102,8 +102,8 @@ const handleReset = () => {
         cursor: pointer;
         transition: opacity 0.2s;
 
-        &:hover {
-            opacity: 0.9;
+        &:active {
+            opacity: 0.8;
         }
     }
 }

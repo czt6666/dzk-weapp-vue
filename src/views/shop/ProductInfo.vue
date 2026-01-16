@@ -221,10 +221,6 @@ function goToShopInfo() {
                 cursor: pointer;
                 transition: transform 0.2s ease;
 
-                &:hover {
-                    transform: scale(1.02);
-                }
-
                 img {
                     width: 100%;
                     height: 100%;
@@ -259,9 +255,8 @@ function goToShopInfo() {
                     opacity: 1;
                     border-color: $color-green-primary;
                 }
-                &:hover {
-                    opacity: 1;
-                    transform: scale(1.05);
+                &:active {
+                    opacity: 0.8;
                 }
             }
         }
@@ -298,10 +293,6 @@ function goToShopInfo() {
             box-shadow: $shadow-sm;
             cursor: pointer;
             transition: transform 0.2s ease;
-
-            &:hover {
-                transform: scale(1.01);
-            }
 
             img {
                 width: 100%;
@@ -373,7 +364,7 @@ function goToShopInfo() {
         background: rgba(0, 0, 0, 0.05);
         color: $text-primary;
 
-        &:hover {
+        &:active {
             background: rgba(0, 0, 0, 0.1);
         }
     }
@@ -382,7 +373,7 @@ function goToShopInfo() {
         background: $color-green-primary;
         color: #fff;
 
-        &:hover {
+        &:active {
             background: color.adjust($color-green-primary, $lightness: -10%);
         }
     }
@@ -436,7 +427,7 @@ function goToShopInfo() {
                 cursor: pointer;
                 transition: $transition-base;
 
-                &:hover {
+                &:active {
                     background: $overlay-green-light;
                 }
             }
@@ -499,7 +490,7 @@ function goToShopInfo() {
             cursor: pointer;
             transition: $transition-base;
 
-            &:hover {
+            &:active {
                 background: rgba(0, 0, 0, 0.1);
             }
         }

@@ -122,10 +122,5 @@ function handleTabClick(routeName: string) {
         transition: transform 0.15s ease;
     }
 
-    &:not(.active):hover {
-        .tab-icon .icon {
-            transform: scale(1.05);
-        }
-    }
 }
 </style>

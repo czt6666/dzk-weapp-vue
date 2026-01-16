@@ -238,8 +238,8 @@ const toggleActivityFavorite = createFavoriteToggle("study_activity", activityLi
             position: relative;
             transition: $transition-base;
 
-            &:hover {
-                color: $color-green-primary;
+            &:active {
+                opacity: 0.8;
             }
 
             &.active {

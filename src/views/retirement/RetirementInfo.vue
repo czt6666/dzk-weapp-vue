@@ -318,9 +318,6 @@ const previewList = computed(() => {
         cursor: pointer;
         transition: transform 0.2s ease;
 
-        &:hover {
-            transform: scale(1.02);
-        }
 
         :deep(.el-image__inner) {
             width: 100%;

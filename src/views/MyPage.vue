@@ -180,7 +180,7 @@ async function handleLogout() {
             font-weight: 500;
             transition: all 0.2s ease;
 
-            &:hover {
+            &:active {
                 background: $color-red-primary;
                 color: white;
             }

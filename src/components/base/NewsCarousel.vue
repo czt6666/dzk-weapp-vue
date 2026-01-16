@@ -317,10 +317,6 @@ watch(
                     opacity: 0.9;
                 }
             }
-
-            &:hover .news-image :deep(.el-image img) {
-                transform: scale(1.05);
-            }
         }
     }
 
@@ -352,7 +348,7 @@ watch(
                 border-radius: 3px;
             }
 
-            &:hover {
+            &:active {
                 background: rgba(255, 255, 255, 0.8);
             }
         }

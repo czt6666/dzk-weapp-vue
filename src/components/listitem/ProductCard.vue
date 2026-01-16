@@ -91,9 +91,8 @@ function toggleFavorite() {
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-    &:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    &:active {
+        opacity: 0.8;
     }
 }
 
@@ -113,10 +112,6 @@ function toggleFavorite() {
             object-fit: cover;
             transition: transform 0.3s ease;
         }
-    }
-
-    &:hover :deep(.el-image img) {
-        transform: scale(1.05);
     }
 
     .status {
@@ -158,9 +153,8 @@ function toggleFavorite() {
             filter: invert(60%) sepia(0%) saturate(0%) hue-rotate(0deg);
         }
 
-        &:hover {
-            transform: scale(1.1);
-            background: rgba(255, 255, 255, 1);
+        &:active {
+            transform: scale(0.95);
 
             .heart-icon {
                 filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(334deg) brightness(100%)
@@ -265,20 +259,14 @@ function toggleFavorite() {
             padding: 2px 4px;
             border-radius: 4px;
 
-            &:hover {
-                background: rgba(255, 107, 107, 0.1);
-                transform: scale(1.05);
+            &:active {
+                transform: scale(0.95);
             }
 
             img {
                 filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(334deg) brightness(100%)
                     contrast(101%);
                 transition: all 0.3s ease;
-            }
-
-            &:hover img {
-                filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(334deg) brightness(110%)
-                    contrast(101%);
             }
         }
     }

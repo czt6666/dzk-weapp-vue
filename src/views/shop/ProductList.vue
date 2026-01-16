@@ -257,9 +257,8 @@ const toggleFavorite = createFavoriteToggle("product", list);
     cursor: pointer;
     transition: $transition-base;
 
-    &:hover {
-        transform: scale(1.1);
-        box-shadow: $shadow-lg;
+    &:active {
+        transform: scale(0.95);
     }
 
     .cart-count {

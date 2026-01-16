@@ -110,9 +110,8 @@ function goDetail(item: any) {
     transition: $transition-base;
 }
 
-.favorite-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+.favorite-card:active {
+    opacity: 0.8;
 }
 
 .thumb {
@@ -138,9 +137,6 @@ function goDetail(item: any) {
     }
 }
 
-.thumb:hover :deep(.el-image img) {
-    transform: scale(1.05);
-}
 
 .info {
     padding: $spacing-md;
@@ -197,7 +193,7 @@ button.buy {
     color: #fff;
 }
 
-button.buy:hover {
+button.buy:active {
     background-color: color.adjust($color-green-primary, $lightness: -10%);
 }
 
@@ -206,7 +202,7 @@ button.remove {
     color: #555;
 }
 
-button.remove:hover {
+button.remove:active {
     background-color: #ffefef;
     color: #e53935;
 }

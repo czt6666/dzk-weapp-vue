@@ -268,10 +268,8 @@ watch(
                 pointer-events: none;
             }
 
-            &:hover:not(:disabled) {
-                background: white;
-                transform: scale(1.1);
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            &:active:not(:disabled) {
+                transform: scale(0.95);
             }
 
             &:active:not(:disabled) {
