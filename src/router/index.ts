@@ -96,13 +96,6 @@ const routes: RouteRecordRaw[] = [
         meta: { title: "我的收藏" },
     },
     {
-        path: "/shop/home/:id",
-        name: "ShopHome",
-        component: () => import("../views/shop/ShopHome.vue"),
-        props: true,
-        meta: { title: "店铺首页" },
-    },
-    {
         path: "/restaurant",
         name: "RestaurantList",
         component: () => import("../views/restaurant/StoreList.vue"),

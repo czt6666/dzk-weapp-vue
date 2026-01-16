@@ -74,7 +74,7 @@
                                 <div class="food-content green-content">
                                     <h3 class="food-name">{{ restaurant.name }}</h3>
                                     <p class="food-desc">
-                                        {{ restaurant.notice || "田园风味，健康美味" }}
+                                        {{ restaurant.villageName }}
                                     </p>
                                 </div>
                             </div>

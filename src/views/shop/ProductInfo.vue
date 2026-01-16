@@ -51,12 +51,20 @@
     </div>
     <!-- 底部操作栏 -->
     <div class="bottom-bar">
-        <div class="merchant" @click="goToShopInfo">
+        <div class="merchant">
             <el-image :src="imgUrl(product.shopAvatar)" fit="cover" />
             <span>{{ product.storeName }}</span>
         </div>
 
-        <button class="collect-btn" @click="showCollect = true">收藏</button>
+        <button
+            class="collect-btn"
+            @click="
+                showCollect = true;
+                onCollectPopupShow();
+            "
+        >
+            收藏
+        </button>
         <button class="buy-btn" @click="showBuyModal = true">购买</button>
     </div>
 
@@ -65,7 +73,15 @@
         <div v-if="showCollect" class="collect-popup">
             <div class="popup-header">
                 <span>收藏商品</span>
-                <button class="close-btn" @click="showCollect = false">×</button>
+                <button
+                    class="close-btn"
+                    @click="
+                        showCollect = false;
+                        selectedSpec = null;
+                    "
+                >
+                    ×
+                </button>
             </div>
 
             <div class="popup-body">
@@ -75,11 +91,22 @@
                         v-for="(item, idx) in product.specifications"
                         :key="idx"
                         class="item"
-                        @click="handleAddToCollect(item)"
+                        :class="{ active: selectedSpec?.id === item.id }"
+                        @click="selectedSpec = item"
                     >
                         {{ item.specName }}: {{ item.price }}元
                     </button>
                 </div>
+            </div>
+
+            <div class="popup-footer">
+                <button
+                    class="collect-confirm-btn"
+                    @click="handleConfirmCollect"
+                    :disabled="!selectedSpec"
+                >
+                    收藏
+                </button>
             </div>
         </div>
     </transition>
@@ -98,7 +125,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, computed } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import { ElMessage } from "element-plus";
 import type { IProductDetail, ISpecItem } from "@/views/shop/types";
 import { imgUrl } from "@/utils";
@@ -106,7 +133,6 @@ import { getProductItem } from "@/apis/shop";
 import { useShopFavoriteStore } from "@/stores/shopFavorite";
 
 const route = useRoute();
-const router = useRouter();
 const favorite = useShopFavoriteStore();
 const id = Number(route.params.id);
 
@@ -158,6 +184,26 @@ async function handleAddToCollect(selectedSpec: ISpecItem) {
     await favorite.add(selectedSpec);
 }
 
+async function handleConfirmCollect() {
+    if (!selectedSpec.value) {
+        ElMessage.warning("请选择规格");
+        return;
+    }
+    await favorite.add(selectedSpec.value);
+    showCollect.value = false;
+    selectedSpec.value = null;
+}
+
+// 监听弹窗显示，默认选择第一个规格
+function onCollectPopupShow() {
+    if (product.value.specifications && product.value.specifications.length > 0) {
+        const firstSpec = product.value.specifications[0];
+        if (firstSpec) {
+            selectedSpec.value = firstSpec;
+        }
+    }
+}
+
 onMounted(async () => {
     try {
         const res = await getProductItem(id);
@@ -173,6 +219,7 @@ onBeforeUnmount(stopAutoPlay);
 
 const showCollect = ref(false);
 const showBuyModal = ref(false);
+const selectedSpec = ref<ISpecItem | null>(null);
 
 // 预览图片列表
 const previewImageList = computed(() => {
@@ -183,10 +230,6 @@ const previewImageList = computed(() => {
 const detailImageList = computed(() => {
     return product.value.detailImages.map((img) => imgUrl(img));
 });
-
-function goToShopInfo() {
-    router.push({ name: "ShopHome", params: { id: product.value.id } });
-}
 </script>
 
 <style lang="scss" scoped>
@@ -329,6 +372,7 @@ function goToShopInfo() {
         flex: 1;
 
         :deep(.el-image) {
+            min-width: 32px;
             width: 32px;
             height: 32px;
             border-radius: 50%;
@@ -411,6 +455,7 @@ function goToShopInfo() {
     .popup-body {
         font-size: 14px;
         color: #333;
+        padding-bottom: 80px; // 为底部按钮留出空间
 
         .collect-list {
             margin-top: 14px;
@@ -422,7 +467,7 @@ function goToShopInfo() {
                 padding: $spacing-md;
                 border-radius: $radius-medium;
                 background: rgba(0, 0, 0, 0.03);
-                border: none;
+                border: 2px solid transparent;
                 text-align: left;
                 cursor: pointer;
                 transition: $transition-base;
@@ -430,6 +475,47 @@ function goToShopInfo() {
                 &:active {
                     background: $overlay-green-light;
                 }
+
+                &.active {
+                    background: $overlay-green-light;
+                    border-color: $color-green-primary;
+                    color: $color-green-primary;
+                    font-weight: 600;
+                }
+            }
+        }
+    }
+
+    .popup-footer {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: $spacing-md;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+        background: rgba(255, 255, 255, 0.98);
+
+        .collect-confirm-btn {
+            width: 100%;
+            padding: 14px 0;
+            border-radius: $radius-medium;
+            border: none;
+            background: $color-green-primary;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: $transition-base;
+
+            &:active:not(:disabled) {
+                background: color.adjust($color-green-primary, $lightness: -10%);
+                transform: scale(0.98);
+            }
+
+            &:disabled {
+                background: rgba(0, 0, 0, 0.1);
+                color: rgba(0, 0, 0, 0.3);
+                cursor: not-allowed;
             }
         }
     }
