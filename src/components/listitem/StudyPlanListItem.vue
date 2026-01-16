@@ -29,7 +29,7 @@
                     <circle cx="12" cy="10" r="3"></circle>
                 </svg>
                 <span class="label">路线：</span>
-                <span class="value">{{ info.route }}</span>
+                <span class="value route-value">{{ info.route }}</span>
             </div>
 
             <div v-if="info.suitableCrowd" class="info-row">
@@ -243,6 +243,16 @@ const toggleFavorite = () => {
             .value {
                 color: #111827;
                 flex: 1;
+
+                &.route-value {
+                    white-space: pre-wrap;
+                    word-break: break-word;
+                    display: -webkit-box;
+                    -webkit-box-orient: vertical;
+                    -webkit-line-clamp: 2;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
             }
         }
     }
@@ -259,6 +269,8 @@ const toggleFavorite = () => {
             font-size: 13px;
             color: #6b7280;
             line-height: 1.5;
+            white-space: pre-wrap;
+            word-break: break-word;
             display: -webkit-box;
             -webkit-box-orient: vertical;
             -webkit-line-clamp: 2;

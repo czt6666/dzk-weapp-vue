@@ -3,7 +3,14 @@
         <!-- 预览区：轮播主图 + 缩略图 -->
         <div class="preview">
             <div class="main-img-box">
-                <el-image :src="imgUrl(currentImage)" class="main-img" fit="contain" />
+                <el-image
+                    :src="imgUrl(currentImage)"
+                    :preview-src-list="previewImageList"
+                    :initial-index="currentIndex"
+                    :preview-teleported="true"
+                    class="main-img"
+                    fit="contain"
+                />
             </div>
 
             <div class="thumbs">
@@ -11,6 +18,9 @@
                     v-for="(img, idx) in product.previewImages"
                     :key="idx"
                     :src="imgUrl(img)"
+                    :preview-src-list="previewImageList"
+                    :initial-index="idx"
+                    :preview-teleported="true"
                     :class="{ active: idx === currentIndex }"
                     @click="setCurrentImage(idx)"
                     fit="cover"
@@ -31,6 +41,9 @@
                 v-for="(img, idx) in product.detailImages"
                 :key="idx"
                 :src="imgUrl(img)"
+                :preview-src-list="detailImageList"
+                :initial-index="idx"
+                :preview-teleported="true"
                 class="detail-img"
                 fit="contain"
             />
@@ -84,8 +97,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, onMounted, onBeforeUnmount, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { ElMessage } from "element-plus";
 import type { IProductDetail, ISpecItem } from "@/views/shop/types";
 import { imgUrl } from "@/utils";
 import { getProductItem } from "@/apis/shop";
@@ -160,6 +174,16 @@ onBeforeUnmount(stopAutoPlay);
 const showCollect = ref(false);
 const showBuyModal = ref(false);
 
+// 预览图片列表
+const previewImageList = computed(() => {
+    return product.value.previewImages.map((img) => imgUrl(img));
+});
+
+// 详情图片列表
+const detailImageList = computed(() => {
+    return product.value.detailImages.map((img) => imgUrl(img));
+});
+
 function goToShopInfo() {
     router.push({ name: "ShopHome", params: { id: product.value.id } });
 }
@@ -194,6 +218,12 @@ function goToShopInfo() {
                 inset: 0;
                 width: 100%;
                 height: 100%;
+                cursor: pointer;
+                transition: transform 0.2s ease;
+
+                &:hover {
+                    transform: scale(1.02);
+                }
 
                 img {
                     width: 100%;
@@ -231,6 +261,7 @@ function goToShopInfo() {
                 }
                 &:hover {
                     opacity: 1;
+                    transform: scale(1.05);
                 }
             }
         }
@@ -265,6 +296,12 @@ function goToShopInfo() {
             background: rgba(255, 255, 255, 0.8);
             margin-bottom: $spacing-md;
             box-shadow: $shadow-sm;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+
+            &:hover {
+                transform: scale(1.01);
+            }
 
             img {
                 width: 100%;

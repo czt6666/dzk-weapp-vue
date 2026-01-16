@@ -22,6 +22,17 @@ import { ref, onMounted, watch } from "vue";
 import { wgs84ToGcj02 } from "@/utils/coord";
 import { AMAP_API_KEY } from "@/utils/constence";
 
+// 标记类型
+export type MarkerType =
+    | "restaurant"
+    | "hotel"
+    | "shop"
+    | "tour"
+    | "study"
+    | "retirement"
+    | "start"
+    | "end";
+
 // 定义商家标记的类型
 export interface MapMarker {
     lng: number; // 经度
@@ -31,6 +42,22 @@ export interface MapMarker {
     phone?: string; // 联系电话
     category?: string; // 美食类别
     image?: string; // 商家图片
+    type?: MarkerType; // 标记类型
+}
+
+// 路线点信息
+export interface RoutePoints {
+    origin: {
+        lng: number;
+        lat: number;
+        address: string;
+    };
+    dest: {
+        lng: number;
+        lat: number;
+        address: string;
+    };
+    routeName: string;
 }
 
 // 定义组件props
@@ -38,18 +65,23 @@ interface Props {
     marks?: MapMarker[];
     showMyLocation?: boolean; // 是否显示我的位置
     autoFitView?: boolean; // 是否自动调整视野
+    showRoute?: boolean; // 是否显示路线
+    routePoints?: RoutePoints | null; // 路线点信息
 }
 
 const props = withDefaults(defineProps<Props>(), {
     marks: () => [],
     showMyLocation: false,
     autoFitView: true,
+    showRoute: false,
+    routePoints: null,
 });
 
 const map = ref<any>(null);
 const restaurantMarkers = ref<any[]>([]);
 const myLocationMarker = ref<any>(null);
 const myLocationLoading = ref(false);
+const routePolyline = ref<any>(null); // 路线折线
 
 // 初始化地图
 const initMap = () => {
@@ -69,15 +101,77 @@ const addMapMarkers = () => {
     });
     restaurantMarkers.value = [];
 
-    // 添加商家标记（传入的是 GPS/WGS84，需要转换为高德使用的 GCJ-02）
-    props.marks.forEach((restaurant) => {
-        const [mapLng, mapLat] = wgs84ToGcj02(restaurant.lng, restaurant.lat);
-        // 创建自定义标记图标
-        const markerContent = `
-      <div class="restaurant-marker">
-        <div class="marker-icon">🍴</div>
-      </div>
-    `;
+    // 获取标记图标
+    const getMarkerIcon = (marker: MapMarker, index: number): string => {
+        const type = marker.type || "restaurant";
+
+        if (props.showRoute) {
+            if (type === "start" || index === 0) {
+                return "🚩"; // 出发地
+            } else if (
+                type === "end" ||
+                (props.marks.length > 0 && index === props.marks.length - 1)
+            ) {
+                return "🏁"; // 目的地
+            }
+        }
+
+        // 根据类型返回不同图标
+        const iconMap: Record<MarkerType, string> = {
+            restaurant: "🍴",
+            hotel: "🏨",
+            shop: "🛍️",
+            tour: "🗺️",
+            study: "📚",
+            retirement: "🏥",
+            start: "🚩",
+            end: "🏁",
+        };
+
+        return iconMap[type] || "📍";
+    };
+
+    // 获取标记颜色类
+    const getMarkerColorClass = (marker: MapMarker, index: number): string => {
+        const type = marker.type || "restaurant";
+
+        if (props.showRoute) {
+            if (type === "start" || index === 0) {
+                return "start-marker";
+            } else if (
+                type === "end" ||
+                (props.marks.length > 0 && index === props.marks.length - 1)
+            ) {
+                return "end-marker";
+            }
+        }
+
+        return `${type}-marker`;
+    };
+
+    // 添加商家标记
+    props.marks.forEach((restaurant, index) => {
+        // const [mapLng, mapLat] = wgs84ToGcj02(restaurant.lng, restaurant.lat);
+        const [mapLng, mapLat] = [restaurant.lng, restaurant.lat];
+
+        const icon = getMarkerIcon(restaurant, index);
+        const colorClass = getMarkerColorClass(restaurant, index);
+
+        // 创建标记内容
+        let markerContent = "";
+        if (props.showRoute && (colorClass === "start-marker" || colorClass === "end-marker")) {
+            markerContent = `
+                <div class="route-marker ${colorClass}">
+                    <div class="marker-icon">${icon}</div>
+                </div>
+            `;
+        } else {
+            markerContent = `
+                <div class="restaurant-marker ${colorClass}">
+                    <div class="marker-icon">${icon}</div>
+                </div>
+            `;
+        }
 
         const marker = new (window as any).AMap.Marker({
             position: new (window as any).AMap.LngLat(mapLng, mapLat),
@@ -108,6 +202,98 @@ const addMapMarkers = () => {
         });
 
         restaurantMarkers.value.push(marker);
+    });
+};
+
+// 生成贝塞尔曲线路径点
+const generateBezierPath = (points: number[][]): number[][] => {
+    if (points.length < 2) return points;
+    if (points.length === 2) {
+        // 两点之间生成平滑曲线
+        const p1 = points[0];
+        const p2 = points[1];
+        if (!p1 || !p2 || p1.length < 2 || p2.length < 2) return points;
+
+        const p1x = p1[0]!;
+        const p1y = p1[1]!;
+        const p2x = p2[0]!;
+        const p2y = p2[1]!;
+
+        const midX = (p1x + p2x) / 2;
+        const midY = (p1y + p2y) / 2;
+        // 计算控制点，使曲线更平滑
+        const dx = p2x - p1x;
+        const dy = p2y - p1y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const controlOffset = distance * 0.3; // 控制点偏移量
+
+        // 垂直方向偏移，形成曲线
+        const controlX = midX;
+        const controlY = midY + controlOffset;
+
+        // 生成贝塞尔曲线点
+        const bezierPoints: number[][] = [];
+        for (let t = 0; t <= 1; t += 0.02) {
+            const x = (1 - t) * (1 - t) * p1x + 2 * (1 - t) * t * controlX + t * t * p2x;
+            const y = (1 - t) * (1 - t) * p1y + 2 * (1 - t) * t * controlY + t * t * p2y;
+            bezierPoints.push([x, y]);
+        }
+        return bezierPoints;
+    }
+
+    // 多个点之间生成平滑曲线
+    const smoothPoints: number[][] = [];
+    for (let i = 0; i < points.length - 1; i++) {
+        const p1 = points[i];
+        const p2 = points[i + 1];
+        if (!p1 || !p2) continue;
+
+        const segment = generateBezierPath([p1, p2]);
+        if (i === 0) {
+            smoothPoints.push(...segment);
+        } else {
+            smoothPoints.push(...segment.slice(1)); // 避免重复点
+        }
+    }
+    return smoothPoints;
+};
+
+// 绘制路线
+const drawRoute = () => {
+    if (!props.showRoute || !props.routePoints || !map.value) return;
+
+    // 清除旧路线
+    if (routePolyline.value) {
+        map.value.remove(routePolyline.value);
+        routePolyline.value = null;
+    }
+
+    // 构建路径点数组
+    const origin = props.routePoints.origin;
+    const dest = props.routePoints.dest;
+    if (!origin || !dest) return;
+
+    // 使用贝塞尔曲线连接起点和终点
+    const pathPoints: number[][] = [
+        [origin.lng, origin.lat],
+        [dest.lng, dest.lat],
+    ];
+
+    const bezierPath = generateBezierPath(pathPoints);
+
+    routePolyline.value = new (window as any).AMap.Polyline({
+        path: bezierPath,
+        isOutline: true,
+        outlineColor: "#ffeeff",
+        borderWeight: 3,
+        strokeColor: "#c62828", // 使用主题红色
+        strokeOpacity: 0.8,
+        strokeWeight: 6,
+        lineJoin: "round",
+        lineCap: "round",
+        zIndex: 50,
+        map: map.value,
+        geodesic: false, // 不使用大地线
     });
 };
 
@@ -199,8 +385,9 @@ const loadAMapScript = (): Promise<void> => {
             return;
         }
 
+        const plugins = "AMap.Geolocation";
         const script = document.createElement("script");
-        script.src = `https://webapi.amap.com/maps?v=2.0&key=${AMAP_API_KEY}&plugin=AMap.Geolocation`;
+        script.src = `https://webapi.amap.com/maps?v=2.0&key=${AMAP_API_KEY}&plugin=${plugins}`;
         script.async = true;
         script.onload = () => resolve();
         script.onerror = () => reject(new Error("高德地图加载失败"));
@@ -219,11 +406,29 @@ watch(
     { deep: true },
 );
 
+// 监听路线信息变化
+watch(
+    () => [props.showRoute, props.routePoints],
+    () => {
+        if (map.value && props.showRoute && props.routePoints) {
+            drawRoute();
+        }
+    },
+    { deep: true },
+);
+
 onMounted(async () => {
     try {
         await loadAMapScript();
         initMap();
         addMapMarkers();
+
+        // 如果开启了显示路线，绘制路线
+        if (props.showRoute && props.routePoints) {
+            setTimeout(() => {
+                drawRoute();
+            }, 300);
+        }
 
         // 如果开启了显示我的位置，先定位
         if (props.showMyLocation) {
@@ -238,9 +443,12 @@ onMounted(async () => {
         // 自动调整视野以显示所有标记（包括商家和我的位置）
         if (props.autoFitView && props.marks.length > 0) {
             // 等待标记完全添加到地图后再调整视野
-            setTimeout(() => {
-                fitAllMarkers();
-            }, 200);
+            setTimeout(
+                () => {
+                    fitAllMarkers();
+                },
+                props.showRoute ? 500 : 200,
+            );
         }
     } catch (error) {
         console.error("地图初始化失败:", error);
@@ -249,6 +457,10 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
+* {
+    box-sizing: border-box;
+}
+
 .map-container {
     width: 100%;
     height: 100%;
@@ -309,6 +521,67 @@ onMounted(async () => {
             transform: scale(1.2);
         }
     }
+
+    // 不同类型标记的颜色
+    &.restaurant-marker .marker-icon {
+        background: #ff6b6b;
+        box-shadow: 0 2px 8px rgba(255, 107, 107, 0.4);
+    }
+
+    &.hotel-marker .marker-icon {
+        background: #4a90e2;
+        box-shadow: 0 2px 8px rgba(74, 144, 226, 0.4);
+    }
+
+    &.shop-marker .marker-icon {
+        background: #f5a623;
+        box-shadow: 0 2px 8px rgba(245, 166, 35, 0.4);
+    }
+
+    &.tour-marker .marker-icon {
+        background: #50c878;
+        box-shadow: 0 2px 8px rgba(80, 200, 120, 0.4);
+    }
+
+    &.study-marker .marker-icon {
+        background: #9b59b6;
+        box-shadow: 0 2px 8px rgba(155, 89, 182, 0.4);
+    }
+
+    &.retirement-marker .marker-icon {
+        background: #e67e22;
+        box-shadow: 0 2px 8px rgba(230, 126, 34, 0.4);
+    }
+}
+
+// 路线标记样式
+:deep(.route-marker) {
+    .marker-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        cursor: pointer;
+        transition: transform 0.2s;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+
+        &:hover {
+            transform: scale(1.2);
+        }
+    }
+
+    &.start-marker .marker-icon {
+        background: #10b981;
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+    }
+
+    &.end-marker .marker-icon {
+        background: #ef4444;
+        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+    }
 }
 
 // 我的位置标记样式
@@ -357,7 +630,7 @@ onMounted(async () => {
 
 // 商家信息窗体样式
 :deep(.restaurant-info) {
-    min-width: 260px;
+    width: 260px;
     padding: 12px;
 
     .restaurant-image {

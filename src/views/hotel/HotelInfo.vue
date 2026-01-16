@@ -3,7 +3,14 @@
     <div v-else class="hotel-detail">
         <!-- 顶部封面 -->
         <div class="cover-wrapper">
-            <el-image class="cover" :src="imgUrl(info.coverImage)" alt="封面" fit="cover" />
+            <el-image
+                class="cover"
+                :src="imgUrl(info.coverImage)"
+                :preview-src-list="coverPreviewList"
+                :preview-teleported="true"
+                alt="封面"
+                fit="cover"
+            />
             <div class="title-bar">
                 <div class="title">{{ info.homestayName }}</div>
             </div>
@@ -20,7 +27,17 @@
                     @click="goToMap"
                 >
                     {{ info.address }}
-                    <span class="map-icon">🗺️</span>
+                    <span class="map-icon">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M9 18L15 12L9 6"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            />
+                        </svg>
+                    </span>
                 </span>
                 <span v-else class="address">{{ info.address }}</span>
             </div>
@@ -66,6 +83,12 @@ const publishDate = computed(() => {
     if (!info.value.createTime) return "";
     const date = new Date(info.value.createTime);
     return date.toLocaleDateString();
+});
+
+// 封面图片预览列表
+const coverPreviewList = computed(() => {
+    if (!info.value.coverImage) return [];
+    return [imgUrl(info.value.coverImage)];
 });
 
 function callPhone(phone: string) {
@@ -120,6 +143,12 @@ onMounted(async () => {
         :deep(.cover) {
             width: 100%;
             height: 220px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+
+            &:hover {
+                transform: scale(1.01);
+            }
 
             img {
                 width: 100%;
@@ -189,7 +218,15 @@ onMounted(async () => {
                     }
 
                     .map-icon {
-                        font-size: 16px;
+                        display: flex;
+                        align-items: center;
+                        color: #999;
+                        flex-shrink: 0;
+
+                        svg {
+                            width: 14px;
+                            height: 14px;
+                        }
                     }
                 }
             }

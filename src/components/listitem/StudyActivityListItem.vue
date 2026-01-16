@@ -32,8 +32,8 @@
                 </svg>
                 <span class="label">报名时间：</span>
                 <span class="value"
-                    >{{ formatDate(info.applyStartDate) }} -
-                    {{ formatDate(info.applyEndDate) }}</span
+                    >{{ info.applyStartDate }} -
+                    {{ info.applyEndDate }}</span
                 >
             </div>
 
@@ -46,8 +46,8 @@
                 </svg>
                 <span class="label">活动时间：</span>
                 <span class="value"
-                    >{{ formatDate(info.activityStartDate) }} -
-                    {{ formatDate(info.activityEndDate) }}</span
+                    >{{ info.activityStartDate }} -
+                    {{ info.activityEndDate }}</span
                 >
             </div>
         </div>

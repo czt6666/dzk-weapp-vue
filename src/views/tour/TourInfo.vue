@@ -46,7 +46,7 @@
             <!-- 路线信息卡片 -->
             <div class="info-card">
                 <h2 class="card-title">路线详情</h2>
-                <div class="route-detail">
+                <div class="route-detail" @click="goToMap">
                     <div class="location-section">
                         <div class="location-label">
                             <svg
@@ -68,7 +68,7 @@
 
                     <div class="route-arrow">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <path d="M5 12h14M12 5l7 7-7 7" />
+                            <path d="M12 5v14M5 12l7-7 7 7" />
                         </svg>
                     </div>
 
@@ -89,6 +89,13 @@
                         <p class="location-coords">
                             经度: {{ info.destLng }} | 纬度: {{ info.destLat }}
                         </p>
+                    </div>
+                    <div class="map-hint">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                            <circle cx="12" cy="10" r="3" />
+                        </svg>
+                        <span>点击查看路线地图</span>
                     </div>
                 </div>
             </div>
@@ -149,8 +156,10 @@
 
 <script setup lang="ts">
 import { getTourRouteDetail, type ITourRoute } from "@/apis/tour";
+import { useRouter } from "vue-router";
 
 const route = useRoute();
+const router = useRouter();
 
 const info = ref<ITourRoute>({
     id: 0,
@@ -217,6 +226,32 @@ const formatDateTime = (datetime: string): string => {
 // 获取状态样式类
 const getStatusClass = (status: number): string => {
     return status === 1 ? "status-active" : "status-inactive";
+};
+
+// 跳转到地图页面显示路线
+const goToMap = () => {
+    if (
+        !info.value.originLng ||
+        !info.value.originLat ||
+        !info.value.destLng ||
+        !info.value.destLat
+    ) {
+        ElMessage.warning("路线坐标信息不完整");
+        return;
+    }
+    router.push({
+        name: "Map",
+        query: {
+            originLng: info.value.originLng,
+            originLat: info.value.originLat,
+            originAddress: info.value.originAddress,
+            destLng: info.value.destLng,
+            destLat: info.value.destLat,
+            destAddress: info.value.destAddress,
+            routeName: info.value.name,
+            showRoute: "true",
+        },
+    });
 };
 
 onMounted(async () => {
@@ -335,14 +370,28 @@ onMounted(async () => {
 
         .route-detail {
             display: flex;
-            align-items: center;
-            gap: 24px;
+            flex-direction: column;
+            gap: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 8px;
+            border-radius: 8px;
+
+            &:hover {
+                background: #f3f4f6;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
 
             .location-section {
-                flex: 1;
                 padding: 20px;
                 background: #f9fafb;
                 border-radius: 8px;
+                transition: all 0.3s;
+
+                &:hover {
+                    background: #f3f4f6;
+                }
 
                 .location-label {
                     display: flex;
@@ -385,13 +434,41 @@ onMounted(async () => {
             }
 
             .route-arrow {
-                flex-shrink: 0;
+                display: flex;
+                justify-content: center;
+                padding: 8px 0;
 
                 svg {
-                    width: 32px;
-                    height: 32px;
+                    width: 24px;
+                    height: 24px;
                     color: #9ca3af;
                     stroke-width: 2;
+                    transform: rotate(180deg);
+                }
+            }
+
+            .map-hint {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                padding: 12px;
+                background: $overlay-red-gradient;
+                color: white;
+                border-radius: $radius-medium;
+                font-size: 14px;
+                font-weight: 500;
+                margin-top: 8px;
+                transition: $transition-base;
+
+                &:hover {
+                    background: $overlay-red-strong;
+                }
+
+                svg {
+                    width: 18px;
+                    height: 18px;
+                    stroke-width: 2.5;
                 }
             }
         }

@@ -20,10 +20,24 @@
             </div>
         </div>
 
+        <!-- 机构介绍 -->
+        <section class="section" v-if="info.introduction">
+            <h2 class="title">📝 机构介绍</h2>
+            <p class="text introduction-text">{{ info.introduction }}</p>
+        </section>
+
         <!-- 地址 -->
         <section class="section">
             <h2 class="title">📍 位置信息</h2>
-            <p class="text">{{ info.businessAddress }}</p>
+            <div class="address-info">
+                <p class="text"><strong>经营地址：</strong>{{ info.businessAddress }}</p>
+                <p
+                    class="text"
+                    v-if="info.registeredAddress && info.registeredAddress !== info.businessAddress"
+                >
+                    <strong>注册地址：</strong>{{ info.registeredAddress }}
+                </p>
+            </div>
         </section>
 
         <!-- 服务能力 -->
@@ -70,7 +84,7 @@
         <section class="section">
             <h2 class="title">📄 机构资质</h2>
             <ul class="licenses">
-                <li>养老许可证：{{ info.elderlyLicenseNo }}</li>
+                <li v-if="info.elderlyLicenseNo">养老许可证：{{ info.elderlyLicenseNo }}</li>
                 <li v-if="info.medicalLicenseNo">医疗许可证：{{ info.medicalLicenseNo }}</li>
                 <li v-if="info.foodLicenseNo">食品许可证：{{ info.foodLicenseNo }}</li>
                 <li v-if="info.fireAcceptanceNo">消防验收：{{ info.fireAcceptanceNo }}</li>
@@ -85,8 +99,12 @@
                     v-for="(p, idx) in photos"
                     :key="idx"
                     :src="imgUrl(p)"
+                    :preview-src-list="previewList"
+                    :initial-index="idx"
                     alt="环境照片"
                     fit="cover"
+                    :preview-teleported="true"
+                    class="gallery-image"
                 />
             </div>
         </section>
@@ -132,7 +150,16 @@ const serviceModes = computed(() => info.value?.serviceMode?.split(",") || []);
 const photos = computed(() => {
     const photos = info.value?.environmentPhotos;
     if (!photos) return [];
-    return photos;
+    // environmentPhotos 可能是字符串（逗号分隔）或数组
+    if (typeof photos === "string") {
+        return photos.split(",").filter(Boolean);
+    }
+    return Array.isArray(photos) ? photos : [];
+});
+
+// 预览图片列表
+const previewList = computed(() => {
+    return photos.value.map((p: string) => imgUrl(p));
 });
 </script>
 
@@ -226,6 +253,26 @@ const photos = computed(() => {
         color: #606266;
         line-height: 1.6;
     }
+
+    .introduction-text {
+        white-space: pre-wrap;
+        word-break: break-word;
+    }
+
+    .address-info {
+        .text {
+            margin-bottom: 8px;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+
+            strong {
+                color: #303133;
+                font-weight: 500;
+            }
+        }
+    }
 }
 
 .facts {
@@ -249,11 +296,13 @@ const photos = computed(() => {
 }
 
 .licenses {
-    padding-left: 16px;
+    padding-left: 20px;
     color: #606266;
+    list-style: disc;
 
     li {
         margin-bottom: 6px;
+        line-height: 1.6;
     }
 }
 
@@ -262,15 +311,22 @@ const photos = computed(() => {
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 10px;
 
-    :deep(.el-image) {
+    .gallery-image {
         width: 100%;
         height: 110px;
         border-radius: 10px;
+        cursor: pointer;
+        transition: transform 0.2s ease;
 
-        img {
+        &:hover {
+            transform: scale(1.02);
+        }
+
+        :deep(.el-image__inner) {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            border-radius: 10px;
         }
     }
 }

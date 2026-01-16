@@ -15,9 +15,9 @@
             <div class="info-card">
                 <h2 class="card-title">基本信息</h2>
                 <div class="info-grid">
-                    <div class="info-item">
+                    <div class="info-item route-item">
                         <label>线路</label>
-                        <span>{{ info.route || "暂无" }}</span>
+                        <span class="route-text">{{ info.route || "暂无" }}</span>
                     </div>
                     <div class="info-item">
                         <label>方案编号</label>
@@ -26,10 +26,6 @@
                     <div class="info-item">
                         <label>创建时间</label>
                         <span>{{ formatDateTime(info.createTime) }}</span>
-                    </div>
-                    <div class="info-item">
-                        <label>最近更新</label>
-                        <span>{{ formatDateTime(info.updateTime) }}</span>
                     </div>
                 </div>
             </div>
@@ -188,6 +184,15 @@ const formatDateTime = (datetime: string | null): string => {
                 span {
                     font-size: 15px;
                     color: $text-primary;
+                }
+
+                &.route-item {
+                    grid-column: 1 / -1;
+
+                    .route-text {
+                        white-space: pre-wrap;
+                        word-break: break-word;
+                    }
                 }
             }
         }

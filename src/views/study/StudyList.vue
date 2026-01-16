@@ -58,7 +58,7 @@
 </template>
 
 <script lang="ts" setup name="StudyList">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import StudyPlanListItem from "@/components/listitem/StudyPlanListItem.vue";
 import StudyActivityListItem from "@/components/listitem/StudyActivityListItem.vue";
 import SmartScrollList from "@/components/base/SmartScrollList.vue";
@@ -71,8 +71,19 @@ import { createFavoriteToggle } from "@/utils/favorite";
 
 const router = useRouter();
 
-// Tab状态
-const activeTab = ref<"plan" | "activity">("plan");
+// Tab状态 - 从sessionStorage恢复或使用默认值
+const STORAGE_KEY = "study_list_active_tab";
+const getStoredTab = (): "plan" | "activity" => {
+    const stored = sessionStorage.getItem(STORAGE_KEY);
+    return (stored === "plan" || stored === "activity") ? stored : "plan";
+};
+
+const activeTab = ref<"plan" | "activity">(getStoredTab());
+
+// 保存tab状态到sessionStorage
+const saveTabState = (tab: "plan" | "activity") => {
+    sessionStorage.setItem(STORAGE_KEY, tab);
+};
 
 // 研学方案相关
 let planPage = 1;
@@ -90,6 +101,7 @@ const keyword = ref("");
 // 切换Tab
 function switchTab(tab: "plan" | "activity") {
     activeTab.value = tab;
+    saveTabState(tab);
     keyword.value = "";
     onRefresh();
 }

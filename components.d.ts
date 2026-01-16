@@ -18,6 +18,7 @@ declare module 'vue' {
     HolidayCarousel: typeof import('./src/components/HolidayCarousel.vue')['default']
     HotelCarousel: typeof import('./src/components/HotelCarousel.vue')['default']
     HotelItem: typeof import('./src/components/listitem/HotelItem.vue')['default']
+    ImageViewer: typeof import('./src/components/base/ImageViewer.vue')['default']
     InertiaScroll: typeof import('./src/components/base/InertiaScroll.vue')['default']
     MapMark: typeof import('./src/components/base/MapMark.vue')['default']
     NewsCarousel: typeof import('./src/components/base/NewsCarousel.vue')['default']

@@ -179,7 +179,21 @@
                         >
                             <span class="label">📍 地址</span>
                             <span class="value">{{ restaurantInfo.address }}</span>
-                            <span class="map-icon">🗺️</span>
+                            <span class="map-icon">
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        d="M9 18L15 12L9 6"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    />
+                                </svg>
+                            </span>
                         </div>
                         <div v-else class="detail-item">
                             <span class="label">📍 地址</span>
@@ -975,7 +989,15 @@ onMounted(async () => {
 
                         .map-icon {
                             margin-left: auto;
-                            font-size: 18px;
+                            display: flex;
+                            align-items: center;
+                            color: #999;
+                            flex-shrink: 0;
+
+                            svg {
+                                width: 16px;
+                                height: 16px;
+                            }
                         }
                     }
 

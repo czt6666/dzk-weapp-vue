@@ -16,15 +16,15 @@
                     <div class="info-item">
                         <label>报名时间</label>
                         <span
-                            >{{ formatDate(info.applyStartDate) }} -
-                            {{ formatDate(info.applyEndDate) }}
+                            >{{ info.applyStartDate }} -
+                            {{ info.applyEndDate }}
                         </span>
                     </div>
                     <div class="info-item">
                         <label>活动时间</label>
                         <span>
-                            {{ formatDate(info.activityStartDate) }} -
-                            {{ formatDate(info.activityEndDate) }}
+                            {{ info.activityStartDate }} -
+                            {{ info.activityEndDate }}
                         </span>
                     </div>
                     <div class="info-item">
