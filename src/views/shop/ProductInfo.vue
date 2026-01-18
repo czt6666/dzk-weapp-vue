@@ -116,7 +116,10 @@
         <div v-if="showBuyModal" class="buy-modal">
             <div class="modal-content">
                 <h3>前往购买</h3>
-                <a :href="product.productUrl" target="_blank">{{ product.productUrl }}</a>
+                <img class="merchant-img" src="@/assets/tmp/xiaodian.jpg" alt="" />
+                <span @click="jumpToWx(product.appid, product.path)"
+                    >{{ product.productUrl }}
+                </span>
                 <button class="close" @click="showBuyModal = false">关闭</button>
             </div>
         </div>
@@ -202,6 +205,55 @@ function onCollectPopupShow() {
             selectedSpec.value = firstSpec;
         }
     }
+}
+
+// 跳转到微信小程序
+function jumpToWx(appid?: string, path?: string) {
+    // 默认值
+    const DEFAULT_APPID = "wx4b74228baa15489a";
+    const DEFAULT_PATH = "lib/home/dist/pages/index/index";
+
+    // 使用传入的参数，如果为空则使用默认值
+    const finalAppId = appid?.trim() || DEFAULT_APPID;
+    const finalPath = path?.trim() || DEFAULT_PATH;
+
+    // 检测是否是微信环境
+    const wxObj = typeof window !== "undefined" ? (window as any).wx : undefined;
+
+    if (!wxObj) {
+        console.warn("jumpToWx: 非微信环境，无法跳转");
+        ElMessage.warning("当前不在微信环境中，无法跳转");
+        return;
+    }
+
+    if (!wxObj.miniProgram) {
+        console.warn("jumpToWx: 非小程序 web-view 环境，wx.miniProgram 不可用");
+        ElMessage.warning("当前环境不支持小程序跳转");
+        return;
+    }
+
+    // 使用 getEnv 判断是否在小程序环境中
+    if (!wxObj.miniProgram.getEnv) {
+        console.warn("jumpToWx: wx.miniProgram.getEnv 不可用");
+        ElMessage.warning("当前环境不支持小程序跳转");
+        return;
+    }
+
+    // 编码路径参数
+    const encodedPath = encodeURIComponent(finalPath);
+    const query = `appId=${finalAppId}&path=${encodedPath}`;
+
+    // 执行跳转
+    wxObj.miniProgram.navigateTo({
+        url: `/pages/jump/jump?${query}`,
+        success() {
+            console.log("跳转到小程序成功", { appId: finalAppId, path: finalPath });
+        },
+        fail(err: any) {
+            console.error("跳转失败", err);
+            ElMessage.error("跳转失败，请稍后重试");
+        },
+    });
 }
 
 onMounted(async () => {
@@ -561,10 +613,16 @@ const detailImageList = computed(() => {
             color: $color-green-primary;
         }
 
-        a {
+        .merchant-img {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: $spacing-md;
+        }
+
+        span {
             display: block;
-            margin: $spacing-md 0;
             color: $color-green-primary;
+            margin-bottom: $spacing-md;
             text-decoration: underline;
         }
 

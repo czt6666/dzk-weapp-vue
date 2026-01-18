@@ -20,6 +20,8 @@ export interface IProduct {
     status: number; // 状态（如 1=上架，0=下架）
     collectNumber?: number; // 收藏数量
     isCollect?: boolean; // 是否已收藏
+    appid?: string; // 小程序 AppID
+    path?: string; // 小程序页面路径
 }
 
 export interface IProductDetail extends IProduct {
