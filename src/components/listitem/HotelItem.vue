@@ -93,7 +93,6 @@ const toggleFavorite = () => {
             }
         }
 
-
         .favorite-overlay {
             position: absolute;
             top: 12px;
@@ -123,7 +122,6 @@ const toggleFavorite = () => {
 
             &:active {
                 transform: scale(0.95);
-            }
 
                 .heart-icon {
                     filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(334deg)
@@ -246,7 +244,6 @@ const toggleFavorite = () => {
                         brightness(100%) contrast(101%);
                     transition: all 0.3s ease;
                 }
-
             }
         }
     }
