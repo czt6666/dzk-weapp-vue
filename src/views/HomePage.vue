@@ -4,6 +4,7 @@
         <header class="header-banner">
             <div class="logo-section">
                 <img src="@/assets/logo1.png" alt="大庄科乡" class="logo" />
+                <img src="@/assets/logo2.png" alt="大庄科乡" class="logo" />
             </div>
             <div class="carousel-wrapper">
                 <HolidayCarousel />
@@ -442,13 +443,14 @@ onMounted(() => {
 
     .logo-section {
         position: absolute;
-        top: 20px;
-        left: 20px;
+        top: 10px;
+        left: 10px;
         z-index: 3;
 
         .logo {
             height: auto;
-            max-width: 100px;
+            width: 100px;
+            margin-right: 10px;
             filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
         }
     }

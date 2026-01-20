@@ -4,6 +4,7 @@
             <MapMark
                 :marks="mapMarks"
                 :auto-fit-view="true"
+                :show-my-location="true"
                 :show-route="showRoute"
                 :route-points="routePoints"
             />

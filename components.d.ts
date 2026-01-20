@@ -11,15 +11,9 @@ declare module 'vue' {
     Carousel: typeof import('./src/components/base/Carousel.vue')['default']
     Desktop: typeof import('./src/components/Desktop.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
-    ElCard: typeof import('element-plus/es')['ElCard']
-    ElForm: typeof import('element-plus/es')['ElForm']
-    ElFormItem: typeof import('element-plus/es')['ElFormItem']
-    ElIcon: typeof import('element-plus/es')['ElIcon']
     ElImage: typeof import('element-plus/es')['ElImage']
     ElInput: typeof import('element-plus/es')['ElInput']
     ElLink: typeof import('element-plus/es')['ElLink']
-    ElOption: typeof import('element-plus/es')['ElOption']
-    ElSelect: typeof import('element-plus/es')['ElSelect']
     HolidayCarousel: typeof import('./src/components/HolidayCarousel.vue')['default']
     HotelCarousel: typeof import('./src/components/HotelCarousel.vue')['default']
     HotelItem: typeof import('./src/components/listitem/HotelItem.vue')['default']
@@ -42,8 +36,5 @@ declare module 'vue' {
     TabBar: typeof import('./src/components/TabBar.vue')['default']
     TopBar: typeof import('./src/components/TopBar.vue')['default']
     TourListItem: typeof import('./src/components/listitem/TourListItem.vue')['default']
-  }
-  export interface GlobalDirectives {
-    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }
