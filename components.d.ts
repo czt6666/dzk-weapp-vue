@@ -11,6 +11,7 @@ declare module 'vue' {
     Carousel: typeof import('./src/components/base/Carousel.vue')['default']
     Desktop: typeof import('./src/components/Desktop.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
+    ElIcon: typeof import('element-plus/es')['ElIcon']
     ElImage: typeof import('element-plus/es')['ElImage']
     ElInput: typeof import('element-plus/es')['ElInput']
     ElLink: typeof import('element-plus/es')['ElLink']
@@ -36,5 +37,8 @@ declare module 'vue' {
     TabBar: typeof import('./src/components/TabBar.vue')['default']
     TopBar: typeof import('./src/components/TopBar.vue')['default']
     TourListItem: typeof import('./src/components/listitem/TourListItem.vue')['default']
+  }
+  export interface GlobalDirectives {
+    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }
