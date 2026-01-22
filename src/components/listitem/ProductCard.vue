@@ -17,9 +17,7 @@
             <h3 class="title">{{ item.title }}</h3>
             <span class="description">{{ item.description }}</span>
             <div class="stats">
-                <span class="price" v-if="minPrice">
-                    ¥{{ minPrice }}
-                </span>
+                <span class="price" v-if="minPrice"> ¥{{ minPrice }} </span>
                 <span class="favorites" @click.stop="toggleFavorite">
                     <img :src="isFavorite ? heartFilledIcon : heartOutlineIcon" alt="收藏数" />
                     {{ localFavoriteCount }}

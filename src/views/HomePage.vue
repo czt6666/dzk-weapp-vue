@@ -813,7 +813,6 @@ onMounted(() => {
                     .tour-desc,
                     .study-desc {
                         font-size: 12px;
-                        margin: 0 0 8px 0;
                         opacity: 0.95;
                     }
 

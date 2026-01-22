@@ -68,7 +68,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { ElMessage } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
 import { getHotelItem } from "@/apis/hotel";
 import { imgUrl } from "@/utils/index";
 
@@ -91,9 +91,82 @@ const coverPreviewList = computed(() => {
     return [imgUrl(info.value.coverImage)];
 });
 
-function callPhone(phone: string) {
-    if (!phone) return;
-    window.location.href = `tel:${phone}`;
+// 检测设备是否支持打电话
+function isPhoneSupported(): boolean {
+    // 检测是否为移动设备
+    const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
+    const isMobile = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(
+        userAgent.toLowerCase(),
+    );
+    return isMobile;
+}
+
+// 复制电话号码到剪贴板
+async function copyPhone(phone: string) {
+    try {
+        await navigator.clipboard.writeText(phone);
+        ElMessage.success(`电话号码 ${phone} 已复制到剪贴板`);
+    } catch (err) {
+        // 降级方案：使用传统方法
+        const textArea = document.createElement("textarea");
+        textArea.value = phone;
+        textArea.style.position = "fixed";
+        textArea.style.opacity = "0";
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            document.execCommand("copy");
+            ElMessage.success(`电话号码 ${phone} 已复制到剪贴板`);
+        } catch (e) {
+            ElMessage.error("复制失败，请手动复制");
+        }
+        document.body.removeChild(textArea);
+    }
+}
+
+// 处理联系房东
+async function callPhone(phone: string) {
+    if (!phone) {
+        ElMessage.warning("电话号码为空");
+        return;
+    }
+
+    // 检测是否支持打电话
+    if (isPhoneSupported()) {
+        // 支持打电话，显示确认弹窗
+        try {
+            await ElMessageBox.confirm(
+                `确定要拨打 ${phone} 吗？`,
+                "联系房东",
+                {
+                    confirmButtonText: "拨打",
+                    cancelButtonText: "取消",
+                    type: "info",
+                },
+            );
+            // 用户确认后拨打电话
+            window.location.href = `tel:${phone}`;
+        } catch {
+            // 用户取消操作
+        }
+    } else {
+        // 不支持打电话，提供复制功能
+        try {
+            await ElMessageBox.confirm(
+                `当前设备不支持直接拨打电话，是否复制电话号码 ${phone}？`,
+                "联系房东",
+                {
+                    confirmButtonText: "复制",
+                    cancelButtonText: "取消",
+                    type: "info",
+                },
+            );
+            // 用户确认后复制电话号码
+            await copyPhone(phone);
+        } catch {
+            // 用户取消操作
+        }
+    }
 }
 
 // 跳转到地图页面
@@ -107,6 +180,7 @@ function goToMap() {
                 name: info.value.homestayName,
                 address: info.value.address,
                 phone: info.value.contactPhone || "",
+                type: "hotel",
             },
         });
     }

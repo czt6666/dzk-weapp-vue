@@ -26,8 +26,11 @@
 
         <!-- 空状态 -->
         <div v-else class="empty">
-            <img src="https://cdn-icons-png.flaticon.com/512/4076/4076501.png" />
-            <p>还没有收藏任何商品~</p>
+            <div class="empty-icon">
+                <img :src="emptyFavoriteIcon" alt="空收藏夹" />
+            </div>
+            <p class="empty-text">还没有收藏任何商品~</p>
+            <p class="empty-hint">快去收藏你喜欢的商品吧</p>
         </div>
     </div>
 </template>
@@ -36,7 +39,9 @@
 import { onMounted } from "vue";
 import { useShopFavoriteStore } from "@/stores/shopFavorite";
 import { useRouter } from "vue-router";
+import { ElMessageBox } from "element-plus";
 import { imgUrl } from "@/utils";
+import emptyFavoriteIcon from "@/assets/svg/empty-favorite.svg";
 
 const favorite = useShopFavoriteStore();
 const router = useRouter();
@@ -47,9 +52,16 @@ onMounted(() => {
 });
 
 // 取消收藏
-function remove(skuId: number) {
-    if (confirm("确定要取消收藏吗？")) {
+async function remove(skuId: number) {
+    try {
+        await ElMessageBox.confirm("确定要取消收藏吗？", "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning",
+        });
         favorite.remove(skuId);
+    } catch {
+        // 用户取消操作
     }
 }
 
@@ -208,14 +220,41 @@ button.remove:active {
 }
 
 .empty {
-    text-align: center;
-    padding: $spacing-xxxl 0;
-    color: #888;
-}
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: $spacing-xxxl $spacing-md;
+    min-height: 60vh;
+    color: $text-secondary;
 
-.empty img {
-    width: 150px;
-    opacity: 0.7;
-    margin-bottom: 1rem;
+    .empty-icon {
+        width: 120px;
+        height: 120px;
+        margin-bottom: $spacing-lg;
+        opacity: 0.4;
+        color: $text-tertiary;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+    }
+
+    .empty-text {
+        font-size: 16px;
+        color: $text-secondary;
+        margin-bottom: $spacing-sm;
+        font-weight: 500;
+    }
+
+    .empty-hint {
+        font-size: 14px;
+        color: $text-tertiary;
+    }
 }
 </style>

@@ -41,10 +41,13 @@
             />
         </div>
 
-        <!-- 底部购物车图标 -->
-        <div class="cart-float" @click="goFavorites">
-            <span>⭐</span>
-            <span class="cart-count">{{ favorite.list.length }}</span>
+        <!-- 收藏夹按钮 -->
+        <div class="favorite-float" @click="goFavorites">
+            <div class="favorite-icon">
+                <img :src="heartFilledIcon" alt="收藏夹" />
+            </div>
+            <span class="favorite-text">收藏夹</span>
+            <span class="favorite-count" v-if="favorite.list.length > 0">{{ favorite.list.length }}</span>
         </div>
     </div>
 </template>
@@ -61,6 +64,7 @@ import { ElMessage } from "element-plus";
 import { useShopFavoriteStore } from "@/stores/shopFavorite";
 import SearchInput from "@/components/input/SearchInput.vue";
 import { createFavoriteToggle } from "@/utils/favorite";
+import heartFilledIcon from "@/assets/svg/heart-filled.svg";
 
 const router = useRouter();
 const favorite = useShopFavoriteStore();
@@ -240,36 +244,69 @@ const toggleFavorite = createFavoriteToggle("product", list);
     opacity: 0;
 }
 
-.cart-float {
+.favorite-float {
     position: absolute;
     bottom: $spacing-xxl;
-    right: $spacing-xxl;
-    width: 48px;
-    height: 48px;
-    border-radius: $radius-round;
+    right: $spacing-lg;
     display: flex;
     align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    background-color: #fff;
-    box-shadow: $shadow-md;
+    gap: 8px;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #ff9500 0%, #ffb347 100%);
+    border-radius: 50px;
+    box-shadow: 0 4px 16px rgba(255, 149, 0, 0.4);
     z-index: 1000;
     cursor: pointer;
-    transition: $transition-base;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 120px;
+    justify-content: center;
 
-    &:active {
-        transform: scale(0.95);
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 149, 0, 0.5);
     }
 
-    .cart-count {
-        position: absolute;
-        top: -2px;
-        right: -4px;
-        background: $color-red-primary;
+    &:active {
+        transform: translateY(0) scale(0.98);
+    }
+
+    .favorite-icon {
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+        }
+    }
+
+    .favorite-text {
         color: #fff;
-        font-size: 12px;
-        padding: 2px 6px;
+        font-size: 15px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .favorite-count {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        background: #fff;
+        color: #ff9500;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 2px 7px;
         border-radius: 12px;
+        min-width: 20px;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        border: 2px solid #ff9500;
     }
 }
 </style>
