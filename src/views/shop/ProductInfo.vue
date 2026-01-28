@@ -18,9 +18,6 @@
                     v-for="(img, idx) in product.previewImages"
                     :key="idx"
                     :src="imgUrl(img)"
-                    :preview-src-list="previewImageList"
-                    :initial-index="idx"
-                    :preview-teleported="true"
                     :class="{ active: idx === currentIndex }"
                     @click="setCurrentImage(idx)"
                     fit="cover"
@@ -116,10 +113,17 @@
         <div v-if="showBuyModal" class="buy-modal">
             <div class="modal-content">
                 <h3>前往购买</h3>
-                <img class="merchant-img" src="@/assets/tmp/xiaodian.jpg" alt="" />
-                <span @click="jumpToWx(product.appid, product.path)"
-                    >{{ product.productUrl }}
-                </span>
+                <img class="merchant-img" :src="imgUrl(product.merchantPosterImg)" alt="" />
+                <div>
+                    <!-- 0-无，1-仅微店，2-仅小程序 -->
+                    <span v-if="product.uploadMethodStatus === 2" @click="jumpToWx()">
+                        打开小程序购买
+                    </span>
+                    <span v-else-if="product.uploadMethodStatus === 1" @click="openMicroShop()">
+                        打开微店购买
+                    </span>
+                    <p v-else class="hint">该商品暂无可跳转的购买渠道</p>
+                </div>
                 <button class="close" @click="showBuyModal = false">关闭</button>
             </div>
         </div>
@@ -149,11 +153,16 @@ const product = ref<IProductDetail>({
     updateTime: "",
     cartCount: 0,
     viewCount: 0,
-    productUrl: "",
     specifications: [],
     status: 0,
     shopAvatar: "",
     storeName: "",
+    uploadMethodStatus: 0,
+    miniProgramAppid: "",
+    miniProgramPath: "",
+    microShopAppid: "",
+    microShopProductId: "",
+    merchantPosterImg: "",
 });
 
 const currentIndex = ref(0);
@@ -183,10 +192,6 @@ function resetAutoPlay() {
     startAutoPlay();
 }
 
-async function handleAddToCollect(selectedSpec: ISpecItem) {
-    await favorite.add(selectedSpec);
-}
-
 async function handleConfirmCollect() {
     if (!selectedSpec.value) {
         ElMessage.warning("请选择规格");
@@ -208,14 +213,14 @@ function onCollectPopupShow() {
 }
 
 // 跳转到微信小程序
-function jumpToWx(appid?: string, path?: string) {
-    // 默认值
-    const DEFAULT_APPID = "wx4b74228baa15489a";
-    const DEFAULT_PATH = "lib/home/dist/pages/index/index";
+function jumpToWx() {
+    const appid = (product.value.miniProgramAppid || "").trim();
+    const path = (product.value.miniProgramPath || "").trim();
 
-    // 使用传入的参数，如果为空则使用默认值
-    const finalAppId = appid?.trim() || DEFAULT_APPID;
-    const finalPath = path?.trim() || DEFAULT_PATH;
+    if (!appid || !path) {
+        ElMessage.warning("商品信息错误，跳转失败");
+        return;
+    }
 
     // 检测是否是微信环境
     const wxObj = typeof window !== "undefined" ? (window as any).wx : undefined;
@@ -240,14 +245,14 @@ function jumpToWx(appid?: string, path?: string) {
     }
 
     // 编码路径参数
-    const encodedPath = encodeURIComponent(finalPath);
-    const query = `appId=${finalAppId}&path=${encodedPath}`;
+    const encodedPath = encodeURIComponent(path);
+    const query = `appId=${appid}&path=${encodedPath}`;
 
     // 执行跳转
     wxObj.miniProgram.navigateTo({
         url: `/pages/jump/jump?${query}`,
         success() {
-            console.log("跳转到小程序成功", { appId: finalAppId, path: finalPath });
+            console.log("跳转到小程序成功", { appId: appid, path: path });
         },
         fail(err: any) {
             console.error("跳转失败", err);
@@ -282,6 +287,16 @@ const previewImageList = computed(() => {
 const detailImageList = computed(() => {
     return product.value.detailImages.map((img) => imgUrl(img));
 });
+
+function openMicroShop() {
+    // 微店跳转：目前后端只提供了 microShopProductId 和 microShopAppid
+    // 但没有明确的跳转协议，暂时提供复制功能
+    const productId = (product.value.microShopProductId || "").trim();
+    if (!productId) {
+        ElMessage.warning("缺少微店商品信息");
+        return;
+    }
+}
 </script>
 
 <style lang="scss" scoped>
