@@ -18,9 +18,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, nextTick } from "vue";
 import { wgs84ToGcj02 } from "@/utils/coord";
 import { AMAP_API_KEY } from "@/utils/constence";
+import { showPhoneModal } from "@/utils/phoneModal";
 
 // 标记类型
 export type MarkerType =
@@ -186,7 +187,7 @@ const addMapMarkers = () => {
         ${restaurant.image ? `<img src="${restaurant.image}" alt="${restaurant.name}" class="restaurant-image" />` : ""}
         <h3 class="restaurant-name">${restaurant.name}</h3>
         <p class="restaurant-address">📍 ${restaurant.address}</p>
-        ${restaurant.phone ? `<p class="restaurant-phone">📞 ${restaurant.phone}</p>` : ""}
+        ${restaurant.phone ? `<p class="restaurant-phone phone-clickable" data-phone="${restaurant.phone}">📞 ${restaurant.phone}</p>` : ""}
         ${restaurant.category ? `<p class="restaurant-category">🏷️ ${restaurant.category}</p>` : ""}
       </div>
     `;
@@ -199,6 +200,20 @@ const addMapMarkers = () => {
         // 点击标记显示信息
         marker.on("click", () => {
             infoWindow.open(map.value, marker.getPosition());
+            
+            // 等待信息窗体渲染后，添加电话号码点击事件
+            nextTick(() => {
+                const phoneElement = document.querySelector('.restaurant-phone.phone-clickable');
+                if (phoneElement && restaurant.phone) {
+                    phoneElement.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        showPhoneModal(restaurant.phone!);
+                    });
+                    // 添加样式提示可点击
+                    (phoneElement as HTMLElement).style.cursor = 'pointer';
+                    (phoneElement as HTMLElement).style.color = '#409EFF';
+                }
+            });
         });
 
         restaurantMarkers.value.push(marker);
@@ -672,6 +687,16 @@ onMounted(async () => {
 
     .restaurant-address {
         color: #888;
+    }
+
+    .restaurant-phone.phone-clickable {
+        cursor: pointer;
+        color: #409EFF;
+        transition: opacity 0.2s ease;
+
+        &:hover {
+            opacity: 0.8;
+        }
     }
 
     .restaurant-category {

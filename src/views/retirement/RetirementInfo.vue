@@ -65,12 +65,18 @@
             <div class="facts">
                 <div class="fact">
                     <span class="label">联系电话</span>
-                    <span class="value">{{ info.officialPhone }}</span>
+                    <span class="value phone-clickable" @click="handlePhoneClick(info.officialPhone)" v-if="info.officialPhone">
+                        {{ info.officialPhone }}
+                    </span>
+                    <span class="value" v-else>-</span>
                 </div>
                 <div class="fact">
                     <span class="label">应急联系人</span>
                     <span class="value">
-                        {{ info.emergencyContact }}（{{ info.emergencyPhone }}）
+                        <span v-if="info.emergencyContact">{{ info.emergencyContact }}</span>
+                        <span v-if="info.emergencyPhone" class="phone-clickable" @click="handlePhoneClick(info.emergencyPhone)">
+                            （{{ info.emergencyPhone }}）
+                        </span>
                     </span>
                 </div>
                 <div class="fact">
@@ -117,6 +123,7 @@ import { useRoute } from "vue-router";
 import { ElMessage } from "element-plus";
 import { getRetirementStationDetail, type IRetirementStation } from "@/apis/retirement";
 import { imgUrl } from "@/utils";
+import { showPhoneModal } from "@/utils/phoneModal";
 
 const route = useRoute();
 const info = ref<IRetirementStation>();
@@ -161,6 +168,13 @@ const photos = computed(() => {
 const previewList = computed(() => {
     return photos.value.map((p: string) => imgUrl(p));
 });
+
+// 处理电话号码点击
+function handlePhoneClick(phone: string) {
+    if (phone) {
+        showPhoneModal(phone);
+    }
+}
 </script>
 
 <style scoped lang="scss">
@@ -291,6 +305,16 @@ const previewList = computed(() => {
         .value {
             font-size: 14px;
             color: #303133;
+
+            &.phone-clickable {
+                cursor: pointer;
+                color: $color-green-primary;
+                transition: opacity 0.2s ease;
+
+                &:active {
+                    opacity: 0.7;
+                }
+            }
         }
     }
 }
