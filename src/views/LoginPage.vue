@@ -364,6 +364,9 @@ async function handleRegister() {
     border-radius: $radius-large;
     box-shadow: $shadow-xl;
     border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.flip-card-front {
     animation: cardFadeIn 0.6s ease-out;
 }
 
