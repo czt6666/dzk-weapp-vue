@@ -24,7 +24,7 @@ export const useShopFavoriteStore = defineStore("shopFavorite", () => {
             const res = await getCartList(currentUserId);
             if (res.code === 200) list.value = res.data || [];
         } catch (err: any) {
-            ElMessage.error(err.msg || "获取收藏夹列表失败");
+            ElMessage.error(err.msg || "获取购物车列表失败");
         }
     }
 
@@ -38,12 +38,12 @@ export const useShopFavoriteStore = defineStore("shopFavorite", () => {
             const res = await addToCart({ userId: currentUserId, skuId: spec.id });
             if (res.code === 200) {
                 await fetchFavorites();
-                ElMessage.success("已添加到收藏夹！");
+                ElMessage.success("已添加到购物车！");
             } else {
-                ElMessage.error(res.msg || "收藏失败");
+                ElMessage.error(res.msg || "添加到购物车失败");
             }
         } catch (err: any) {
-            ElMessage.error(err.msg || "收藏失败");
+            ElMessage.error(err.msg || "添加到购物车失败");
         }
     }
 
@@ -58,10 +58,10 @@ export const useShopFavoriteStore = defineStore("shopFavorite", () => {
             if (res.code === 200) {
                 await fetchFavorites();
             } else {
-                ElMessage.error(res.msg || "取消收藏失败");
+                ElMessage.error(res.msg || "取消购物车失败");
             }
         } catch (err: any) {
-            ElMessage.error(err.msg || "取消收藏失败");
+            ElMessage.error(err.msg || "取消购物车失败");
         }
     }
 

@@ -41,13 +41,11 @@
             />
         </div>
 
-        <!-- 收藏夹按钮 -->
-        <div class="favorite-float" @click="goFavorites">
-            <div class="favorite-icon">
-                <img :src="heartFilledIcon" alt="收藏夹" />
-            </div>
-            <span class="favorite-text">收藏夹</span>
-            <span class="favorite-count" v-if="favorite.list.length > 0">{{ favorite.list.length }}</span>
+        <!-- 购物车按钮 -->
+        <div class="cart-float" @click="goCart">
+            <div class="cart-icon">🛒</div>
+            <span class="cart-text">购物车</span>
+            <span class="cart-count" v-if="favorite.list.length > 0">{{ favorite.list.length }}</span>
         </div>
     </div>
 </template>
@@ -64,7 +62,6 @@ import { ElMessage } from "element-plus";
 import { useShopFavoriteStore } from "@/stores/shopFavorite";
 import SearchInput from "@/components/input/SearchInput.vue";
 import { createFavoriteToggle } from "@/utils/favorite";
-import heartFilledIcon from "@/assets/svg/heart-filled.svg";
 
 const router = useRouter();
 const favorite = useShopFavoriteStore();
@@ -186,7 +183,7 @@ function openProduct(item: IProduct) {
     router.push({ name: "ShopInfo", params: { id: item.id } });
 }
 
-function goFavorites() {
+function goCart() {
     router.push({ name: "ShopFavorites" });
 }
 
@@ -244,14 +241,14 @@ const toggleFavorite = createFavoriteToggle("product", list);
     opacity: 0;
 }
 
-.favorite-float {
+.cart-float {
     position: absolute;
     bottom: $spacing-xxl;
     right: $spacing-lg;
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 12px 20px;
+    padding: 8px 20px;
     background: linear-gradient(135deg, #ff9500 0%, #ffb347 100%);
     border-radius: 50px;
     box-shadow: 0 4px 16px rgba(255, 149, 0, 0.4);
@@ -270,30 +267,22 @@ const toggleFavorite = createFavoriteToggle("product", list);
         transform: translateY(0) scale(0.98);
     }
 
-    .favorite-icon {
-        width: 24px;
-        height: 24px;
+    .cart-icon {
+        font-size: 24px;
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
-
-        img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            filter: brightness(0) invert(1);
-        }
     }
 
-    .favorite-text {
+    .cart-text {
         color: #fff;
         font-size: 15px;
         font-weight: 600;
         white-space: nowrap;
     }
 
-    .favorite-count {
+    .cart-count {
         position: absolute;
         top: -6px;
         right: -6px;

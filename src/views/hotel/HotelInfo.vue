@@ -27,17 +27,7 @@
                     @click="goToMap"
                 >
                     {{ info.address }}
-                    <span class="map-icon">
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M9 18L15 12L9 6"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                            />
-                        </svg>
-                    </span>
+                    <ActionArrow />
                 </span>
                 <span v-else class="address">{{ info.address }}</span>
             </div>
@@ -71,6 +61,7 @@ import { useRoute, useRouter } from "vue-router";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { getHotelItem } from "@/apis/hotel";
 import { imgUrl } from "@/utils/index";
+import ActionArrow from "@/components/base/ActionArrow.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -285,18 +276,6 @@ onMounted(async () => {
                     &:active {
                         background-color: #f5f5f5;
                         color: $color-green-primary;
-                    }
-
-                    .map-icon {
-                        display: flex;
-                        align-items: center;
-                        color: #999;
-                        flex-shrink: 0;
-
-                        svg {
-                            width: 14px;
-                            height: 14px;
-                        }
                     }
                 }
             }

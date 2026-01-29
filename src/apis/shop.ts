@@ -14,7 +14,6 @@ interface CartAddDTO {
     skuId: number;
 }
 
-// 收藏商品
 export function addToCart(data: CartAddDTO) {
     return service.post("/admin/ecadmin/cart/add", data);
 }

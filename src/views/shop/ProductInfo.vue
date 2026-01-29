@@ -60,16 +60,16 @@
                 onCollectPopupShow();
             "
         >
-            收藏
+            加入购物车
         </button>
         <button class="buy-btn" @click="showBuyModal = true">购买</button>
     </div>
 
-    <!-- 收藏滑上弹窗 -->
+    <!-- 加入购物车弹窗 -->
     <transition name="slideup">
         <div v-if="showCollect" class="collect-popup">
             <div class="popup-header">
-                <span>收藏商品</span>
+                <span>加入购物车</span>
                 <button
                     class="close-btn"
                     @click="
@@ -102,7 +102,7 @@
                     @click="handleConfirmCollect"
                     :disabled="!selectedSpec"
                 >
-                    收藏
+                    加入购物车
                 </button>
             </div>
         </div>
@@ -122,7 +122,7 @@
                     <span v-else-if="product.uploadMethodStatus === 1" @click="openMicroShop()">
                         打开微店购买
                     </span>
-                    <p v-else class="hint">该商品暂无可跳转的购买渠道</p>
+                    <span v-else>该商品暂无可线上的购买渠道</span>
                 </div>
                 <button class="close" @click="showBuyModal = false">关闭</button>
             </div>
@@ -390,6 +390,7 @@ function openMicroShop() {
             color: $text-secondary;
             font-size: 14px;
             line-height: 1.6;
+            white-space: pre-wrap;
         }
     }
 

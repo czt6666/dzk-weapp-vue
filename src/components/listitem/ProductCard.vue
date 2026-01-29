@@ -94,7 +94,6 @@ function toggleFavorite() {
     position: relative;
     width: 100%;
     overflow: hidden;
-    background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
 
     :deep(.el-image) {
         width: 100%;

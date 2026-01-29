@@ -93,7 +93,7 @@ const routes: RouteRecordRaw[] = [
         path: "/shop/favorites",
         name: "ShopFavorites",
         component: () => import("../views/shop/Favorites.vue"),
-        meta: { title: "我的收藏" },
+        meta: { title: "我的购物车" },
     },
     {
         path: "/restaurant",

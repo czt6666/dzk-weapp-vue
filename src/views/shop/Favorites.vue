@@ -1,13 +1,13 @@
 <template>
-    <div class="favorites-page">
+    <div class="cart-page">
         <header class="header">
-            <h1>我的收藏夹</h1>
-            <p class="sub">收藏的宝贝都在这里啦～</p>
+            <h1>我的购物车</h1>
+            <p class="sub">购物车里的宝贝都在这里啦～</p>
         </header>
 
-        <!-- 收藏列表 -->
-        <section v-if="favorite.list.length" class="favorites-grid">
-            <div v-for="item in favorite.list" :key="item.id" class="favorite-card">
+        <!-- 购物车列表 -->
+        <section v-if="favorite.list.length" class="cart-grid">
+            <div v-for="item in favorite.list" :key="item.id" class="cart-card">
                 <div class="thumb" @click="goDetail(item)">
                     <el-image :src="imgUrl(item.previewImage)" alt="商品图片" fit="cover" />
                 </div>
@@ -19,7 +19,7 @@
                 </div>
                 <div class="actions">
                     <button class="buy" @click.stop="openLink(item.link)">去购买</button>
-                    <button class="remove" @click.stop="remove(item.skuId)">取消收藏</button>
+                    <button class="remove" @click.stop="remove(item.skuId)">移出购物车</button>
                 </div>
             </div>
         </section>
@@ -27,10 +27,10 @@
         <!-- 空状态 -->
         <div v-else class="empty">
             <div class="empty-icon">
-                <img :src="emptyFavoriteIcon" alt="空收藏夹" />
+                <div class="cart-icon-large">🛒</div>
             </div>
-            <p class="empty-text">还没有收藏任何商品~</p>
-            <p class="empty-hint">快去收藏你喜欢的商品吧</p>
+            <p class="empty-text">购物车是空的~</p>
+            <p class="empty-hint">快去添加你喜欢的商品吧</p>
         </div>
     </div>
 </template>
@@ -41,20 +41,19 @@ import { useShopFavoriteStore } from "@/stores/shopFavorite";
 import { useRouter } from "vue-router";
 import { ElMessageBox } from "element-plus";
 import { imgUrl } from "@/utils";
-import emptyFavoriteIcon from "@/assets/svg/empty-favorite.svg";
 
 const favorite = useShopFavoriteStore();
 const router = useRouter();
 
-// 页面挂载时获取收藏列表
+// 页面挂载时获取购物车列表
 onMounted(() => {
     favorite.fetchFavorites();
 });
 
-// 取消收藏
+// 移出购物车
 async function remove(skuId: number) {
     try {
-        await ElMessageBox.confirm("确定要取消收藏吗？", "提示", {
+        await ElMessageBox.confirm("确定要从购物车移出吗？", "提示", {
             confirmButtonText: "确定",
             cancelButtonText: "取消",
             type: "warning",
@@ -80,7 +79,7 @@ function goDetail(item: any) {
 @use "@/styles/variables.scss" as *;
 @use "sass:color";
 
-.favorites-page {
+.cart-page {
     overflow-y: auto;
     height: 100%;
     padding: $spacing-md;
@@ -105,13 +104,13 @@ function goDetail(item: any) {
     color: #888;
 }
 
-.favorites-grid {
+.cart-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: $spacing-md;
 }
 
-.favorite-card {
+.cart-card {
     background: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(10px);
     border-radius: $radius-large;
@@ -122,7 +121,7 @@ function goDetail(item: any) {
     transition: $transition-base;
 }
 
-.favorite-card:active {
+.cart-card:active {
     opacity: 0.8;
 }
 
@@ -169,6 +168,7 @@ function goDetail(item: any) {
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     margin-bottom: 0.4rem;
 }
@@ -238,10 +238,8 @@ button.remove:active {
         align-items: center;
         justify-content: center;
 
-        img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
+        .cart-icon-large {
+            font-size: 80px;
         }
     }
 

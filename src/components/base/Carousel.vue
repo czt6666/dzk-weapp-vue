@@ -36,15 +36,7 @@
                 </svg>
             </button>
             <button class="carousel-btn next" @click.stop="goToNext" :disabled="!bs">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M9 18L15 12L9 6"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    />
-                </svg>
+                <ActionArrow />
             </button>
         </div>
 
@@ -64,6 +56,7 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, nextTick, computed, onUnmounted } from "vue";
 import BScroll from "better-scroll";
+import ActionArrow from "@/components/base/ActionArrow.vue";
 
 const props = withDefaults(
     defineProps<{
@@ -266,7 +259,8 @@ watch(
             justify-content: center;
             color: #333;
 
-            svg {
+            svg,
+            :deep(.action-arrow) {
                 width: 24px;
                 height: 24px;
                 pointer-events: none; // 确保 SVG 不阻止按钮的点击事件
