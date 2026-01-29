@@ -1,4 +1,5 @@
 import service from "./index";
+import type { ApiResponse } from "./index";
 
 export function getRestaurantList(params: { name?: string }) {
     return service.get("/admin/ecadmin/restaurant/list", { params });
@@ -61,4 +62,34 @@ export interface IDishItem {
     price: number;
     unit: string;
     summary: string;
+}
+
+// 下单请求参数
+export interface ICreateOrderParams {
+    userId: number;
+    items: Array<{
+        dishId: number;
+        quantity: number;
+    }>;
+}
+
+// 订单商品信息
+export interface IOrderItem {
+    dishId: number;
+    dishName: string;
+    price: number;
+    quantity: number;
+}
+
+// 下单返回数据
+export interface IOrderResult {
+    orderId: string;
+    items: IOrderItem[];
+    totalAmount: number;
+    createTime: string;
+}
+
+// 创建订单
+export function createOrder(params: ICreateOrderParams) {
+    return service.post<ApiResponse & { data: IOrderResult }>("/restaurant/order/create", params);
 }

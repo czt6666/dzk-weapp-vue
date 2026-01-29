@@ -61,64 +61,6 @@ export function throttle<T extends (...args: any[]) => void>(
     };
 }
 
-// // 1x1 base64 占位图
-// const FALLBACK_BASE64 =
-//     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIW2P8z/C/HwAFgwJ/lZSmOQAAAABJRU5ErkJggg==";
-
-// function checkImgAvailable(url: string, callback: typeof imgUrl): boolean {
-//     console.log("checkImgAvailable:", url);
-
-//     // 异步加载图片
-//     const img = new Image();
-//     img.onload = () => {
-//         console.log("img loaded:", url);
-//         callback(url, true);
-//     };
-//     img.onerror = () => {
-//         console.log("img error:", url);
-//         callback(FALLBACK_BASE64, true);
-//     };
-//     img.src = url;
-
-//     // 同步阶段先抛错
-//     throw new Error("checkImgAvailable is loading");
-// }
-
-// export function imgUrl(url: string | null | undefined, isCheck: boolean = false): string {
-//     // 当回调触发时 isCheck=true，此时直接返回 url
-//     if (isCheck) return url!;
-
-//     if (!url) return FALLBACK_BASE64;
-
-//     // http 或 data URL
-//     if (url.startsWith("http") || url.startsWith("data:")) {
-//         try {
-//             return checkImgAvailable(url, imgUrl) ? url : FALLBACK_BASE64;
-//         } catch (err) {
-//             // 第一次必然走这里
-//             console.warn(err);
-//             return FALLBACK_BASE64;
-//         }
-//     }
-
-//     // 后端的路径
-//     const base = import.meta.env.VITE_API_BASE_URL;
-//     const newUrl = url.startsWith("/api") ? url.slice(4) : url;
-//     const finalUrl = joinUrl(base, newUrl);
-//     console.log("imgUrl final:", finalUrl);
-
-//     try {
-//         return checkImgAvailable(finalUrl, imgUrl) ? finalUrl : FALLBACK_BASE64;
-//     } catch (err) {
-//         console.warn(err);
-//         return FALLBACK_BASE64;
-//     }
-// }
-
-// function joinUrl(base: string, path: string) {
-//     return base.replace(/\/+$/, "") + "/" + path.replace(/^\/+/, "");
-// }
-
 export const imgUrl = (url: string | null | undefined) => {
     if (!url) return "";
     if (url.startsWith("http")) return url;
@@ -131,3 +73,53 @@ export const imgUrl = (url: string | null | undefined) => {
 const joinUrl = (base: string, path: string) => {
     return base.replace(/\/+$/, "") + "/" + path.replace(/^\/+/, "");
 };
+
+/**
+ * 复制文本到剪贴板
+ * @param text 要复制的文本
+ * @returns Promise<boolean> 是否成功
+ */
+export async function copyToClipboard(text: string): Promise<boolean> {
+    try {
+        await navigator.clipboard.writeText(text);
+        return true;
+    } catch (err) {
+        // 降级方案：使用传统方法
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.position = "fixed";
+        textArea.style.opacity = "0";
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            document.execCommand("copy");
+            document.body.removeChild(textArea);
+            return true;
+        } catch (e) {
+            document.body.removeChild(textArea);
+            return false;
+        }
+    }
+}
+
+/**
+ * 检测设备是否支持打电话
+ * @returns boolean
+ */
+export function isPhoneSupported(): boolean {
+    const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
+    const isMobile = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(
+        userAgent.toLowerCase(),
+    );
+    return isMobile;
+}
+
+/**
+ * 拨打电话
+ * @param phone 电话号码
+ */
+export function callPhone(phone: string): void {
+    if (phone) {
+        window.location.href = `tel:${phone}`;
+    }
+}

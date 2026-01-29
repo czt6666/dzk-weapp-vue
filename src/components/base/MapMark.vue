@@ -203,6 +203,27 @@ const addMapMarkers = () => {
 
         restaurantMarkers.value.push(marker);
     });
+
+    // 添加标记后，立即设置地图中心点为标记的中心点
+    if (restaurantMarkers.value.length > 0 && map.value) {
+        if (restaurantMarkers.value.length === 1) {
+            // 只有一个标记时，直接居中
+            const position = restaurantMarkers.value[0].getPosition();
+            map.value.setZoomAndCenter(16, [position.lng, position.lat]);
+        } else {
+            // 多个标记时，计算中心点
+            let sumLng = 0;
+            let sumLat = 0;
+            restaurantMarkers.value.forEach((marker) => {
+                const pos = marker.getPosition();
+                sumLng += pos.lng;
+                sumLat += pos.lat;
+            });
+            const centerLng = sumLng / restaurantMarkers.value.length;
+            const centerLat = sumLat / restaurantMarkers.value.length;
+            map.value.setZoomAndCenter(15, [centerLng, centerLat]);
+        }
+    }
 };
 
 // 生成贝塞尔曲线路径点
@@ -358,9 +379,16 @@ const locateMe = (isClick: boolean = false): Promise<void> => {
                         map: map.value,
                     });
 
-                    // 如果是点击按钮，只移动到我的位置；否则如果开启了自动适应视野，会在后面统一处理
+                    // 如果是点击按钮，只移动到我的位置
                     if (isClick) {
                         map.value.setZoomAndCenter(15, [gcjLng, gcjLat]);
+                    } else {
+                        // 如果不是点击按钮，且开启了自动适应视野，则自适应所有标记（包括商家和我的位置）
+                        if (props.autoFitView) {
+                            setTimeout(() => {
+                                fitAllMarkers();
+                            }, 100);
+                        }
                     }
 
                     resolve();
@@ -421,6 +449,7 @@ onMounted(async () => {
     try {
         await loadAMapScript();
         initMap();
+        // 添加标记，此时会自动设置地图中心点为标记的中心点
         addMapMarkers();
 
         // 如果开启了显示路线，绘制路线
@@ -430,25 +459,14 @@ onMounted(async () => {
             }, 300);
         }
 
-        // 如果开启了显示我的位置，先定位
+        // 如果开启了显示我的位置，异步获取用户位置
+        // 获取到用户位置后会自动进行自适应（在 locateMe 函数中处理）
         if (props.showMyLocation) {
-            try {
-                await locateMe();
-            } catch (error) {
-                // 定位失败不影响后续流程
+            // 异步获取用户位置，不阻塞地图显示
+            locateMe().catch((error) => {
+                // 定位失败不影响地图显示，地图已经显示了标记位置
                 console.warn("定位失败，继续显示商家位置", error);
-            }
-        }
-
-        // 自动调整视野以显示所有标记（包括商家和我的位置）
-        if (props.autoFitView && props.marks.length > 0) {
-            // 等待标记完全添加到地图后再调整视野
-            setTimeout(
-                () => {
-                    fitAllMarkers();
-                },
-                props.showRoute ? 500 : 200,
-            );
+            });
         }
     } catch (error) {
         console.error("地图初始化失败:", error);

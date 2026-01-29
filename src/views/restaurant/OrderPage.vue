@@ -104,7 +104,13 @@
                     <div class="total-price">¥{{ cartStore.totalPrice.toFixed(2) }}</div>
                 </div>
 
-                <!-- <button class="checkout-btn" :disabled="cartStore.totalItems === 0">去结算</button> -->
+                <button
+                    class="checkout-btn"
+                    :disabled="cartStore.totalItems === 0"
+                    @click="handleCheckout"
+                >
+                    去下单
+                </button>
             </div>
         </footer>
 
@@ -162,8 +168,11 @@
                     <div class="store-images">
                         <el-image
                             :src="imgUrl(restaurantInfo.logoUrl)"
+                            :preview-src-list="[imgUrl(restaurantInfo.logoUrl)]"
+                            :preview-teleported="true"
                             alt="店铺logo"
                             class="store-img"
+                            style="cursor: pointer"
                         />
                     </div>
 
@@ -179,29 +188,16 @@
                         >
                             <span class="label">📍 地址</span>
                             <span class="value">{{ restaurantInfo.address }}</span>
-                            <span class="map-icon">
-                                <svg
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        d="M9 18L15 12L9 6"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                    />
-                                </svg>
-                            </span>
+                            <ActionArrow />
                         </div>
                         <div v-else class="detail-item">
                             <span class="label">📍 地址</span>
                             <span class="value">{{ restaurantInfo.address }}</span>
                         </div>
-                        <div class="detail-item">
+                        <div class="detail-item phone-item" @click="handlePhoneClick" v-if="restaurantInfo.phone">
                             <span class="label">📞 电话</span>
                             <span class="value">{{ restaurantInfo.phone }}</span>
+                            <ActionArrow />
                         </div>
                         <div class="detail-item">
                             <span class="label">🕐 营业时间</span>
@@ -219,30 +215,38 @@
                 </div>
             </div>
         </div>
+
     </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { ElMessage } from "element-plus";
 import { useCartStore } from "@/stores/orderCart";
+import { useUserStore } from "@/stores/user";
 import {
     getRestaurantDetail,
     getCategoryList,
     getDishList,
+    createOrder,
     type IRestaurantInfo,
     type IDishCategory,
     type IDishItem,
 } from "@/apis/restaurant";
 import { imgUrl } from "@/utils";
+import { showPhoneModal } from "@/utils/phoneModal";
+import ActionArrow from "@/components/base/ActionArrow.vue";
 
 const route = useRoute();
 const router = useRouter();
 const cartStore = useCartStore();
+const userStore = useUserStore();
 const activeCategory = ref<number>(0);
 const showCart = ref(false);
 const showStoreDetail = ref(false);
 const loading = ref(true);
+const submitting = ref(false);
 
 const restaurantInfo = ref<IRestaurantInfo | null>(null);
 const categories = ref<IDishCategory[]>([]);
@@ -273,6 +277,68 @@ function goToMap() {
                 phone: restaurantInfo.value.phone || "",
             },
         });
+    }
+}
+
+// 处理电话号码点击
+function handlePhoneClick() {
+    if (restaurantInfo.value?.phone) {
+        showPhoneModal(restaurantInfo.value.phone);
+    }
+}
+
+// 处理下单
+async function handleCheckout() {
+    if (cartStore.totalItems === 0) {
+        ElMessage.warning("购物车是空的");
+        return;
+    }
+
+    // 获取userId
+    const userId = userStore.userInfo?.userId;
+    if (!userId) {
+        ElMessage.error("请先登录");
+        router.push({ name: "MyPage" });
+        return;
+    }
+
+    try {
+        submitting.value = true;
+
+        // 构建下单参数
+        const orderItems = cartStore.cartList.map((item) => ({
+            dishId: item.id,
+            quantity: item.quantity,
+        }));
+
+        const res = await createOrder({
+            userId,
+            items: orderItems,
+        });
+
+        if (res.data) {
+            ElMessage.success("下单成功");
+            // 清空购物车
+            cartStore.clearCart();
+            // 跳转到订单页面，传递完整的订单信息和店铺信息
+            const orderDataWithStore = {
+                ...res.data,
+                restaurantInfo: restaurantInfo.value,
+            };
+            router.push({
+                name: "OrderDetail",
+                query: {
+                    orderData: JSON.stringify(orderDataWithStore),
+                },
+            });
+        } else {
+            ElMessage.error("下单失败，请重试");
+        }
+    } catch (error: any) {
+        console.error("下单失败:", error);
+        ElMessage.error(error?.response?.data?.message || "下单失败，请重试");
+    } finally {
+        submitting.value = false;
     }
 }
 
@@ -987,18 +1053,6 @@ onMounted(async () => {
                             background-color: #f5f5f5;
                         }
 
-                        .map-icon {
-                            margin-left: auto;
-                            display: flex;
-                            align-items: center;
-                            color: #999;
-                            flex-shrink: 0;
-
-                            svg {
-                                width: 16px;
-                                height: 16px;
-                            }
-                        }
                     }
 
                     .label {
@@ -1010,6 +1064,25 @@ onMounted(async () => {
                     .value {
                         flex: 1;
                         color: #333;
+                    }
+
+                    &.address-item,
+                    &.phone-item {
+                        cursor: pointer;
+                        transition: background-color 0.2s ease;
+                        padding: 8px;
+                        margin: -8px;
+                        border-radius: 4px;
+                        display: flex;
+                        align-items: center;
+
+                        &:active {
+                            background-color: #f5f5f5;
+                        }
+
+                        &:active :deep(.action-arrow) {
+                            transform: translateX(2px);
+                        }
                     }
                 }
 
@@ -1030,6 +1103,7 @@ onMounted(async () => {
             }
         }
     }
+
 }
 </style>
 

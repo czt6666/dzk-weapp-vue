@@ -35,6 +35,12 @@
             </div>
         </div>
 
+        <!-- 介绍 -->
+        <div v-if="store.notice" class="store-intro">
+            <span class="intro-icon">📝</span>
+            <span class="intro-text">{{ store.notice }}</span>
+        </div>
+
         <!-- 营业时间 -->
         <div class="store-info-row">
             <span class="info-icon">🕐</span>
@@ -45,17 +51,19 @@
         </div>
 
         <!-- 地址 -->
-        <div class="store-info-row">
+        <div class="store-info-row address-row" @click.stop="goToMap">
             <span class="info-icon">📍</span>
             <span class="info-label">地址：</span>
             <span class="info-value">{{ store.address }}</span>
+            <ActionArrow />
         </div>
 
         <!-- 电话 -->
-        <div class="store-info-row">
+        <div class="store-info-row phone-row" @click.stop="handlePhoneClick" v-if="store.phone">
             <span class="info-icon">📞</span>
             <span class="info-label">电话：</span>
             <span class="info-value">{{ store.phone }}</span>
+            <ActionArrow />
         </div>
 
         <!-- 收藏数 -->
@@ -64,19 +72,16 @@
             <span class="info-label">收藏数：</span>
             <span class="info-value">{{ localFavoriteCount }}</span>
         </div>
-
-        <!-- 公告 -->
-        <div v-if="store.notice" class="store-notice">
-            <span class="notice-icon">📢</span>
-            <span class="notice-text">{{ store.notice }}</span>
-        </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from "vue";
+import { useRouter } from "vue-router";
 import type { IRestaurantInfo } from "@/apis/restaurant";
 import { imgUrl } from "@/utils";
+import { showPhoneModal } from "@/utils/phoneModal";
+import ActionArrow from "@/components/base/ActionArrow.vue";
 import heartFilledIcon from "@/assets/svg/heart-filled.svg";
 import heartOutlineIcon from "@/assets/svg/heart-outline.svg";
 
@@ -88,6 +93,8 @@ const emit = defineEmits<{
     click: [store: IRestaurantInfo];
     favorite: [isFavorite: boolean];
 }>();
+
+const router = useRouter();
 
 // 直接使用父组件传递的收藏状态
 const isFavorite = computed(() => props.store.isCollect || false);
@@ -103,6 +110,29 @@ const handleClick = () => {
 
 const toggleFavorite = () => {
     emit("favorite", !isFavorite.value);
+};
+
+// 跳转到地图页面
+const goToMap = () => {
+    if (props.store.coordinateLng && props.store.coordinateLat) {
+        router.push({
+            name: "Map",
+            query: {
+                lng: props.store.coordinateLng.toString(),
+                lat: props.store.coordinateLat.toString(),
+                name: props.store.name,
+                address: props.store.address,
+                phone: props.store.phone || "",
+            },
+        });
+    }
+};
+
+// 处理电话号码点击
+const handlePhoneClick = () => {
+    if (props.store.phone) {
+        showPhoneModal(props.store.phone);
+    }
 };
 </script>
 
@@ -241,6 +271,31 @@ const toggleFavorite = () => {
     }
 }
 
+// 介绍
+.store-intro {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 13px;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.intro-icon {
+    font-size: 16px;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.intro-text {
+    color: #666;
+    line-height: 1.6;
+    flex: 1;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
 // 信息行
 .store-info-row {
     display: flex;
@@ -251,6 +306,21 @@ const toggleFavorite = () => {
 
     &:last-of-type {
         margin-bottom: 0;
+    }
+
+    &.address-row {
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+        padding: 4px 0;
+        margin-left: -4px;
+        margin-right: -4px;
+        padding-left: 4px;
+        padding-right: 4px;
+        border-radius: 4px;
+
+        &:active {
+            background-color: #f5f5f5;
+        }
     }
 
     .info-icon {
@@ -275,31 +345,26 @@ const toggleFavorite = () => {
         color: #333;
         flex: 1;
     }
-}
 
-// 公告
-.store-notice {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    background: #fff9e6;
-    border-left: 3px solid #ffb800;
-    padding: 10px 12px;
-    margin-top: 12px;
-    border-radius: 4px;
-    font-size: 13px;
-}
+    .arrow-icon {
+        display: flex;
+        align-items: center;
+    }
 
-.notice-icon {
-    font-size: 16px;
-    flex-shrink: 0;
-    margin-top: 1px;
-}
+    &.phone-row {
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+        padding: 4px 0;
+        margin-left: -4px;
+        margin-right: -4px;
+        padding-left: 4px;
+        padding-right: 4px;
+        border-radius: 4px;
 
-.notice-text {
-    color: #856404;
-    line-height: 1.5;
-    flex: 1;
+        &:active {
+            background-color: #f5f5f5;
+        }
+    }
 }
 
 @keyframes heartBeat {

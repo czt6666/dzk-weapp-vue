@@ -8,6 +8,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    ActionArrow: typeof import('./src/components/base/ActionArrow.vue')['default']
     Carousel: typeof import('./src/components/base/Carousel.vue')['default']
     Desktop: typeof import('./src/components/Desktop.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
@@ -23,6 +24,7 @@ declare module 'vue' {
     MapMark: typeof import('./src/components/base/MapMark.vue')['default']
     NewsCarousel: typeof import('./src/components/base/NewsCarousel.vue')['default']
     NewsListItem: typeof import('./src/components/listitem/NewsListItem.vue')['default']
+    PhoneModal: typeof import('./src/components/base/PhoneModal.vue')['default']
     ProductCard: typeof import('./src/components/listitem/ProductCard.vue')['default']
     RetirementListItem: typeof import('./src/components/listitem/RetirementListItem.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
