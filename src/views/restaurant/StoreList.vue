@@ -5,68 +5,81 @@
             <SearchInput
                 v-model="keyword"
                 placeholder="请输入门店名称"
-                @handleSearch="fetchData"
-                @handleReset="clearSearch"
+                @handleSearch="handleSearch"
+                @handleReset="handleReset"
             />
         </div>
 
         <!-- 门店列表 -->
-        <main class="store-list">
-            <div v-if="loading" class="loading-state">
-                <div class="spinner"></div>
-                <p>加载中...</p>
-            </div>
+        <div class="list">
+            <SmartScrollList :onRefresh="onRefresh" :onLoadMore="debounce(onLoadMore)" :pullUp="false">
+                <div v-if="stores.length === 0" class="empty-state">
+                    <div class="empty-icon">🏪</div>
+                    <p>暂无门店信息</p>
+                </div>
 
-            <div v-else-if="stores.length === 0" class="empty-state">
-                <div class="empty-icon">🏪</div>
-                <p>暂无门店信息</p>
-            </div>
-
-            <div v-else class="store-items">
-                <StoreCard
-                    v-for="store in stores"
-                    :key="store.id"
-                    :store="store"
-                    @click="goToStore"
-                    @favorite="toggleFavorite(store.id, $event)"
-                />
-            </div>
-        </main>
+                <div v-else class="store-items">
+                    <StoreCard
+                        v-for="store in stores"
+                        :key="store.id"
+                        :store="store"
+                        @click="goToStore"
+                        @favorite="toggleFavorite(store.id, $event)"
+                    />
+                </div>
+            </SmartScrollList>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import SearchInput from "@/components/input/SearchInput.vue";
 import StoreCard from "@/components/listitem/StoreListItem.vue";
+import SmartScrollList from "@/components/base/SmartScrollList.vue";
 import { getRestaurantList, type IRestaurantInfo } from "@/apis/restaurant";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import { createFavoriteToggle } from "@/utils/favorite";
+import { debounce } from "@/utils";
 
-const loading = ref(true);
 const keyword = ref("");
 const stores = ref<IRestaurantInfo[]>([]);
 const router = useRouter();
 
-const fetchData = async () => {
-    loading.value = true;
+async function fetchData() {
     try {
         const result = await getRestaurantList({ name: keyword.value.trim() });
-        stores.value = result.data.records;
-        return result;
+        return result.data.records || [];
     } catch (error) {
         ElMessage.error("获取门店列表失败");
         console.error("获取门店列表失败:", error);
-    } finally {
-        loading.value = false;
+        return [];
     }
-};
+}
 
-const clearSearch = async () => {
+async function onRefresh() {
+    stores.value = await fetchData();
+}
+
+async function onLoadMore() {
+    // 门店列表通常是一次性返回所有数据，不需要分页加载
+    // 如果将来需要分页，可以在这里实现
+    ElMessage.success("没有更多数据了");
+}
+
+function handleSearch() {
+    if (!keyword.value.trim()) {
+        ElMessage.warning("请输入搜索关键词");
+        return;
+    }
+    onRefresh();
+}
+
+function handleReset() {
     keyword.value = "";
-    await fetchData();
-};
+    onRefresh();
+}
 
 const goToStore = (store: IRestaurantInfo) => {
     router.push({ name: "RestaurantOrder", query: { id: store.id, name: store.name } });
@@ -74,10 +87,6 @@ const goToStore = (store: IRestaurantInfo) => {
 
 // 使用生成器创建收藏切换函数
 const toggleFavorite = createFavoriteToggle("restaurant", stores);
-
-onMounted(async () => {
-    await fetchData();
-});
 </script>
 
 <style lang="scss" scoped>
@@ -92,67 +101,38 @@ onMounted(async () => {
 
 // 搜索区域
 .search-section {
+    flex-shrink: 0;
     padding: $spacing-md;
     background: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(10px);
 }
 
 // 主列表区域
-.store-list {
-    overflow-y: auto;
+.list {
     flex: 1;
-    padding: $spacing-md $spacing-lg;
-}
+    min-height: 0;
+    padding: $spacing-sm 0 0;
 
-// 加载状态
-.loading-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: $spacing-xxl $spacing-md;
-    color: $text-tertiary;
-
-    .spinner {
-        width: 40px;
-        height: 40px;
-        border: 3px solid #f3f3f3;
-        border-top: 3px solid $color-green-primary;
-        border-radius: $radius-round;
-        animation: spin 1s linear infinite;
-        margin-bottom: $spacing-lg;
+    .store-items {
+        display: flex;
+        flex-direction: column;
+        gap: $spacing-md;
     }
 
-    @keyframes spin {
-        0% {
-            transform: rotate(0deg);
-        }
-        100% {
-            transform: rotate(360deg);
+    // 空状态
+    .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: $spacing-xxxl $spacing-md;
+        color: $text-tertiary;
+
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: $spacing-lg;
+            opacity: 0.5;
         }
     }
-}
-
-// 空状态
-.empty-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: $spacing-xxxl $spacing-md;
-    color: $text-tertiary;
-
-    .empty-icon {
-        font-size: 64px;
-        margin-bottom: $spacing-lg;
-        opacity: 0.5;
-    }
-}
-
-// 店铺卡片列表
-.store-items {
-    display: flex;
-    flex-direction: column;
-    gap: $spacing-md;
 }
 </style>
