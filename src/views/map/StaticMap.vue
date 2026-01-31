@@ -12,7 +12,7 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="Map">
 import { useRoute } from "vue-router";
 import { computed } from "vue";
 import MapMark, {

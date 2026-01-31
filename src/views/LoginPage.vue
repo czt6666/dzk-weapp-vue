@@ -151,7 +151,7 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="LoginPage">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";

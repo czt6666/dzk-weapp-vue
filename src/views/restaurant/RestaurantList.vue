@@ -12,7 +12,11 @@
 
         <!-- 门店列表 -->
         <div class="list">
-            <SmartScrollList :onRefresh="onRefresh" :onLoadMore="debounce(onLoadMore)" :pullUp="false">
+            <SmartScrollList
+                :onRefresh="onRefresh"
+                :onLoadMore="debounce(onLoadMore)"
+                :pullUp="false"
+            >
                 <div v-if="stores.length === 0" class="empty-state">
                     <div class="empty-icon">🏪</div>
                     <p>暂无门店信息</p>
@@ -32,7 +36,7 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="RestaurantList">
 import { ref } from "vue";
 import SearchInput from "@/components/input/SearchInput.vue";
 import StoreCard from "@/components/listitem/StoreListItem.vue";

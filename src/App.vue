@@ -2,11 +2,11 @@
     <div class="app">
         <TopBar class="top-bar" />
         <div class="router-view">
-            <RouterView v-slot="{ Component, route: currentRoute }">
+            <RouterView v-slot="{ Component, route }">
                 <Transition v-if="shouldTransition" name="fade-slide" mode="out-in">
-                    <component :is="Component" :key="currentRoute.path" />
+                    <component :is="Component" :key="route.name" />
                 </Transition>
-                <component v-else :is="Component" :key="currentRoute.path" />
+                <component v-else :is="Component" :key="route.name" />
             </RouterView>
         </div>
         <TabBar v-show="showTabBar" />
@@ -26,6 +26,18 @@ const shouldTransition = ref(false);
 // 根据路由meta.isTab控制TabBar显示
 const showTabBar = computed(() => {
     return route.meta.isTab === true;
+});
+
+// 缓存tab路由组件
+const keepAliveNames = computed(() => {
+    return (
+        router
+            .getRoutes()
+            .filter((r) => r.meta.keepAlive === true)
+            .map((r) => r.name as string)
+            // .map((r) => (Symbol.isSymbol(r.name) ? r.name.toString() : r.name))
+            .filter((name) => name !== undefined)
+    );
 });
 
 // 使用路由守卫来检测是否是 tab 之间的切换

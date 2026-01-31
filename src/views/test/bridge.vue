@@ -69,7 +69,7 @@
     </div>
 </template>
 
-<script setup>
+<script setup name="bridge">
 import { ref, reactive, onMounted } from "vue";
 
 const logs = ref([]);

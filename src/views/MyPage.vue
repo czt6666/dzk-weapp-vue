@@ -46,7 +46,7 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="MyPage">
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user";
 import { ElMessage } from "element-plus";
@@ -57,7 +57,7 @@ const router = useRouter();
 const userStore = useUserStore();
 
 function goToCart() {
-    router.push({ name: "ShopFavorites" });
+    router.push({ name: "ShopCart" });
 }
 
 async function handleLogout() {

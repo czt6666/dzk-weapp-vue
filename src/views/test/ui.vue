@@ -141,7 +141,7 @@
     </div>
 </template>
 
-<script setup>
+<script setup name="ui">
 import { ref } from "vue";
 import {
     Plus,

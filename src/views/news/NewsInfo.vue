@@ -17,7 +17,7 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="NewsInfo">
 import { onMounted, ref, computed, nextTick, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { ElMessage } from "element-plus";

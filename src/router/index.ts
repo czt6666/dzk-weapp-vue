@@ -29,7 +29,7 @@ const routes: RouteRecordRaw[] = [
         path: "/",
         name: "HomePage",
         component: HomePage,
-        meta: { isTab: true, title: "首页" },
+        meta: { isTab: true, title: "首页", keepAlive: true },
     },
     {
         path: "/my",
@@ -41,13 +41,13 @@ const routes: RouteRecordRaw[] = [
         path: "/news",
         name: "NewsList",
         component: () => import("../views/news/NewsList.vue"),
-        meta: { title: "红色庄科" },
+        meta: { title: "红色庄科", keepAlive: true },
     },
     {
         path: "/news/actualtime",
         name: "ActualTimeList",
         component: () => import("../views/news/ActualTimeList.vue"),
-        meta: { title: "时事资讯" },
+        meta: { title: "时事资讯", keepAlive: true },
     },
     {
         path: "/news/actualtime/:id",
@@ -67,7 +67,7 @@ const routes: RouteRecordRaw[] = [
         path: "/hotels",
         name: "HotelList",
         component: () => import("../views/hotel/HotelList.vue"),
-        meta: { isTab: true, title: "民宿" },
+        meta: { isTab: true, title: "民宿", keepAlive: true },
     },
     {
         path: "/hotels/:id",
@@ -79,32 +79,32 @@ const routes: RouteRecordRaw[] = [
     {
         path: "/shop",
         name: "ShopList",
-        component: () => import("../views/shop/ProductList.vue"),
-        meta: { isTab: true, title: "特产" },
+        component: () => import("../views/shop/ShopList.vue"),
+        meta: { isTab: true, title: "特产", keepAlive: true },
     },
     {
         path: "/shop/:id",
         name: "ShopInfo",
-        component: () => import("../views/shop/ProductInfo.vue"),
+        component: () => import("../views/shop/ShopInfo.vue"),
         props: true,
         meta: { title: "商品详情" },
     },
     {
         path: "/shop/favorites",
-        name: "ShopFavorites",
-        component: () => import("../views/shop/Favorites.vue"),
+        name: "ShopCart",
+        component: () => import("../views/shop/ShopCart.vue"),
         meta: { title: "我的购物车" },
     },
     {
         path: "/restaurant",
         name: "RestaurantList",
-        component: () => import("../views/restaurant/StoreList.vue"),
-        meta: { isTab: true, title: "美食" },
+        component: () => import("../views/restaurant/RestaurantList.vue"),
+        meta: { isTab: true, title: "美食", keepAlive: true },
     },
     {
         path: "/restaurant/order",
         name: "RestaurantOrder",
-        component: () => import("../views/restaurant/OrderPage.vue"),
+        component: () => import("../views/restaurant/RestaurantOrder.vue"),
         meta: { title: "点餐" },
     },
     {
@@ -116,14 +116,14 @@ const routes: RouteRecordRaw[] = [
     {
         path: "/map",
         name: "Map",
-        component: () => import("../views/map/RestaurantMap.vue"),
+        component: () => import("../views/map/StaticMap.vue"),
         meta: { title: "位置地图" },
     },
     {
         path: "/tour",
         name: "TourList",
         component: () => import("../views/tour/TourList.vue"),
-        meta: { title: "红色旅游" },
+        meta: { title: "红色旅游", keepAlive: true },
     },
     {
         path: "/tour/:id",
@@ -136,7 +136,7 @@ const routes: RouteRecordRaw[] = [
         path: "/study",
         name: "StudyList",
         component: () => import("../views/study/StudyList.vue"),
-        meta: { title: "研学基地" },
+        meta: { title: "研学基地", keepAlive: true },
     },
     {
         path: "/study/plan/:id",
@@ -156,7 +156,7 @@ const routes: RouteRecordRaw[] = [
         path: "/retirement",
         name: "RetirementList",
         component: () => import("../views/retirement/RetirementList.vue"),
-        meta: { title: "康养生活" },
+        meta: { title: "康养生活", keepAlive: true },
     },
     {
         path: "/retirement/:id",

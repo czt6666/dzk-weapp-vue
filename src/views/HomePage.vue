@@ -209,7 +209,7 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="HomePage">
 import { ref, onMounted, onUnmounted, nextTick } from "vue";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";

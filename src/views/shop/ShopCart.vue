@@ -35,7 +35,7 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="ShopCart">
 import { onMounted } from "vue";
 import { useShopFavoriteStore } from "@/stores/shopFavorite";
 import { useRouter } from "vue-router";
@@ -147,7 +147,6 @@ function goDetail(item: any) {
         transition: transform 0.3s ease;
     }
 }
-
 
 .info {
     padding: $spacing-md;

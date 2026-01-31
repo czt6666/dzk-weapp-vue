@@ -31,7 +31,7 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="map">
 import { ref, computed } from "vue";
 import MapComponent, { type MapMarker } from "../../components/base/MapMark.vue";
 

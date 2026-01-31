@@ -17,7 +17,7 @@
     </div>
 </template>
 
-<script setup>
+<script setup name="location">
 import { ref } from "vue";
 
 const loading = ref(false);

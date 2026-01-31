@@ -25,7 +25,7 @@
     </div>
 </template>
 
-<script lang="ts" setup name="TourList">
+<script lang="ts" setup name="RetirementList">
 import { ref } from "vue";
 import RetirementListItem from "@/components/listitem/RetirementListItem.vue";
 import SmartScrollList from "@/components/base/SmartScrollList.vue";

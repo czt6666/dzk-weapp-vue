@@ -154,7 +154,7 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="TourInfo">
 import { getTourRouteDetail, type ITourRoute } from "@/apis/tour";
 import { useRouter } from "vue-router";
 

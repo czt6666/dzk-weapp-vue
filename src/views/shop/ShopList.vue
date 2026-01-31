@@ -45,12 +45,14 @@
         <div class="cart-float" @click="goCart">
             <div class="cart-icon">🛒</div>
             <span class="cart-text">购物车</span>
-            <span class="cart-count" v-if="favorite.list.length > 0">{{ favorite.list.length }}</span>
+            <span class="cart-count" v-if="favorite.list.length > 0">{{
+                favorite.list.length
+            }}</span>
         </div>
     </div>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup name="ShopList">
 import { ref, nextTick } from "vue";
 import { useRouter } from "vue-router";
 import ProductCard from "@/components/listitem/ProductCard.vue";
@@ -184,7 +186,7 @@ function openProduct(item: IProduct) {
 }
 
 function goCart() {
-    router.push({ name: "ShopFavorites" });
+    router.push({ name: "ShopCart" });
 }
 
 // 使用生成器创建收藏切换函数

@@ -130,7 +130,7 @@
     </transition>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="ShopInfo">
 import { ref, onMounted, onBeforeUnmount, computed } from "vue";
 import { useRoute } from "vue-router";
 import { ElMessage } from "element-plus";

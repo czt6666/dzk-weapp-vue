@@ -55,7 +55,7 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="HotelInfo">
 import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { ElMessage } from "element-plus";

@@ -42,7 +42,7 @@
     </div>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup name="HotelList">
 import { ref, nextTick } from "vue";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
