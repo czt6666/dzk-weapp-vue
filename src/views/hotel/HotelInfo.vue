@@ -3,13 +3,11 @@
     <div v-else class="hotel-detail">
         <!-- 顶部封面 -->
         <div class="cover-wrapper">
-            <el-image
-                class="cover"
-                :src="imgUrl(info.coverImage)"
-                :preview-src-list="coverPreviewList"
-                :preview-teleported="true"
-                alt="封面"
-                fit="cover"
+            <Carousel
+                :images="info.coverImage.map((i) => imgUrl(i))"
+                :height="300"
+                fit="contain"
+                :is-preview="true"
             />
             <div class="title-bar">
                 <div class="title">{{ info.homestayName }}</div>
@@ -63,6 +61,7 @@ import { getHotelItem } from "@/apis/hotel";
 import { imgUrl } from "@/utils/index";
 import { showPhoneModal } from "@/utils/phoneModal";
 import ActionArrow from "@/components/base/ActionArrow.vue";
+import Carousel from "@/components/base/Carousel.vue";
 
 const route = useRoute();
 const router = useRouter();

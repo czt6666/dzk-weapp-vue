@@ -16,7 +16,9 @@
                         :src="img"
                         class="carousel-image"
                         :alt="`Slide ${idx + 1}`"
-                        fit="cover"
+                        :preview-src-list="isPreview ? images : []"
+                        :preview-teleported="true"
+                        :fit="fit"
                     />
                 </div>
             </div>
@@ -65,11 +67,15 @@ const props = withDefaults(
         height?: number; // 轮播图高度（px）
         showButtons?: boolean; // 是否显示左右控制按钮，默认false
         showDots?: boolean; // 是否显示底部dot指示器，默认true
+        fit?: "contain" | "cover"; // 图片适应方式，默认cover
+        isPreview?: boolean; // 是否预览模式，默认false
     }>(),
     {
         height: undefined,
         showButtons: false,
         showDots: true,
+        fit: "cover",
+        isPreview: false,
     },
 );
 

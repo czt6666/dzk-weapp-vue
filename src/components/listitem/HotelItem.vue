@@ -1,7 +1,7 @@
 <template>
     <div class="item-card" @click="handleClick">
         <div class="image-wrapper">
-            <el-image :src="imgUrl(info.coverImage)" alt="封面图" lazy />
+            <el-image :src="imgUrl(info.coverImage.split(',')[0])" alt="封面图" lazy />
             <div class="favorite-overlay" @click.stop="toggleFavorite">
                 <div class="favorite-btn" :class="{ active: isFavorite }">
                     <img v-if="isFavorite" :src="heartFilledIcon" alt="已收藏" class="heart-icon" />

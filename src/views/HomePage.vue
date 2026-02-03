@@ -193,7 +193,7 @@
                     >
                         <div class="hotel-image">
                             <el-image
-                                :src="imgUrl(hotel.imageUrl || hotel.coverImage)"
+                                :src="imgUrl(hotel.coverImage.split(',')[0])"
                                 :alt="hotel.homestayName"
                                 fit="cover"
                             />
