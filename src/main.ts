@@ -5,23 +5,14 @@ import App from "./App.vue";
 import router from "./router";
 
 import "@/styles/main.scss";
-import ElementPlus from "element-plus";
-import "element-plus/dist/index.css";
-import { STORAGE_TOKEN_KEY } from "@/utils/constence";
-import { useUserStore } from "@/stores/user";
-
-// 调试代码：设置默认 token（在应用初始化之前）
-const DEBUG_TOKEN =
-    "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI1IiwiZXhwIjoxNzY3NjA3ODYzLCJ1c2VySWQiOjUsImlhdCI6MTc2NzAwMzA2M30.65w54bifvx3AGz59zbm-TKUej5wOfMOpnO5IhA0j1RI8BkCLfk0sDmMO26a0UtmztRKUeaO-neVqVZn0jIuwSg";
-const existingToken = localStorage.getItem(STORAGE_TOKEN_KEY);
-if (!existingToken) {
-    localStorage.setItem(STORAGE_TOKEN_KEY, DEBUG_TOKEN);
-    console.log("🔧 [调试] 已设置默认 token");
-}
+// ElementPlus：不要在入口全量注册/全量引入样式（会显著增大首包）
+// 组件按需引入由 unplugin-vue-components + ElementPlusResolver 负责
+// 这里仅保留“服务组件”(ElMessage/ElMessageBox 等)所需的最小样式
+import "element-plus/es/components/message/style/css";
+import "element-plus/es/components/message-box/style/css";
 
 const app = createApp(App);
 
-app.use(ElementPlus);
 const pinia = createPinia();
 app.use(pinia);
 app.use(router);

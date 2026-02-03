@@ -17,7 +17,7 @@ export interface CustomAxiosInstance extends AxiosInstance {
 
 const service = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL || "", // 配置在 .env
-    timeout: 10000, // 10秒超时
+    timeout: 60000, // 60秒超时
 }) as CustomAxiosInstance;
 
 // 请求拦截器

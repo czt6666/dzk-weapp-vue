@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from "vue-router";
 import HomePage from "@/views/HomePage.vue";
 
-const pages = import.meta.glob("../views/test/**/*.vue");
+// 测试页面路由只在开发环境保留，避免生产首包携带测试路由表与 glob 映射
+const pages = import.meta.env.DEV ? import.meta.glob("../views/test/**/*.vue") : {};
 
 // 生成路由数组
 function generateRoutes() {
@@ -167,7 +168,7 @@ const routes: RouteRecordRaw[] = [
     },
     {
         path: "/test",
-        children: generateRoutes(),
+        children: import.meta.env.DEV ? generateRoutes() : [],
     },
 ];
 

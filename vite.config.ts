@@ -29,17 +29,20 @@ function getPort(): Promise<number> {
 
 export default async function () {
     const port = await getPort();
+    const isDev = process.env.NODE_ENV !== "production";
 
     return defineConfig({
         base: "/dzk-weapp-vue/",
         plugins: [
             vue(),
-            vueDevTools(),
+            // 仅在开发环境启用 devtools，避免生产构建引入额外代码
+            ...(isDev ? [vueDevTools()] : []),
             AutoImport({
                 imports: [
                     "vue", // 自动导入 ref, reactive, computed...
                     "vue-router", // 自动导入 useRouter, useRoute...
                 ],
+                // 让 ElMessage/ElMessageBox 等服务也能自动导入（样式在 main.ts 里按需引入）
                 resolvers: [ElementPlusResolver()],
                 dts: "src/auto-imports.d.ts", // 声明文件生成路径
                 eslintrc: {
@@ -50,7 +53,8 @@ export default async function () {
                 dirs: ["./src/composables"], // 自动导入自定义函数/工具
             }),
             Components({
-                resolvers: [ElementPlusResolver()],
+                // ElementPlus 组件按需引入 + 按需样式（避免 main.ts 全量 element-plus/dist/index.css）
+                resolvers: [ElementPlusResolver({ importStyle: "css" })],
             }),
         ],
         resolve: {
