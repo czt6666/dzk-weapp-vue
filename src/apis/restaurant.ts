@@ -66,11 +66,11 @@ export interface IDishItem {
 
 // 下单请求参数
 export interface ICreateOrderParams {
+    dishIds: number[]; // 菜品ID数组
+    quantities: number[]; // 数量数组
     userId: number;
-    items: Array<{
-        dishId: number;
-        quantity: number;
-    }>;
+    restaurantId: number;
+    remark?: string; // 备注（可选）
 }
 
 // 订单商品信息
@@ -90,6 +90,19 @@ export interface IOrderResult {
 }
 
 // 创建订单
-export function createOrder(params: ICreateOrderParams) {
-    return service.post<ApiResponse & { data: IOrderResult }>("/restaurant/order/create", params);
+export function createOrder(params: ICreateOrderParams, userId?: number) {
+    const config: any = {
+        headers: {},
+    };
+    
+    // 如果提供了 userId，添加到请求头
+    if (userId) {
+        config.headers["x-user-id"] = userId;
+    }
+    
+    return service.post<ApiResponse & { data: IOrderResult }>(
+        "/restaurant/orders/create",
+        params,
+        config,
+    );
 }

@@ -4,7 +4,7 @@
         <!-- 顶部封面 -->
         <div class="cover-wrapper">
             <Carousel
-                :images="info.coverImage.map((i) => imgUrl(i))"
+                :images="info.coverImage.map((i: string) => imgUrl(i))"
                 :height="300"
                 fit="contain"
                 :is-preview="true"
@@ -48,7 +48,16 @@
 
         <!-- 底部按钮 -->
         <div class="bottom-bar">
+            <!-- 联系房东按钮 -->
             <button class="btn-call" @click="callPhone(info.contactPhone)">📞 联系房东</button>
+            <!-- 小程序预定按钮：只有当 miniProgramPath 和 miniProgramAppid 都存在时显示 -->
+            <button
+                v-if="hasMiniProgram"
+                class="btn-book"
+                @click="handleJumpToMiniProgram"
+            >
+                🏨 小程序预定
+            </button>
         </div>
     </div>
 </template>
@@ -60,6 +69,7 @@ import { ElMessage } from "element-plus";
 import { getHotelItem } from "@/apis/hotel";
 import { imgUrl } from "@/utils/index";
 import { showPhoneModal } from "@/utils/phoneModal";
+import { jumpToMiniProgram } from "@/utils/purchase";
 import ActionArrow from "@/components/base/ActionArrow.vue";
 import Carousel from "@/components/base/Carousel.vue";
 
@@ -81,6 +91,20 @@ const coverPreviewList = computed(() => {
     if (!info.value.coverImage) return [];
     return [imgUrl(info.value.coverImage)];
 });
+
+// 判断是否有小程序跳转信息
+const hasMiniProgram = computed(() => {
+    return !!info.value.miniProgramAppid && !!info.value.miniProgramPath;
+});
+
+// 跳转到微信小程序
+function handleJumpToMiniProgram() {
+    jumpToMiniProgram(
+        info.value.miniProgramAppid || "",
+        info.value.miniProgramPath || "",
+        "民宿信息错误，跳转失败",
+    );
+}
 
 // 处理联系房东
 function callPhone(phone: string) {
@@ -248,17 +272,19 @@ onMounted(async () => {
     }
 
     .bottom-bar {
+        display: flex;
         position: absolute;
         bottom: 0;
         left: 0;
         right: 0;
+        gap: $spacing-md;
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(10px);
         box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
         padding: $spacing-md;
 
-        .btn-call {
-            width: 100%;
+        .btn-book {
+            flex: 1;
             background: $color-green-primary;
             color: #fff;
             font-size: 16px;
@@ -271,9 +297,24 @@ onMounted(async () => {
 
             &:active {
                 background: color.adjust($color-green-primary, $lightness: -10%);
+                transform: scale(0.98);
             }
+        }
+
+        .btn-call {
+            flex: 1;
+            background: #fff;
+            color: $color-green-primary;
+            font-size: 16px;
+            font-weight: 600;
+            border: 1px solid $color-green-primary;
+            border-radius: $radius-small;
+            padding: $spacing-md 0;
+            cursor: pointer;
+            transition: $transition-base;
 
             &:active {
+                background: color.adjust($color-green-primary, $alpha: -0.9);
                 transform: scale(0.98);
             }
         }

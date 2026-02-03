@@ -18,7 +18,7 @@
                     <p class="price">¥{{ item.price }}</p>
                 </div>
                 <div class="actions">
-                    <button class="buy" @click.stop="openLink(item.link)">去购买</button>
+                    <!-- <button class="buy" @click.stop="handlePurchaseClick(item)">去购买</button> -->
                     <button class="remove" @click.stop="remove(item.skuId)">移出购物车</button>
                 </div>
             </div>
@@ -36,11 +36,12 @@
 </template>
 
 <script setup lang="ts" name="ShopCart">
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import { useShopFavoriteStore } from "@/stores/shopFavorite";
 import { useRouter } from "vue-router";
 import { ElMessageBox } from "element-plus";
 import { imgUrl } from "@/utils";
+import { handlePurchase, type PurchaseInfo } from "@/utils/purchase";
 
 const favorite = useShopFavoriteStore();
 const router = useRouter();
@@ -64,9 +65,20 @@ async function remove(skuId: number) {
     }
 }
 
-// 打开购买链接
-function openLink(link: string) {
-    window.open(link, "_blank");
+// 处理购买逻辑
+function handlePurchaseClick(item: any) {
+    // 构建购买信息对象
+    const purchaseInfo: PurchaseInfo = {
+        uploadMethodStatus: item.uploadMethodStatus,
+        miniProgramAppid: item.miniProgramAppid,
+        miniProgramPath: item.miniProgramPath,
+        microShopAppid: item.microShopAppid,
+        microShopProductId: item.microShopProductId,
+        merchantPosterImg: item.merchantPosterImg,
+    };
+
+    // 使用公共函数处理购买
+    handlePurchase(purchaseInfo);
 }
 
 // 跳转商品详情

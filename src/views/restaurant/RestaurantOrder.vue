@@ -302,19 +302,34 @@ async function handleCheckout() {
         return;
     }
 
+    // 检查餐厅信息
+    if (!restaurantInfo.value?.id) {
+        ElMessage.error("餐厅信息错误");
+        return;
+    }
+
     try {
         submitting.value = true;
 
-        // 构建下单参数
-        const orderItems = cartStore.cartList.map((item) => ({
-            dishId: item.id,
-            quantity: item.quantity,
-        }));
+        // 构建下单参数：将购物车数据转换为 dishIds 和 quantities 数组
+        const dishIds: number[] = [];
+        const quantities: number[] = [];
 
-        const res = await createOrder({
-            userId,
-            items: orderItems,
+        cartStore.cartList.forEach((item) => {
+            dishIds.push(item.id);
+            quantities.push(item.quantity);
         });
+
+        const res = await createOrder(
+            {
+                dishIds,
+                quantities,
+                userId,
+                restaurantId: restaurantInfo.value.id,
+                remark: "", // 备注，可以后续添加输入框让用户填写
+            },
+            userId, // 作为请求头传递
+        );
 
         if (res.data) {
             ElMessage.success("下单成功");
@@ -336,7 +351,7 @@ async function handleCheckout() {
         }
     } catch (error: any) {
         console.error("下单失败:", error);
-        ElMessage.error(error?.response?.data?.message || "下单失败，请重试");
+        ElMessage.error(error?.response?.data?.message || error?.msg || "下单失败，请重试");
     } finally {
         submitting.value = false;
     }

@@ -115,11 +115,10 @@
                 <h3>前往购买</h3>
                 <img class="merchant-img" :src="imgUrl(product.merchantPosterImg)" alt="" />
                 <div>
-                    <!-- 0-无，1-仅微店，2-仅小程序 -->
-                    <span v-if="product.uploadMethodStatus === 2" @click="jumpToWx()">
+                    <span v-if="hasMiniProgram" @click="jumpToWx()">
                         打开小程序购买
                     </span>
-                    <span v-else-if="product.uploadMethodStatus === 1" @click="openMicroShop()">
+                    <span v-else-if="hasMicroShop" @click="openMicroShop()">
                         打开微店购买
                     </span>
                     <span v-else>该商品暂无可线上的购买渠道</span>
@@ -138,6 +137,7 @@ import type { IProductDetail, ISpecItem } from "@/views/shop/types";
 import { imgUrl } from "@/utils";
 import { getProductItem } from "@/apis/shop";
 import { useShopFavoriteStore } from "@/stores/shopFavorite";
+import { jumpToMiniProgram, openMicroShop } from "@/utils/purchase";
 
 const route = useRoute();
 const favorite = useShopFavoriteStore();
@@ -214,51 +214,11 @@ function onCollectPopupShow() {
 
 // 跳转到微信小程序
 function jumpToWx() {
-    const appid = (product.value.miniProgramAppid || "").trim();
-    const path = (product.value.miniProgramPath || "").trim();
-
-    if (!appid || !path) {
-        ElMessage.warning("商品信息错误，跳转失败");
-        return;
-    }
-
-    // 检测是否是微信环境
-    const wxObj = typeof window !== "undefined" ? (window as any).wx : undefined;
-
-    if (!wxObj) {
-        console.warn("jumpToWx: 非微信环境，无法跳转");
-        ElMessage.warning("当前不在微信环境中，无法跳转");
-        return;
-    }
-
-    if (!wxObj.miniProgram) {
-        console.warn("jumpToWx: 非小程序 web-view 环境，wx.miniProgram 不可用");
-        ElMessage.warning("当前环境不支持小程序跳转");
-        return;
-    }
-
-    // 使用 getEnv 判断是否在小程序环境中
-    if (!wxObj.miniProgram.getEnv) {
-        console.warn("jumpToWx: wx.miniProgram.getEnv 不可用");
-        ElMessage.warning("当前环境不支持小程序跳转");
-        return;
-    }
-
-    // 编码路径参数
-    const encodedPath = encodeURIComponent(path);
-    const query = `appId=${appid}&path=${encodedPath}`;
-
-    // 执行跳转
-    wxObj.miniProgram.navigateTo({
-        url: `/pages/jump/jump?${query}`,
-        success() {
-            console.log("跳转到小程序成功", { appId: appid, path: path });
-        },
-        fail(err: any) {
-            console.error("跳转失败", err);
-            ElMessage.error("跳转失败，请稍后重试");
-        },
-    });
+    jumpToMiniProgram(
+        product.value.miniProgramAppid || "",
+        product.value.miniProgramPath || "",
+        "商品信息错误，跳转失败",
+    );
 }
 
 onMounted(async () => {
@@ -278,6 +238,16 @@ const showCollect = ref(false);
 const showBuyModal = ref(false);
 const selectedSpec = ref<ISpecItem | null>(null);
 
+// 检查是否有小程序购买渠道
+const hasMiniProgram = computed(() => {
+    return !!product.value.miniProgramAppid && !!product.value.miniProgramPath;
+});
+
+// 检查是否有微店购买渠道
+const hasMicroShop = computed(() => {
+    return !!product.value.microShopAppid && !!product.value.microShopProductId;
+});
+
 // 预览图片列表
 const previewImageList = computed(() => {
     return product.value.previewImages.map((img) => imgUrl(img));
@@ -288,15 +258,6 @@ const detailImageList = computed(() => {
     return product.value.detailImages.map((img) => imgUrl(img));
 });
 
-function openMicroShop() {
-    // 微店跳转：目前后端只提供了 microShopProductId 和 microShopAppid
-    // 但没有明确的跳转协议，暂时提供复制功能
-    const productId = (product.value.microShopProductId || "").trim();
-    if (!productId) {
-        ElMessage.warning("缺少微店商品信息");
-        return;
-    }
-}
 </script>
 
 <style lang="scss" scoped>
