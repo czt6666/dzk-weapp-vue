@@ -82,6 +82,50 @@ export default async function () {
             sourcemap: false, // 生产环境关闭 source map
             outDir: "dist",
             target: "es2015",
+            // 优化分包策略，减小初始包体积并提升缓存效率
+            rollupOptions: {
+                output: {
+                    manualChunks: (id) => {
+                        // 将 node_modules 中的依赖分包
+                        if (id.includes("node_modules")) {
+                            // Vue 核心库单独打包
+                            if (id.includes("vue") && !id.includes("vue-router")) {
+                                return "vue-vendor";
+                            }
+                            // Vue Router 单独打包
+                            if (id.includes("vue-router")) {
+                                return "vue-router-vendor";
+                            }
+                            // Pinia 单独打包
+                            if (id.includes("pinia")) {
+                                return "pinia-vendor";
+                            }
+                            // Element Plus 单独打包（按需引入后体积较小）
+                            if (id.includes("element-plus")) {
+                                return "element-plus-vendor";
+                            }
+                            // Swiper 单独打包（较大）
+                            if (id.includes("swiper")) {
+                                return "swiper-vendor";
+                            }
+                            // Better Scroll 单独打包
+                            if (id.includes("better-scroll")) {
+                                return "better-scroll-vendor";
+                            }
+                            // Axios 单独打包
+                            if (id.includes("axios")) {
+                                return "axios-vendor";
+                            }
+                            // 其他第三方库统一打包
+                            return "vendor";
+                        }
+                    },
+                    // 优化 chunk 文件名，便于缓存
+                    chunkFileNames: "assets/js/[name]-[hash].js",
+                    entryFileNames: "assets/js/[name]-[hash].js",
+                    assetFileNames: "assets/[ext]/[name]-[hash].[ext]",
+                },
+            },
         },
         // 环境变量注入，例如 global -> self，处理 Web Worker 问题（如 monaco）
         define: {
