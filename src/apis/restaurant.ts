@@ -1,5 +1,4 @@
 import service from "./index";
-import type { ApiResponse } from "./index";
 
 export function getRestaurantList(params: { name?: string }) {
     return service.get("/admin/ecadmin/restaurant/list", { params });
@@ -68,41 +67,42 @@ export interface IDishItem {
 export interface ICreateOrderParams {
     dishIds: number[]; // 菜品ID数组
     quantities: number[]; // 数量数组
-    userId: number;
     restaurantId: number;
     remark?: string; // 备注（可选）
 }
 
-// 订单商品信息
-export interface IOrderItem {
-    dishId: number;
-    dishName: string;
-    price: number;
-    quantity: number;
+// 创建订单
+export function createOrder(params: ICreateOrderParams) {
+    return service.post("/restaurant/orders/create", params);
 }
 
-// 下单返回数据
-export interface IOrderResult {
-    orderId: string;
-    items: IOrderItem[];
-    totalAmount: number;
+// 订单详情中的订单项
+export interface IOrderDetailItem {
+    id: number;
+    dishId: number;
+    dishName: string;
+    dishPrice: number;
+    quantity: number;
+    subtotalAmount: number;
     createTime: string;
 }
 
-// 创建订单
-export function createOrder(params: ICreateOrderParams, userId?: number) {
-    const config: any = {
-        headers: {},
-    };
-    
-    // 如果提供了 userId，添加到请求头
-    if (userId) {
-        config.headers["x-user-id"] = userId;
-    }
-    
-    return service.post<ApiResponse & { data: IOrderResult }>(
-        "/restaurant/orders/create",
-        params,
-        config,
-    );
+// 订单详情数据
+export interface IOrderDetail {
+    id: number;
+    orderNo: string;
+    totalAmount: number;
+    restaurantName: string;
+    restaurantId: number;
+    userId: number;
+    orderStatus: number;
+    remark: string;
+    createTime: string;
+    updateTime: string;
+    orderItems: IOrderDetailItem[];
+}
+
+// 获取订单详情
+export function getOrderDetail(orderId: number) {
+    return service.get(`/restaurant/orders/detail/${orderId}`);
 }

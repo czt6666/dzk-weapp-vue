@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import { loginByUsername, register } from "@/apis/user";
-import { STORAGE_TOKEN_KEY } from "@/utils/constence";
+import { STORAGE_TOKEN_KEY, STORAGE_USER_INFO_KEY } from "@/utils/constence";
 
 export interface IUserInfo {
     userId?: number;
@@ -12,7 +12,17 @@ export interface IUserInfo {
 }
 
 export const useUserStore = defineStore("user", () => {
-    const userInfo = ref<IUserInfo | null>(null);
+    // 从 localStorage 恢复用户信息
+    const initUserInfo = (): IUserInfo | null => {
+        try {
+            const stored = localStorage.getItem(STORAGE_USER_INFO_KEY);
+            return stored ? JSON.parse(stored) : null;
+        } catch {
+            return null;
+        }
+    };
+
+    const userInfo = ref<IUserInfo | null>(initUserInfo());
 
     const isLoggedIn = computed(() => {
         const token = localStorage.getItem(STORAGE_TOKEN_KEY);
@@ -29,6 +39,12 @@ export const useUserStore = defineStore("user", () => {
 
     function setUserInfo(info: IUserInfo | null) {
         userInfo.value = info;
+        // 持久化用户信息到 localStorage
+        if (info) {
+            localStorage.setItem(STORAGE_USER_INFO_KEY, JSON.stringify(info));
+        } else {
+            localStorage.removeItem(STORAGE_USER_INFO_KEY);
+        }
     }
 
     // 手机号 + 密码登录
@@ -61,6 +77,9 @@ export const useUserStore = defineStore("user", () => {
     function logout() {
         setToken(null);
         setUserInfo(null);
+        // 清除 localStorage 中的用户数据
+        localStorage.removeItem(STORAGE_TOKEN_KEY);
+        localStorage.removeItem(STORAGE_USER_INFO_KEY);
     }
 
     return {

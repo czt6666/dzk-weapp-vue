@@ -5,7 +5,7 @@
             <!-- 订单头部 -->
             <div class="order-header">
                 <h2 class="order-title">订单详情</h2>
-                <div class="order-id">订单号：{{ orderInfo.orderId }}</div>
+                <div class="order-id">订单号：{{ orderInfo.orderNo }}</div>
             </div>
 
             <!-- 店铺信息 -->
@@ -26,7 +26,11 @@
                                 <span class="icon">📍</span>
                                 {{ restaurantInfo.address }}
                             </div>
-                            <div class="store-phone" v-if="restaurantInfo.phone" @click="handlePhoneClick">
+                            <div
+                                class="store-phone"
+                                v-if="restaurantInfo.phone"
+                                @click="handlePhoneClick"
+                            >
                                 <span class="icon">📞</span>
                                 {{ restaurantInfo.phone }}
                                 <ActionArrow />
@@ -40,10 +44,10 @@
             <div class="order-items">
                 <h3 class="section-title">商品信息</h3>
                 <div class="items-list">
-                    <div v-for="item in orderInfo.items" :key="item.dishId" class="order-item">
+                    <div v-for="item in orderInfo.orderItems" :key="item.id" class="order-item">
                         <div class="item-name">{{ item.dishName }}</div>
                         <div class="item-quantity">x{{ item.quantity }}</div>
-                        <div class="item-price">¥{{ (item.price * item.quantity).toFixed(2) }}</div>
+                        <div class="item-price">¥{{ item.subtotalAmount.toFixed(2) }}</div>
                     </div>
                 </div>
             </div>
@@ -92,16 +96,19 @@
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
-import type { IOrderResult, IRestaurantInfo } from "@/apis/restaurant";
+import type { IOrderDetail, IRestaurantInfo } from "@/apis/restaurant";
+import { getOrderDetail, getRestaurantDetail } from "@/apis/restaurant";
+import { useUserStore } from "@/stores/user";
 import { imgUrl } from "@/utils";
 import { showPhoneModal } from "@/utils/phoneModal";
 import ActionArrow from "@/components/base/ActionArrow.vue";
 
 const route = useRoute();
 const router = useRouter();
+const userStore = useUserStore();
 
 const loading = ref(true);
-const orderInfo = ref<IOrderResult | null>(null);
+const orderInfo = ref<IOrderDetail | null>(null);
 const restaurantInfo = ref<IRestaurantInfo | null>(null);
 const showTipModal = ref(false);
 
@@ -133,32 +140,47 @@ function handlePhoneClick() {
     }
 }
 
-onMounted(() => {
-    // 从路由query中获取订单信息（下单成功后传递的完整订单数据）
-    const orderDataStr = route.query.orderData as string;
-    if (orderDataStr) {
-        try {
-            const orderData = JSON.parse(decodeURIComponent(orderDataStr));
-            orderInfo.value = {
-                orderId: orderData.orderId,
-                items: orderData.items,
-                totalAmount: orderData.totalAmount,
-                createTime: orderData.createTime,
-            };
-            restaurantInfo.value = orderData.restaurantInfo || null;
+onMounted(async () => {
+    // 从路由query中获取订单id
+    const orderId = route.query.orderId;
+    if (!orderId) {
+        loading.value = false;
+        ElMessage.error("缺少订单ID");
+        return;
+    }
+
+    try {
+        loading.value = true;
+        // 使用订单id请求订单详情
+        const res = await getOrderDetail(Number(orderId));
+
+        if (res.data) {
+            orderInfo.value = res.data;
+
+            // 获取餐厅信息
+            if (res.data.restaurantId) {
+                try {
+                    const restaurantRes = await getRestaurantDetail({ id: res.data.restaurantId });
+                    restaurantInfo.value = restaurantRes.data;
+                } catch (error) {
+                    console.error("获取餐厅信息失败:", error);
+                    // 即使获取餐厅信息失败，也继续显示订单信息
+                }
+            }
+
             loading.value = false;
             // 显示提示弹窗
             setTimeout(() => {
                 showTipModal.value = true;
             }, 300);
-        } catch (error) {
-            console.error("解析订单数据失败:", error);
-            ElMessage.error("订单信息格式错误");
+        } else {
             loading.value = false;
+            ElMessage.error("订单信息加载失败");
         }
-    } else {
+    } catch (error: any) {
+        console.error("获取订单详情失败:", error);
+        ElMessage.error(error?.response?.data?.msg || error?.msg || "订单信息加载失败");
         loading.value = false;
-        ElMessage.error("缺少订单信息");
     }
 });
 </script>
@@ -509,4 +531,3 @@ onMounted(() => {
     }
 }
 </style>
-

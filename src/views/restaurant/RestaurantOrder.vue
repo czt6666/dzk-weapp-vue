@@ -194,7 +194,11 @@
                             <span class="label">📍 地址</span>
                             <span class="value">{{ restaurantInfo.address }}</span>
                         </div>
-                        <div class="detail-item phone-item" @click="handlePhoneClick" v-if="restaurantInfo.phone">
+                        <div
+                            class="detail-item phone-item"
+                            @click="handlePhoneClick"
+                            v-if="restaurantInfo.phone"
+                        >
                             <span class="label">📞 电话</span>
                             <span class="value">{{ restaurantInfo.phone }}</span>
                             <ActionArrow />
@@ -215,7 +219,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 </template>
 
@@ -320,30 +323,22 @@ async function handleCheckout() {
             quantities.push(item.quantity);
         });
 
-        const res = await createOrder(
-            {
-                dishIds,
-                quantities,
-                userId,
-                restaurantId: restaurantInfo.value.id,
-                remark: "", // 备注，可以后续添加输入框让用户填写
-            },
-            userId, // 作为请求头传递
-        );
+        const res = await createOrder({
+            dishIds,
+            quantities,
+            restaurantId: restaurantInfo.value.id,
+            remark: "", // 备注，可以后续添加输入框让用户填写
+        });
 
         if (res.data) {
             ElMessage.success("下单成功");
             // 清空购物车
             cartStore.clearCart();
-            // 跳转到订单页面，传递完整的订单信息和店铺信息
-            const orderDataWithStore = {
-                ...res.data,
-                restaurantInfo: restaurantInfo.value,
-            };
+            // 跳转到订单页面，传递订单id
             router.push({
                 name: "OrderDetail",
                 query: {
-                    orderData: JSON.stringify(orderDataWithStore),
+                    orderId: res.data,
                 },
             });
         } else {
@@ -1067,7 +1062,6 @@ onMounted(async () => {
                         &:active {
                             background-color: #f5f5f5;
                         }
-
                     }
 
                     .label {
@@ -1118,7 +1112,6 @@ onMounted(async () => {
             }
         }
     }
-
 }
 </style>
 

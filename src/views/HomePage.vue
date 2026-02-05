@@ -210,9 +210,8 @@
 </template>
 
 <script setup lang="ts" name="HomePage">
-import { ref, onMounted, onUnmounted, nextTick } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { ElMessage } from "element-plus";
 import { getNewsList, getActualTimeList } from "@/apis/news";
 import { getHotelList } from "@/apis/hotel";
 import { getProductList } from "@/apis/shop";
@@ -223,15 +222,10 @@ import { getRetirementStationList } from "@/apis/retirement";
 import { imgUrl } from "@/utils";
 import { useScrollPosition } from "@/composables/useScrollPosition";
 import HolidayCarousel from "@/components/HolidayCarousel.vue";
-import HotelCarousel from "@/components/HotelCarousel.vue";
 import NewsCarousel from "@/components/base/NewsCarousel.vue";
 import spring2 from "@/assets/swiper/spring2.jpg";
 import summer2 from "@/assets/swiper/summer2.jpg";
 import autumn1 from "@/assets/swiper/autumn1.png";
-import newsIcon from "@/assets/svg/news.png";
-import tourIcon from "@/assets/svg/tour.png";
-import studyIcon from "@/assets/svg/study.png";
-import retirementIcon from "@/assets/svg/retirement.png";
 
 const router = useRouter();
 
@@ -253,14 +247,6 @@ const restaurantList = ref<any[]>([]);
 const tourDesc = ref("");
 const studyDesc = ref("");
 const retirementDesc = ref("");
-
-// 格式化日期
-function formatDate(dateStr: string) {
-    const date = new Date(dateStr);
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${month}-${day}`;
-}
 
 // 数据加载
 async function loadNews() {
