@@ -18,7 +18,7 @@
                     <p class="price">¥{{ item.price }}</p>
                 </div>
                 <div class="actions">
-                    <!-- <button class="buy" @click.stop="handlePurchaseClick(item)">去购买</button> -->
+                    <button class="buy" @click.stop="handlePurchaseClick(item)">去购买</button>
                     <button class="remove" @click.stop="remove(item.skuId)">移出购物车</button>
                 </div>
             </div>

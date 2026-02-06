@@ -104,6 +104,8 @@ export function openMicroShop(productId?: string, appid?: string) {
 export function handlePurchase(product: PurchaseInfo): boolean {
     // 优先判断小程序：如果 miniProgramAppid 和 miniProgramPath 都有值，跳转小程序
     const hasMiniProgram = hasMiniProgramChannel(product);
+    console.log("hasMiniProgram:", hasMiniProgram);
+
     if (hasMiniProgram) {
         const appid = product.miniProgramAppid || "";
         const path = product.miniProgramPath || "";
@@ -160,4 +162,3 @@ export function hasMiniProgram(product: PurchaseInfo): boolean {
 export function hasMicroShop(product: PurchaseInfo): boolean {
     return hasMicroShopChannel(product);
 }
-
