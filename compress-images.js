@@ -8,7 +8,7 @@ const __dirname = path.dirname(__filename);
 
 const MAX_SIZE = 100 * 1024; // 100KB
 // 图片目录路径（相对于项目根目录）
-const SWIPER_DIR = path.join(__dirname, "src/assets/swiper");
+const SWIPER_DIR = path.join(__dirname, "src/assets");
 
 // 支持的图片格式
 const IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".webp"];
@@ -43,11 +43,15 @@ async function compressImage(filePath) {
 
         // 如果文件已经小于 100KB，跳过
         if (originalSize <= MAX_SIZE) {
-            console.log(`✓ ${path.relative(SWIPER_DIR, filePath)} (${(originalSize / 1024).toFixed(2)}KB) - 已满足要求`);
+            console.log(
+                `✓ ${path.relative(SWIPER_DIR, filePath)} (${(originalSize / 1024).toFixed(2)}KB) - 已满足要求`,
+            );
             return { success: true, skipped: true, originalSize, finalSize: originalSize };
         }
 
-        console.log(`压缩中: ${path.relative(SWIPER_DIR, filePath)} (${(originalSize / 1024).toFixed(2)}KB)`);
+        console.log(
+            `压缩中: ${path.relative(SWIPER_DIR, filePath)} (${(originalSize / 1024).toFixed(2)}KB)`,
+        );
 
         const ext = path.extname(filePath).toLowerCase();
         let quality = 85; // 初始质量
@@ -114,7 +118,7 @@ async function compressImage(filePath) {
                 const saved = (finalSize / 1024).toFixed(2);
                 const savedPercent = (((originalSize - finalSize) / originalSize) * 100).toFixed(1);
                 console.log(
-                    `✓ ${path.relative(SWIPER_DIR, filePath)}: ${(originalSize / 1024).toFixed(2)}KB → ${saved}KB (节省 ${savedPercent}%)`
+                    `✓ ${path.relative(SWIPER_DIR, filePath)}: ${(originalSize / 1024).toFixed(2)}KB → ${saved}KB (节省 ${savedPercent}%)`,
                 );
                 return { success: true, skipped: false, originalSize, finalSize };
             }
@@ -159,7 +163,7 @@ async function compressImage(filePath) {
             const saved = (finalSize / 1024).toFixed(2);
             const savedPercent = (((originalSize - finalSize) / originalSize) * 100).toFixed(1);
             console.log(
-                `✓ ${path.relative(SWIPER_DIR, filePath)}: ${(originalSize / 1024).toFixed(2)}KB → ${saved}KB (节省 ${savedPercent}%)`
+                `✓ ${path.relative(SWIPER_DIR, filePath)}: ${(originalSize / 1024).toFixed(2)}KB → ${saved}KB (节省 ${savedPercent}%)`,
             );
         }
 
@@ -229,10 +233,10 @@ async function main() {
     console.log(`已满足要求: ${results.skipped} 个`);
     console.log(`失败: ${results.failed} 个`);
     console.log(
-        `总大小: ${(results.totalOriginalSize / 1024 / 1024).toFixed(2)}MB → ${(results.totalFinalSize / 1024 / 1024).toFixed(2)}MB`
+        `总大小: ${(results.totalOriginalSize / 1024 / 1024).toFixed(2)}MB → ${(results.totalFinalSize / 1024 / 1024).toFixed(2)}MB`,
     );
     console.log(
-        `节省: ${((results.totalOriginalSize - results.totalFinalSize) / 1024 / 1024).toFixed(2)}MB (${(((results.totalOriginalSize - results.totalFinalSize) / results.totalOriginalSize) * 100).toFixed(1)}%)`
+        `节省: ${((results.totalOriginalSize - results.totalFinalSize) / 1024 / 1024).toFixed(2)}MB (${(((results.totalOriginalSize - results.totalFinalSize) / results.totalOriginalSize) * 100).toFixed(1)}%)`,
     );
 }
 
@@ -240,4 +244,3 @@ main().catch((error) => {
     console.error("发生错误:", error);
     process.exit(1);
 });
-
