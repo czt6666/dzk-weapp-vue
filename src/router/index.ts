@@ -109,6 +109,12 @@ const routes: RouteRecordRaw[] = [
         meta: { title: "点餐" },
     },
     {
+        path: "/restaurant/orders",
+        name: "OrderList",
+        component: () => import("../views/restaurant/OrderList.vue"),
+        meta: { title: "我的订单" },
+    },
+    {
         path: "/restaurant/order/detail",
         name: "OrderDetail",
         component: () => import("../views/restaurant/OrderDetail.vue"),

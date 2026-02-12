@@ -37,7 +37,12 @@
                         <span class="menu-arrow">→</span>
                     </div>
                 </div>
-
+                <div class="menu-list">
+                    <div class="menu-item" @click="goToOrderList">
+                        <span class="menu-text">我的订单</span>
+                        <span class="menu-arrow">→</span>
+                    </div>
+                </div>
                 <div class="logout-section">
                     <el-button class="logout-btn" @click="handleLogout">退出登录</el-button>
                 </div>
@@ -55,6 +60,10 @@ import LoginPage from "@/views/LoginPage.vue";
 
 const router = useRouter();
 const userStore = useUserStore();
+
+function goToOrderList() {
+    router.push({ name: "OrderList" });
+}
 
 function goToCart() {
     router.push({ name: "ShopCart" });

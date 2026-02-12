@@ -106,3 +106,8 @@ export interface IOrderDetail {
 export function getOrderDetail(orderId: number) {
     return service.get(`/restaurant/orders/detail/${orderId}`);
 }
+
+// 获取我的订单列表（接口返回“订单id列表”或包含订单id的列表）
+export function getOrderList(params: { userId: number }) {
+    return service.get(`/restaurant/orders/mini-program/list`, { params });
+}

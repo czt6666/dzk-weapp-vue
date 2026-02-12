@@ -8,7 +8,7 @@ const __dirname = path.dirname(__filename);
 
 const MAX_SIZE = 100 * 1024; // 100KB
 // 图片目录路径（相对于项目根目录）
-const SWIPER_DIR = path.join(__dirname, "src/assets");
+const SWIPER_DIR = path.join(__dirname, "/upload");
 
 // 支持的图片格式
 const IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".webp"];

@@ -14,7 +14,7 @@
     "type-check": "vue-tsc --build",
     "lint": "eslint . --fix",
     "format": "prettier --write src/",
-    "compress-images": "node compress-images.js"
+    "compress-images": "node src/assets/compress-images.js"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.2",
