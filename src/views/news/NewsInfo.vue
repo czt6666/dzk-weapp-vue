@@ -2,7 +2,7 @@
     <div class="news-info">
         <div v-if="loading" class="loading">加载中...</div>
         <div v-else class="content">
-            <h2 class="news-title">{{ info.title }}</h2>
+            <h1 class="news-title">{{ info.title }}</h1>
             <p class="meta">
                 发布日期：{{ publishDate || "--" }}
                 <!-- 浏览量：{{ info.views || "--" }} -->
@@ -52,8 +52,9 @@ const publishDate = computed(() => {
     if (!info.value.createTime) {
         return "";
     }
-    const date = new Date(info.value.createTime);
-    return date.toLocaleDateString();
+    const d = new Date(info.value.createTime);
+    if (isNaN(d.getTime())) return "";
+    return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
 });
 
 // 为图片添加点击预览功能
@@ -113,7 +114,7 @@ watch(
 .news-info {
     height: 100%;
     overflow-y: auto;
-    padding: $spacing-md;
+    padding: $spacing-lg;
     background: $bg-gradient-main;
 }
 
@@ -129,10 +130,8 @@ watch(
 
     .news-title {
         text-align: center;
-        font-size: 28px;
         margin-bottom: $spacing-md;
         color: $color-red-primary;
-        font-weight: 600;
     }
 }
 

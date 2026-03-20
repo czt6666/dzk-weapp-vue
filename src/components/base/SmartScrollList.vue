@@ -9,7 +9,7 @@
                 <slot></slot>
 
                 <!-- 上拉加载提示 -->
-                <div class="pullup-tips" v-show="pullUpTip !== 'hidden'">
+                <div class="pullup-tips" v-show="pullUp && pullUpTip !== 'hidden'">
                     {{ pullUpTip }}
                 </div>
             </div>

@@ -477,7 +477,7 @@ onMounted(() => {
 
 // 主内容区域
 .main-content {
-    padding: $spacing-sm $spacing-sm $spacing-md;
+    padding: $spacing-sm $spacing-md $spacing-md;
     max-width: 1200px;
     margin: 0 auto;
 }

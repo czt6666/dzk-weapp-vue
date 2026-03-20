@@ -9,13 +9,12 @@
                 class="store-logo"
                 fit="cover"
             />
-            <div v-else class="store-logo-placeholder">🏪</div>
+            <div v-else class="store-logo-placeholder"></div>
 
             <div class="store-main-info">
                 <h3 class="store-name">{{ store.name }}</h3>
                 <div class="store-village" v-if="store.villageName">
-                    <span class="village-icon">📍</span>
-                    <span>{{ store.villageName }}</span>
+                    {{ store.villageName }}
                 </div>
             </div>
 
@@ -37,13 +36,11 @@
 
         <!-- 介绍 -->
         <div v-if="store.notice" class="store-intro">
-            <span class="intro-icon">📝</span>
             <span class="intro-text">{{ store.notice }}</span>
         </div>
 
         <!-- 营业时间 -->
         <div class="store-info-row">
-            <span class="info-icon">🕐</span>
             <span class="info-label">营业时间：</span>
             <span class="info-value">
                 {{ store.businessStartTime }} - {{ store.businessEndTime }}
@@ -52,7 +49,6 @@
 
         <!-- 地址 -->
         <div class="store-info-row address-row" @click.stop="goToMap">
-            <span class="info-icon">📍</span>
             <span class="info-label">地址：</span>
             <span class="info-value">{{ store.address }}</span>
             <ActionArrow />
@@ -60,7 +56,6 @@
 
         <!-- 电话 -->
         <div class="store-info-row phone-row" @click.stop="handlePhoneClick" v-if="store.phone">
-            <span class="info-icon">📞</span>
             <span class="info-label">电话：</span>
             <span class="info-value">{{ store.phone }}</span>
             <ActionArrow />
@@ -202,15 +197,8 @@ const handlePhoneClick = () => {
     }
 
     .store-village {
-        display: flex;
-        align-items: center;
-        gap: 4px;
         font-size: 13px;
         color: #666;
-
-        .village-icon {
-            font-size: 12px;
-        }
     }
 
     .action-buttons {
@@ -281,12 +269,6 @@ const handlePhoneClick = () => {
     border-bottom: 1px solid #f0f0f0;
     padding-bottom: 10px;
     margin-bottom: 10px;
-}
-
-.intro-icon {
-    font-size: 16px;
-    flex-shrink: 0;
-    margin-top: 1px;
 }
 
 .intro-text {

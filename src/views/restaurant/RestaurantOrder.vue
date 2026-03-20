@@ -18,7 +18,12 @@
             <!-- 左侧分类 -->
             <aside class="category-sidebar">
                 <div v-if="loading" class="loading">加载中...</div>
+                <div v-else-if="categories.length === 0" class="empty-state">
+                    <div class="empty-icon">📋</div>
+                    <p>暂无分类</p>
+                </div>
                 <div
+                    v-else
                     v-for="cat in categories"
                     :key="cat.id"
                     :class="['category-item', { active: activeCategory === cat.id }]"
@@ -42,12 +47,22 @@
                     <div class="spinner"></div>
                     <p>正在加载美味...</p>
                 </div>
+                <div v-else-if="categories.length === 0" class="empty-products">
+                    <div class="empty-icon">🍽️</div>
+                    <p class="empty-text">暂无菜品分类</p>
+                    <p class="empty-hint">该店铺暂无菜品</p>
+                </div>
+                <div v-else-if="currentProducts.length === 0" class="empty-products">
+                    <div class="empty-icon">📭</div>
+                    <p class="empty-text">该分类暂无菜品</p>
+                    <p class="empty-hint">换个分类试试吧</p>
+                </div>
                 <div v-else class="product-list">
                     <div v-for="item in currentProducts" :key="item.id" class="product-card">
                         <el-image
                             class="product-image"
-                            :src="imgUrl(item.coverImgUrl)"
-                            :preview-src-list="[imgUrl(item.coverImgUrl)]"
+                            :src="getDishImageUrl(item.coverImgUrl)"
+                            :preview-src-list="item.coverImgUrl ? [imgUrl(item.coverImgUrl)] : []"
                             :preview-teleported="true"
                             alt="商品图片"
                             fit="cover"
@@ -131,7 +146,7 @@
                     <div v-else class="cart-items">
                         <div v-for="item in cartStore.cartList" :key="item.id" class="cart-item">
                             <div class="item-image">
-                                <el-image :src="imgUrl(item.coverImgUrl)" alt="商品图片" />
+                                <el-image :src="getDishImageUrl(item.coverImgUrl)" alt="商品图片" />
                             </div>
                             <div class="item-info">
                                 <div class="item-name">{{ item.dishName }}</div>
@@ -170,6 +185,7 @@
                             :src="imgUrl(restaurantInfo.logoUrl)"
                             :preview-src-list="[imgUrl(restaurantInfo.logoUrl)]"
                             :preview-teleported="true"
+                            fit="cover"
                             alt="店铺logo"
                             class="store-img"
                             style="cursor: pointer"
@@ -177,7 +193,7 @@
                     </div>
 
                     <div class="store-detail-section">
-                        <h2 class="store-detail-name">{{ restaurantInfo.name }}</h2>
+                        <h3 class="store-detail-name">{{ restaurantInfo.name }}</h3>
                     </div>
 
                     <div class="store-detail-section">
@@ -214,7 +230,7 @@
 
                     <div class="store-detail-section">
                         <h4>店铺介绍</h4>
-                        <p class="store-description">{{ restaurantInfo.notice }}</p>
+                        <p class="store-description">{{ restaurantInfo.notice || "暂无介绍" }}</p>
                     </div>
                 </div>
             </div>
@@ -266,6 +282,14 @@ const restaurantId = computed(() => {
 const currentProducts = computed(() => {
     return menuItems.value.filter((item) => item.categoryId === activeCategory.value);
 });
+
+// 菜品默认图（无图时使用）
+const DISH_PLACEHOLDER = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><rect width="100%" height="100%" fill="%23f5f0eb"/><text x="50%" y="45%" text-anchor="middle" fill="%23c4b5a8" font-size="24">暂无</text><text x="50%" y="62%" text-anchor="middle" fill="%23c4b5a8" font-size="24">照片</text></svg>`;
+
+function getDishImageUrl(coverImgUrl: string | null | undefined): string {
+    const url = imgUrl(coverImgUrl);
+    return url || DISH_PLACEHOLDER;
+}
 
 // 跳转到地图页面
 function goToMap() {
@@ -362,8 +386,8 @@ onMounted(async () => {
         ]);
 
         restaurantInfo.value = info.data;
-        categories.value = cats.data.records;
-        menuItems.value = items.data.records;
+        categories.value = cats.data?.records ?? [];
+        menuItems.value = items.data?.records ?? [];
 
         activeCategory.value = categories.value[0]?.id || 0;
     } catch (error) {
@@ -460,13 +484,17 @@ onMounted(async () => {
     .main-content {
         display: flex;
         flex: 1 1 0;
+        min-height: 0; /* 允许 flex 子项收缩，使 overflow 生效 */
         margin-bottom: 61px;
 
         .category-sidebar {
             width: 90px;
+            flex-shrink: 0;
+            min-height: 0;
             background: rgba(255, 255, 255, 0.6);
             backdrop-filter: blur(10px);
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
             border-right: 1px solid rgba(0, 0, 0, 0.1);
 
             .loading {
@@ -474,6 +502,23 @@ onMounted(async () => {
                 text-align: center;
                 color: #999;
                 font-size: 13px;
+            }
+
+            .empty-state {
+                padding: $spacing-xl $spacing-lg;
+                text-align: center;
+                color: #999;
+
+                .empty-icon {
+                    font-size: 36px;
+                    margin-bottom: 8px;
+                    opacity: 0.5;
+                }
+
+                p {
+                    margin: 0;
+                    font-size: 12px;
+                }
             }
 
             .category-item {
@@ -522,7 +567,9 @@ onMounted(async () => {
 
         .product-section {
             flex: 1;
+            min-height: 0;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(10px);
 
@@ -548,6 +595,35 @@ onMounted(async () => {
                     to {
                         transform: rotate(360deg);
                     }
+                }
+            }
+
+            .empty-products {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: $spacing-xxl $spacing-md;
+                color: #999;
+                text-align: center;
+
+                .empty-icon {
+                    font-size: 48px;
+                    margin-bottom: 12px;
+                    opacity: 0.4;
+                }
+
+                .empty-text {
+                    font-size: 15px;
+                    font-weight: 500;
+                    color: #666;
+                    margin: 0 0 6px 0;
+                }
+
+                .empty-hint {
+                    font-size: 13px;
+                    margin: 0;
+                    color: #aaa;
                 }
             }
 
@@ -651,14 +727,15 @@ onMounted(async () => {
                                     border: 1px solid #ddd;
                                     background: white;
                                     font-size: 16px;
+                                    line-height: 1;
                                     cursor: pointer;
                                     transition: all 0.2s;
                                     display: flex;
                                     align-items: center;
                                     justify-content: center;
+                                    padding: 0;
 
                                     &.btn-minus {
-                                        padding-bottom: 2px;
                                         color: #ff6b35;
 
                                         &:active {
@@ -687,18 +764,20 @@ onMounted(async () => {
                             }
 
                             .btn-add {
-                                width: 28px;
-                                height: 28px;
+                                width: 24px;
+                                height: 24px;
                                 border-radius: 50%;
                                 border: none;
                                 background: #ff6b35;
                                 color: white;
-                                font-size: 18px;
+                                font-size: 16px;
+                                line-height: 1;
                                 cursor: pointer;
                                 transition: all 0.2s;
                                 display: flex;
                                 align-items: center;
                                 justify-content: center;
+                                padding: 0;
 
                                 &:active {
                                     background: #ff5722;
@@ -714,7 +793,7 @@ onMounted(async () => {
 
     .cart-footer {
         position: absolute;
-        height: 61px;
+        padding: $spacing-md 0;
         bottom: 0;
         left: 0;
         right: 0;
@@ -750,11 +829,10 @@ onMounted(async () => {
 
                 .cart-badge {
                     position: absolute;
-                    top: -4px;
+                    top: -1px;
                     right: -4px;
                     min-width: 18px;
                     height: 18px;
-                    padding: 0 4px;
                     background: #f44336;
                     color: white;
                     border-radius: 9px;
@@ -763,6 +841,8 @@ onMounted(async () => {
                     justify-content: center;
                     font-size: 11px;
                     font-weight: 600;
+                    line-height: 1;
+                    padding: 0;
                 }
             }
 
@@ -841,8 +921,8 @@ onMounted(async () => {
             padding: $spacing-md;
             border-bottom: 1px solid #f0f0f0;
 
-            h3 {
-                font-size: 16px;
+            > h3 {
+                font-size: 18px;
                 font-weight: 600;
                 color: #333;
             }
@@ -853,6 +933,7 @@ onMounted(async () => {
                 border-radius: 50%;
                 border: none;
                 background: #f5f5f5;
+                color: #666;
                 font-size: 18px;
                 cursor: pointer;
                 display: flex;
@@ -976,7 +1057,7 @@ onMounted(async () => {
 
             .clear-btn {
                 width: 100%;
-                padding: $spacing-sm;
+                padding: $spacing-md;
                 border-radius: 6px;
                 border: none;
                 background: #f5f5f5;
@@ -1004,6 +1085,10 @@ onMounted(async () => {
     .store-detail-modal {
         max-height: 80vh;
 
+        .modal-header .close-btn {
+            color: #333;
+        }
+
         .modal-body {
             .store-images {
                 display: flex;
@@ -1016,10 +1101,6 @@ onMounted(async () => {
                     height: 100px;
                     background: linear-gradient(135deg, #fff5f0, #ffe8dc);
                     border-radius: 6px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-size: 48px;
                     flex-shrink: 0;
                 }
             }
@@ -1028,7 +1109,7 @@ onMounted(async () => {
                 margin-bottom: 20px;
 
                 .store-detail-name {
-                    font-size: 20px;
+                    font-size: 18px;
                     font-weight: 600;
                     color: #333;
                     margin-bottom: 8px;
@@ -1099,6 +1180,7 @@ onMounted(async () => {
                     font-size: 14px;
                     line-height: 1.6;
                     color: #666;
+                    white-space: pre-line;
                 }
 
                 .map-wrapper {

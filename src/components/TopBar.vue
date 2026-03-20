@@ -50,18 +50,21 @@ const goBack = () => {
     width: 100%;
     display: flex;
     align-items: center;
-    padding: 8px 18px 4px;
+    padding: 4px 18px 0px;
     background: #fff;
 }
 
 .back-btn {
-    background: transparent;
+    flex-shrink: 0;
+    background: none;
+    border: none;
     cursor: pointer;
     padding: 8px;
-    margin: -8px;
+    margin: 0px;
     display: flex;
     align-items: center;
     justify-content: center;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .title {

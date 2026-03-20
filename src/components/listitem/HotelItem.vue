@@ -72,7 +72,6 @@ const handleClick = () => {
     .image-wrapper {
         position: relative;
         width: 100%;
-        aspect-ratio: 16 / 11;
         overflow: hidden;
         background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
 

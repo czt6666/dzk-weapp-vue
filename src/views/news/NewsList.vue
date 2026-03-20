@@ -112,7 +112,7 @@ function goDetail(id: number) {
         .scroll-list {
             display: flex;
             flex-direction: column;
-            gap: $spacing-sm;
+            gap: $spacing-md;
         }
     }
 }

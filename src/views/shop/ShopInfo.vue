@@ -29,7 +29,7 @@
         <div class="info">
             <h1>{{ product.title }}</h1>
             <p class="desc">{{ product.description }}</p>
-            <p>上架时间：{{ new Date(product.createTime).toLocaleDateString() }}</p>
+            <p>上架时间：{{ formatListDate(product.createTime) }}</p>
         </div>
 
         <!-- 详情长图 -->
@@ -111,20 +111,25 @@
 
     <!-- 购买弹窗 -->
     <transition name="fade">
-        <div v-if="showBuyModal" class="buy-modal">
+        <div v-if="showBuyModal" class="buy-modal" @click.self="showBuyModal = false">
             <div class="modal-content">
-                <h3>前往购买</h3>
-                <img class="merchant-img" :src="imgUrl(product.merchantPosterImg)" alt="" />
-                <div>
-                    <span v-if="hasMiniProgram" @click="jumpToWx()">
+                <h3 class="modal-title">前往购买</h3>
+                <img
+                    v-if="product.merchantPosterImg"
+                    class="merchant-img"
+                    :src="imgUrl(product.merchantPosterImg)"
+                    alt="商家海报"
+                />
+                <div class="modal-actions">
+                    <span v-if="hasMiniProgram" class="action-link" @click="jumpToWx()">
                         打开小程序购买
                     </span>
-                    <span v-else-if="hasMicroShop" @click="openMicroShop()">
+                    <span v-else-if="hasMicroShop" class="action-link" @click="openMicroShop()">
                         打开微店购买
                     </span>
-                    <span v-else>该商品暂无可线上的购买渠道</span>
+                    <span v-else class="action-hint">该商品暂无可线上的购买渠道</span>
                 </div>
-                <button class="close" @click="showBuyModal = false">关闭</button>
+                <button class="close-btn" @click="showBuyModal = false">关闭</button>
             </div>
         </div>
     </transition>
@@ -169,6 +174,14 @@ const product = ref<IProductDetail>({
 const currentIndex = ref(0);
 const currentImage = ref<string | undefined>("");
 let timer: number | null = null;
+
+// 上架时间格式：YYYY年M月D日
+function formatListDate(dateStr: string): string {
+    if (!dateStr) return "";
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return "";
+    return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
+}
 
 function setCurrentImage(index: number) {
     currentIndex.value = index;
@@ -258,7 +271,6 @@ const previewImageList = computed(() => {
 const detailImageList = computed(() => {
     return product.value.detailImages.map((img) => imgUrl(img));
 });
-
 </script>
 
 <style lang="scss" scoped>
@@ -352,6 +364,7 @@ const detailImageList = computed(() => {
             color: $text-secondary;
             font-size: 14px;
             line-height: 1.6;
+            margin-bottom: 8px;
             white-space: pre-wrap;
         }
     }
@@ -571,45 +584,81 @@ const detailImageList = computed(() => {
 .buy-modal {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.45);
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 40;
+    padding: $spacing-lg;
 
     .modal-content {
-        background: rgba(255, 255, 255, 0.98);
+        background: #fff;
         backdrop-filter: blur(20px);
-        padding: $spacing-md;
-        border-radius: $radius-medium;
-        width: 80%;
+        padding: $spacing-xl $spacing-lg;
+        border-radius: $radius-large;
+        width: 100%;
+        max-width: 320px;
         text-align: center;
         box-shadow: $shadow-xl;
 
-        h3 {
-            margin-bottom: $spacing-md;
+        .modal-title {
+            margin: 0 0 $spacing-lg 0;
+            font-size: 18px;
+            font-weight: 600;
             color: $color-green-primary;
+            letter-spacing: 0.08em;
         }
 
         .merchant-img {
             width: 100%;
-            border-radius: 10px;
-            margin-bottom: $spacing-md;
-        }
-
-        span {
+            border-radius: $radius-medium;
+            margin-bottom: $spacing-lg;
             display: block;
-            color: $color-green-primary;
-            margin-bottom: $spacing-md;
-            text-decoration: underline;
         }
 
-        .close {
-            padding: $spacing-sm $spacing-lg;
-            background: rgba(0, 0, 0, 0.05);
+        .modal-actions {
+            margin-bottom: $spacing-lg;
+
+            .action-link {
+                display: block;
+                padding: $spacing-md $spacing-lg;
+                color: $color-green-primary;
+                font-size: 15px;
+                letter-spacing: 0.05em;
+                line-height: 1.5;
+                text-decoration: underline;
+                text-underline-offset: 3px;
+                cursor: pointer;
+                -webkit-tap-highlight-color: transparent;
+                transition: $transition-base;
+
+                &:active {
+                    opacity: 0.8;
+                }
+            }
+
+            .action-hint {
+                display: block;
+                padding: $spacing-md;
+                color: $text-secondary;
+                font-size: 14px;
+                letter-spacing: 0.04em;
+                line-height: 1.6;
+            }
+        }
+
+        .close-btn {
+            display: block;
+            width: 100%;
+            padding: $spacing-md $spacing-lg;
+            background: rgba(0, 0, 0, 0.06);
             border: none;
             border-radius: $radius-small;
+            font-size: 15px;
+            color: #333;
+            letter-spacing: 0.06em;
             cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
             transition: $transition-base;
 
             &:active {

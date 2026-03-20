@@ -51,11 +51,7 @@
             <!-- 联系房东按钮 -->
             <button class="btn-call" @click="callPhone(info.contactPhone)">📞 联系房东</button>
             <!-- 小程序预定按钮：只有当 miniProgramPath 和 miniProgramAppid 都存在时显示 -->
-            <button
-                v-if="hasMiniProgram"
-                class="btn-book"
-                @click="handleJumpToMiniProgram"
-            >
+            <button v-if="hasMiniProgram" class="btn-book" @click="handleJumpToMiniProgram">
                 🏨 小程序预定
             </button>
         </div>
@@ -194,7 +190,7 @@ onMounted(async () => {
     .content {
         padding: $spacing-md;
         background: rgba(255, 255, 255, 0.6);
-        margin: $spacing-sm;
+        margin: $spacing-md;
         margin-bottom: 80px;
         border-radius: $radius-large;
         backdrop-filter: blur(10px);
@@ -281,7 +277,7 @@ onMounted(async () => {
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(10px);
         box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
-        padding: $spacing-md;
+        padding: $spacing-lg;
 
         .btn-book {
             flex: 1;

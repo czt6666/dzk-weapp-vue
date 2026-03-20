@@ -74,6 +74,7 @@ function handleTabClick(routeName: string) {
     padding: 4px 0;
     position: relative;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    -webkit-tap-highlight-color: transparent; /* 移动端去除点击高亮 */
 
     .tab-icon {
         margin-bottom: 4px;
@@ -117,7 +118,13 @@ function handleTabClick(routeName: string) {
         }
     }
 
+    /* 移动端不需要 hover 背景效果 */
+    &:hover {
+        background: transparent;
+    }
+
     &:active {
+        background: transparent;
         transform: scale(0.95);
         transition: transform 0.15s ease;
     }

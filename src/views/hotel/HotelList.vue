@@ -191,7 +191,7 @@ function goDetail(id: number) {
     display: flex;
     flex-wrap: wrap;
     gap: $spacing-md;
-    padding: $spacing-md $spacing-lg;
+    padding: $spacing-sm $spacing-md;
     align-items: center;
     background: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(10px);

@@ -105,7 +105,7 @@ const toggleFavorite = createFavoriteToggle("restaurant", stores);
 // 搜索区域
 .search-section {
     flex-shrink: 0;
-    padding: $spacing-md;
+    padding: $spacing-sm $spacing-md;
     background: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(10px);
 }
@@ -114,7 +114,7 @@ const toggleFavorite = createFavoriteToggle("restaurant", stores);
 .list {
     flex: 1;
     min-height: 0;
-    padding: $spacing-sm 0 0;
+    padding: $spacing-md 0 0;
 
     .store-items {
         display: flex;

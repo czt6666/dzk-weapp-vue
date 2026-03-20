@@ -107,12 +107,12 @@ function goDetail(id: number) {
     .list {
         flex: 1;
         min-height: 0;
-        padding: $spacing-sm 0 0;
+        padding: $spacing-md 0 0;
 
         .scroll-list {
             display: flex;
             flex-direction: column;
-            gap: $spacing-sm;
+            gap: $spacing-md;
         }
     }
 }
