@@ -7,7 +7,12 @@
 
         <!-- 订单列表 -->
         <section v-if="!loading && orderList.length" class="order-grid">
-            <div v-for="order in orderList" :key="order.id" class="order-card" @click="goToDetail(order.id)">
+            <div
+                v-for="order in orderList"
+                :key="order.id"
+                class="order-card"
+                @click="goToDetail(order.id)"
+            >
                 <div class="order-header">
                     <div class="order-info">
                         <div class="order-no">订单号：{{ order.orderNo }}</div>
@@ -24,7 +29,11 @@
                         {{ order.restaurantName }}
                     </div>
                     <div class="order-items-preview">
-                        <span v-for="(item, index) in order.orderItems.slice(0, 3)" :key="item.id" class="item-tag">
+                        <span
+                            v-for="(item, index) in order.orderItems.slice(0, 3)"
+                            :key="item.id"
+                            class="item-tag"
+                        >
                             {{ item.dishName }} x{{ item.quantity }}
                         </span>
                         <span v-if="order.orderItems.length > 3" class="more-items">
@@ -155,13 +164,13 @@ async function fetchOrders() {
             getOrderDetail(id).catch((err) => {
                 console.error(`获取订单 ${id} 详情失败:`, err);
                 return null;
-            })
+            }),
         );
 
         const orderResults = await Promise.all(orderPromises);
         orderList.value = orderResults
-            .filter((res) => res?.data)
-            .map((res) => res.data)
+            .filter((r) => r != null && r.data != null)
+            .map((r) => r!.data)
             .sort((a, b) => {
                 // 按创建时间倒序排列
                 return new Date(b.createTime).getTime() - new Date(a.createTime).getTime();
@@ -422,5 +431,3 @@ onMounted(() => {
     }
 }
 </style>
-
-

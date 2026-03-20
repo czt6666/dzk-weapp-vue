@@ -37,7 +37,7 @@ const tabItems: TabItem[] = [
     { name: "美食", routeName: "RestaurantList", icon: foodIcon },
     { name: "特产", routeName: "ShopList", icon: shopIcon },
     { name: "民宿", routeName: "HotelList", icon: hotelIcon },
-    { name: "我的", routeName: "MyPage", icon: userIcon },
+    // { name: "我的", routeName: "MyPage", icon: userIcon },
 ];
 
 function isActive(routeName: string): boolean {
@@ -121,6 +121,5 @@ function handleTabClick(routeName: string) {
         transform: scale(0.95);
         transition: transform 0.15s ease;
     }
-
 }
 </style>

@@ -53,7 +53,8 @@
             <span>{{ product.storeName }}</span>
         </div>
 
-        <button
+        <!-- 加入购物车按钮已注释 -->
+        <!-- <button
             class="collect-btn"
             @click="
                 showCollect = true;
@@ -61,7 +62,7 @@
             "
         >
             加入购物车
-        </button>
+        </button> -->
         <button class="buy-btn" @click="showBuyModal = true">购买</button>
     </div>
 

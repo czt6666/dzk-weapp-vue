@@ -92,7 +92,6 @@ function goDetail(id: number) {
     router.push({ name: "RetirementInfo", params: { id } });
 }
 
-// 使用生成器创建收藏切换函数
 const toggleFavorite = createFavoriteToggle("elderly_station", list);
 </script>
 

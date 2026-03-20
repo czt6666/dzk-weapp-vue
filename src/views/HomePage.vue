@@ -121,15 +121,14 @@
             </section>
 
             <!-- 3. 红色旅游和研学基地 - 左右排列 -->
-            <section class="tour-study-section">
-                <div class="tour-study-dual">
+            <!-- <section class="tour-study-section">
+                <div class="tour-study-dual"> -->
                     <!-- 红色旅游 -->
-                    <div class="tour-item" @click="goToTour">
+                    <!-- <div class="tour-item" @click="goToTour">
                         <div class="tour-banner" :style="{ backgroundImage: `url(${redTourBg})` }">
                             <div class="tour-overlay"></div>
                             <div class="tour-content">
                                 <h2 class="tour-title">
-                                    <!-- <img :src="tourIcon" alt="红色旅游" class="title-icon" /> -->
                                     红色旅游
                                 </h2>
                                 <p class="tour-desc">
@@ -138,14 +137,13 @@
                                 <div class="tour-arrow">→</div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <!-- 研学基地 -->
-                    <div class="study-item" @click="goToStudy">
+                    <!-- <div class="study-item" @click="goToStudy">
                         <div class="study-banner" :style="{ backgroundImage: `url(${studyBg})` }">
                             <div class="study-overlay"></div>
                             <div class="study-content">
                                 <h2 class="study-title">
-                                    <!-- <img :src="studyIcon" alt="研学基地" class="title-icon" /> -->
                                     研学基地
                                 </h2>
                                 <p class="study-desc">{{ studyDesc || "探索知识，传承文化" }}</p>
@@ -163,7 +161,6 @@
                         <div class="retirement-overlay"></div>
                         <div class="retirement-content">
                             <h2 class="retirement-title">
-                                <!-- <img :src="retirementIcon" alt="康养生活" class="title-icon" /> -->
                                 康养生活
                             </h2>
                             <p class="retirement-desc">
@@ -173,7 +170,7 @@
                         </div>
                     </div>
                 </div>
-            </section>
+            </section> -->
 
             <!-- 5. 民宿 - 瀑布流 -->
             <section class="hotel-section">

@@ -89,7 +89,6 @@ const goToStore = (store: IRestaurantInfo) => {
     router.push({ name: "RestaurantOrder", query: { id: store.id, name: store.name } });
 };
 
-// 使用生成器创建收藏切换函数
 const toggleFavorite = createFavoriteToggle("restaurant", stores);
 </script>
 

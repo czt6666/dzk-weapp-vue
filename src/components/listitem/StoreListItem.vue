@@ -20,7 +20,7 @@
             </div>
 
             <div class="action-buttons">
-                <!-- 收藏按钮 -->
+                <!-- 收藏按钮 DOM 已注释
                 <button
                     class="favorite-btn"
                     :class="{ active: isFavorite }"
@@ -29,9 +29,9 @@
                     <img v-if="isFavorite" :src="heartFilledIcon" alt="已收藏" class="heart-icon" />
                     <img v-else :src="heartOutlineIcon" alt="收藏" class="heart-icon" />
                 </button>
-
+                -->
                 <!-- 去下单按钮 -->
-                <button class="order-btn" @click.stop="handleClick">去下单</button>
+                <!-- <button class="order-btn" @click.stop="handleClick">去下单</button> -->
             </div>
         </div>
 
@@ -66,12 +66,13 @@
             <ActionArrow />
         </div>
 
-        <!-- 收藏数 -->
+        <!-- 收藏数 DOM 已注释
         <div class="store-info-row">
             <img :src="heartOutlineIcon" alt="收藏" class="info-icon favorite-icon" />
             <span class="info-label">收藏数：</span>
             <span class="info-value">{{ localFavoriteCount }}</span>
         </div>
+        -->
     </div>
 </template>
 

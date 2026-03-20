@@ -63,7 +63,6 @@ const tempList = ref<any[]>([]);
 const columns = ref<any[][]>([[], []]);
 const keyword = ref("");
 
-// 使用生成器创建收藏切换函数
 const toggleFavorite = createFavoriteToggle("homestay", list);
 
 async function fetchData(page: number, pageSize: number, keyword?: string) {

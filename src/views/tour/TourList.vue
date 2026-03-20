@@ -93,7 +93,6 @@ function goDetail(id: number) {
     router.push({ name: "TourInfo", params: { id } });
 }
 
-// 使用生成器创建收藏切换函数
 const toggleFavorite = createFavoriteToggle("tour_route", list);
 </script>
 

@@ -204,7 +204,6 @@ function goActivityDetail(id: number) {
     router.push({ name: "StudyActivityInfo", params: { id } });
 }
 
-// 使用生成器创建收藏切换函数
 const togglePlanFavorite = createFavoriteToggle("study_plan", planList);
 const toggleActivityFavorite = createFavoriteToggle("study_activity", activityList);
 </script>

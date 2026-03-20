@@ -7,17 +7,14 @@
                 <span class="status-tag" :class="statusClass">
                     {{ statusText }}
                 </span>
+                <!-- 收藏按钮 DOM 已注释
                 <div class="favorite-overlay" @click.stop="toggleFavorite">
                     <div class="favorite-btn" :class="{ active: isFavorite }">
-                        <img
-                            v-if="isFavorite"
-                            :src="heartFilledIcon"
-                            alt="已收藏"
-                            class="heart-icon"
-                        />
+                        <img v-if="isFavorite" :src="heartFilledIcon" alt="已收藏" class="heart-icon" />
                         <img v-else :src="heartOutlineIcon" alt="收藏" class="heart-icon" />
                     </div>
                 </div>
+                -->
             </div>
         </div>
 
@@ -60,10 +57,12 @@
             <div v-if="info.briefIntro" class="brief-intro">
                 {{ info.briefIntro }}
             </div>
+            <!-- 收藏数 DOM 已注释
             <div class="info-item favorites">
                 <img :src="heartOutlineIcon" alt="收藏数" />
                 <span>{{ localFavoriteCount }}</span>
             </div>
+            -->
         </div>
     </div>
 </template>
@@ -85,13 +84,9 @@ const emit = defineEmits<{
     favorite: [isFavorite: boolean];
 }>();
 
-// 直接使用父组件传递的收藏状态
 const isFavorite = computed(() => props.info.isCollect || false);
-
-// 收藏数
-const localFavoriteCount = computed(() => {
-    return props.info.collectNumber || 0;
-});
+const localFavoriteCount = computed(() => props.info.collectNumber || 0);
+const toggleFavorite = () => emit("favorite", !isFavorite.value);
 
 // 状态文本
 const statusText = computed(() => {
@@ -106,11 +101,6 @@ const statusClass = computed(() => {
 // 点击事件
 const handleClick = () => {
     emit("click", props.info.id);
-};
-
-// 切换收藏
-const toggleFavorite = () => {
-    emit("favorite", !isFavorite.value);
 };
 </script>
 

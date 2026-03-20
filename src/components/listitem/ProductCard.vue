@@ -3,14 +3,14 @@
         <div class="thumb">
             <el-image :src="imgUrl(firstImage)" alt="预览" fit="cover" />
             <span v-if="item.status !== 1" class="status" :class="item.status">已下架</span>
-
-            <!-- 收藏按钮 -->
+            <!-- 收藏按钮 DOM 已注释
             <div class="favorite-overlay" @click.stop="toggleFavorite">
                 <div class="favorite-btn" :class="{ active: isFavorite }">
                     <img v-if="isFavorite" :src="heartFilledIcon" alt="已收藏" class="heart-icon" />
                     <img v-else :src="heartOutlineIcon" alt="收藏" class="heart-icon" />
                 </div>
             </div>
+            -->
         </div>
 
         <div class="info">
@@ -18,10 +18,12 @@
             <span class="description">{{ item.description }}</span>
             <div class="stats">
                 <span class="price" v-if="minPrice"> ¥{{ minPrice }} </span>
+                <!-- 收藏数 DOM 已注释
                 <span class="favorites" @click.stop="toggleFavorite">
                     <img :src="isFavorite ? heartFilledIcon : heartOutlineIcon" alt="收藏数" />
                     {{ localFavoriteCount }}
                 </span>
+                -->
             </div>
         </div>
     </article>
@@ -43,13 +45,8 @@ const emit = defineEmits<{
 const placeholder =
     'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300"><rect width="100%" height="100%" fill="#f4efe3"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#b5a688">无图</text></svg>';
 
-// 直接使用父组件传递的收藏状态
 const isFavorite = computed(() => props.item.isCollect || false);
-
-// 收藏数
-const localFavoriteCount = computed(() => {
-    return props.item.collectNumber || 0;
-});
+const localFavoriteCount = computed(() => props.item.collectNumber || 0);
 
 const firstImage = computed(() => {
     const imgs = props.item.previewImages ?? [];

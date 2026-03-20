@@ -32,12 +32,12 @@ const routes: RouteRecordRaw[] = [
         component: HomePage,
         meta: { isTab: true, title: "首页", keepAlive: true },
     },
-    {
-        path: "/my",
-        name: "MyPage",
-        component: () => import("../views/MyPage.vue"),
-        meta: { isTab: true, title: "我的" },
-    },
+    // {
+    //     path: "/my",
+    //     name: "MyPage",
+    //     component: () => import("../views/MyPage.vue"),
+    //     meta: { isTab: true, title: "我的" },
+    // },
     {
         path: "/news",
         name: "NewsList",
@@ -90,12 +90,13 @@ const routes: RouteRecordRaw[] = [
         props: true,
         meta: { title: "商品详情" },
     },
-    {
-        path: "/shop/favorites",
-        name: "ShopCart",
-        component: () => import("../views/shop/ShopCart.vue"),
-        meta: { title: "我的购物车" },
-    },
+    // 购物车路由已注释（userId相关）
+    // {
+    //     path: "/shop/favorites",
+    //     name: "ShopCart",
+    //     component: () => import("../views/shop/ShopCart.vue"),
+    //     meta: { title: "我的购物车" },
+    // },
     {
         path: "/restaurant",
         name: "RestaurantList",
@@ -108,12 +109,13 @@ const routes: RouteRecordRaw[] = [
         component: () => import("../views/restaurant/RestaurantOrder.vue"),
         meta: { title: "点餐" },
     },
-    {
-        path: "/restaurant/orders",
-        name: "OrderList",
-        component: () => import("../views/restaurant/OrderList.vue"),
-        meta: { title: "我的订单" },
-    },
+    // 订单列表路由已注释（userId相关）
+    // {
+    //     path: "/restaurant/orders",
+    //     name: "OrderList",
+    //     component: () => import("../views/restaurant/OrderList.vue"),
+    //     meta: { title: "我的订单" },
+    // },
     {
         path: "/restaurant/order/detail",
         name: "OrderDetail",

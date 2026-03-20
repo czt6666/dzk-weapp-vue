@@ -104,13 +104,13 @@
                     <div class="total-price">¥{{ cartStore.totalPrice.toFixed(2) }}</div>
                 </div>
 
-                <button
+                <!-- <button
                     class="checkout-btn"
                     :disabled="cartStore.totalItems === 0"
                     @click="handleCheckout"
                 >
                     去下单
-                </button>
+                </button> -->
             </div>
         </footer>
 
@@ -297,7 +297,7 @@ async function handleCheckout() {
         return;
     }
 
-    // 获取userId
+    // userId 相关功能已注释
     const userId = userStore.userInfo?.userId;
     if (!userId) {
         ElMessage.error("请先登录");

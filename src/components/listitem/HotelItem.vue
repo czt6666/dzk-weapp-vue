@@ -2,12 +2,14 @@
     <div class="item-card" @click="handleClick">
         <div class="image-wrapper">
             <el-image :src="imgUrl(info.coverImage.split(',')[0])" alt="封面图" lazy />
+            <!-- 收藏按钮 DOM 已注释
             <div class="favorite-overlay" @click.stop="toggleFavorite">
                 <div class="favorite-btn" :class="{ active: isFavorite }">
                     <img v-if="isFavorite" :src="heartFilledIcon" alt="已收藏" class="heart-icon" />
                     <img v-else :src="heartOutlineIcon" alt="收藏" class="heart-icon" />
                 </div>
             </div>
+            -->
         </div>
         <div class="info">
             <h3 class="title">{{ info.homestayName }}</h3>
@@ -20,10 +22,12 @@
                 <span class="rating">
                     <img v-for="i in info.starLevel" :key="i" :src="ratingIcon" />
                 </span>
+                <!-- 收藏数 DOM 已注释
                 <span class="favorites" @click.stop="toggleFavorite">
                     <img :src="isFavorite ? heartFilledIcon : heartOutlineIcon" alt="收藏数" />
                     {{ localFavoriteCount }}
                 </span>
+                -->
             </div>
         </div>
     </div>
@@ -43,21 +47,12 @@ const emit = defineEmits<{
     favorite: [isFavorite: boolean];
 }>();
 
-// 直接使用父组件传递的收藏状态
 const isFavorite = computed(() => props.info.isCollect || false);
-
-// 收藏数
-const localFavoriteCount = computed(() => {
-    return props.info.collectNumber || 0;
-});
+const localFavoriteCount = computed(() => props.info.collectNumber || 0);
+const toggleFavorite = () => emit("favorite", !isFavorite.value);
 
 const handleClick = () => {
     emit("click");
-};
-
-const toggleFavorite = () => {
-    // 直接触发事件，让父组件处理状态更新
-    emit("favorite", !isFavorite.value);
 };
 </script>
 
