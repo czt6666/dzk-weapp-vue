@@ -123,8 +123,8 @@
             <!-- 3. 红色旅游和研学基地 - 左右排列 -->
             <!-- <section class="tour-study-section">
                 <div class="tour-study-dual"> -->
-                    <!-- 红色旅游 -->
-                    <!-- <div class="tour-item" @click="goToTour">
+            <!-- 红色旅游 -->
+            <!-- <div class="tour-item" @click="goToTour">
                         <div class="tour-banner" :style="{ backgroundImage: `url(${redTourBg})` }">
                             <div class="tour-overlay"></div>
                             <div class="tour-content">
@@ -138,8 +138,8 @@
                             </div>
                         </div>
                     </div> -->
-                    <!-- 研学基地 -->
-                    <!-- <div class="study-item" @click="goToStudy">
+            <!-- 研学基地 -->
+            <!-- <div class="study-item" @click="goToStudy">
                         <div class="study-banner" :style="{ backgroundImage: `url(${studyBg})` }">
                             <div class="study-overlay"></div>
                             <div class="study-content">
@@ -354,6 +354,24 @@ function goToProductList() {
 
 function goToRestaurantList() {
     router.push({ name: "RestaurantList" });
+}
+
+// 跳转到小程序 /pages/gzh/gzh
+function goToGzh() {
+    const wxObj = typeof window !== "undefined" ? (window as any).wx : undefined;
+    if (!wxObj?.miniProgram) {
+        console.warn("goToGzh: 非小程序 web-view 环境，wx.miniProgram 不可用");
+        return;
+    }
+    wxObj.miniProgram.navigateTo({
+        url: "/pages/gzh/gzh",
+        success() {
+            console.log("跳转到 /pages/gzh/gzh 成功");
+        },
+        fail(err: any) {
+            console.error("跳转失败", err);
+        },
+    });
 }
 
 // 加载旅游数据
