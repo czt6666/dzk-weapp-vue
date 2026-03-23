@@ -3,7 +3,7 @@
         <!-- 顶部封面 -->
         <div class="header">
             <div class="header-main">
-                <h1 class="name">{{ info.name }}</h1>
+                <h1 class="name">{{ info.name || "暂无名称" }}</h1>
                 <span class="status" :class="statusClass">
                     {{ statusText }}
                 </span>
@@ -14,28 +14,30 @@
             </div>
 
             <div class="modes">
-                <span class="mode" v-for="m in serviceModes" :key="m">
-                    {{ m }}
-                </span>
+                <span class="mode" v-for="m in serviceModes" :key="m">{{ m }}</span>
+                <span v-if="!serviceModes.length" class="mode">暂无</span>
             </div>
         </div>
 
         <!-- 机构介绍 -->
-        <section class="section" v-if="info.introduction">
+        <section class="section">
             <h2 class="title">📝 机构介绍</h2>
-            <p class="text introduction-text">{{ info.introduction }}</p>
+            <p v-for="(para, i) in introductionParagraphs" :key="i" class="text introduction-text">
+                {{ para }}
+            </p>
+            <p v-if="!introductionParagraphs.length" class="text introduction-text">暂无介绍</p>
         </section>
 
         <!-- 地址 -->
         <section class="section">
             <h2 class="title">📍 位置信息</h2>
             <div class="address-info">
-                <p class="text"><strong>经营地址：</strong>{{ info.businessAddress }}</p>
+                <p class="text"><strong>经营地址：</strong>{{ info.businessAddress || "暂无" }}</p>
                 <p
                     class="text"
                     v-if="info.registeredAddress && info.registeredAddress !== info.businessAddress"
                 >
-                    <strong>注册地址：</strong>{{ info.registeredAddress }}
+                    <strong>注册地址：</strong>{{ info.registeredAddress || "暂无" }}
                 </p>
             </div>
         </section>
@@ -46,15 +48,18 @@
             <div class="facts">
                 <div class="fact">
                     <span class="label">床位数量</span>
-                    <span class="value">{{ info.totalBeds }} 张</span>
+                    <span class="value"
+                        >{{ info.totalBeds ?? "暂无"
+                        }}{{ info.totalBeds != null ? " 张" : "" }}</span
+                    >
                 </div>
                 <div class="fact">
                     <span class="label">护理等级</span>
-                    <span class="value">{{ info.careLevel }}</span>
+                    <span class="value">{{ info.careLevel || "暂无" }}</span>
                 </div>
                 <div class="fact">
                     <span class="label">房间配置</span>
-                    <span class="value">{{ info.roomConfig }}</span>
+                    <span class="value">{{ info.roomConfig || "暂无" }}</span>
                 </div>
             </div>
         </section>
@@ -65,7 +70,11 @@
             <div class="facts">
                 <div class="fact">
                     <span class="label">联系电话</span>
-                    <span class="value phone-clickable" @click="handlePhoneClick(info.officialPhone)" v-if="info.officialPhone">
+                    <span
+                        class="value phone-clickable"
+                        @click="handlePhoneClick(info.officialPhone)"
+                        v-if="info.officialPhone"
+                    >
                         {{ info.officialPhone }}
                     </span>
                     <span class="value" v-else>-</span>
@@ -73,10 +82,17 @@
                 <div class="fact">
                     <span class="label">应急联系人</span>
                     <span class="value">
-                        <span v-if="info.emergencyContact">{{ info.emergencyContact }}</span>
-                        <span v-if="info.emergencyPhone" class="phone-clickable" @click="handlePhoneClick(info.emergencyPhone)">
-                            （{{ info.emergencyPhone }}）
-                        </span>
+                        <template v-if="info.emergencyContact || info.emergencyPhone">
+                            <span v-if="info.emergencyContact">{{ info.emergencyContact }}</span>
+                            <span
+                                v-if="info.emergencyPhone"
+                                class="phone-clickable"
+                                @click="handlePhoneClick(info.emergencyPhone)"
+                            >
+                                （{{ info.emergencyPhone }}）
+                            </span>
+                        </template>
+                        <span v-else>暂无</span>
                     </span>
                 </div>
                 <div class="fact">
@@ -94,6 +110,7 @@
                 <li v-if="info.medicalLicenseNo">医疗许可证：{{ info.medicalLicenseNo }}</li>
                 <li v-if="info.foodLicenseNo">食品许可证：{{ info.foodLicenseNo }}</li>
                 <li v-if="info.fireAcceptanceNo">消防验收：{{ info.fireAcceptanceNo }}</li>
+                <li v-if="!hasAnyLicense">暂无</li>
             </ul>
         </section>
 
@@ -153,6 +170,25 @@ const statusText = computed(() => (info.value?.businessStatus === 1 ? "正常运
 const statusClass = computed(() => (info.value?.businessStatus === 1 ? "open" : "close"));
 
 const serviceModes = computed(() => info.value?.serviceMode?.split(",") || []);
+
+const introductionParagraphs = computed(() => {
+    const text = info.value?.introduction;
+    if (!text) return [];
+    return text
+        .split(/\n/)
+        .map((s) => s.trim())
+        .filter(Boolean);
+});
+
+const hasAnyLicense = computed(
+    () =>
+        !!(
+            info.value?.elderlyLicenseNo ||
+            info.value?.medicalLicenseNo ||
+            info.value?.foodLicenseNo ||
+            info.value?.fireAcceptanceNo
+        ),
+);
 
 const photos = computed(() => {
     const photos = info.value?.environmentPhotos;
@@ -269,8 +305,13 @@ function handlePhoneClick(phone: string) {
     }
 
     .introduction-text {
-        white-space: pre-wrap;
         word-break: break-word;
+        text-indent: 2em;
+        margin-bottom: $spacing-sm;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
     }
 
     .address-info {
@@ -341,7 +382,6 @@ function handlePhoneClick(phone: string) {
         border-radius: 10px;
         cursor: pointer;
         transition: transform 0.2s ease;
-
 
         :deep(.el-image__inner) {
             width: 100%;

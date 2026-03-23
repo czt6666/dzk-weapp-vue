@@ -1,5 +1,7 @@
 /// <reference types="vite/client" />
 
+declare const __APP_VERSION__: string;
+
 // 声明 Vue 组件的类型
 declare module "*.vue" {
     import type { DefineComponent } from "vue";

@@ -3,6 +3,7 @@ import { createPinia } from "pinia";
 
 import App from "./App.vue";
 import router from "./router";
+import { checkVersion } from "@/utils/versionCheck";
 
 import "@/styles/main.scss";
 // ElementPlus：不要在入口全量注册/全量引入样式（会显著增大首包）
@@ -17,4 +18,10 @@ const pinia = createPinia();
 app.use(pinia);
 app.use(router);
 
-app.mount("#app");
+async function init() {
+    const needReload = await checkVersion();
+    if (needReload) return;
+    app.mount("#app");
+}
+
+init();

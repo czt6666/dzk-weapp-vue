@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { fileURLToPath, URL } from "node:url";
 
 import { defineConfig } from "vite";
@@ -130,6 +131,9 @@ export default async function () {
         // 环境变量注入，例如 global -> self，处理 Web Worker 问题（如 monaco）
         define: {
             global: "self",
+            __APP_VERSION__: JSON.stringify(
+                JSON.parse(readFileSync(new URL("./package.json", import.meta.url), "utf-8")).version ?? "0.0.0",
+            ),
         },
     });
 }

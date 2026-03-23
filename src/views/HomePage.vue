@@ -121,16 +121,14 @@
             </section>
 
             <!-- 3. 红色旅游和研学基地 - 左右排列 -->
-            <!-- <section class="tour-study-section">
-                <div class="tour-study-dual"> -->
-            <!-- 红色旅游 -->
-            <!-- <div class="tour-item" @click="goToTour">
+            <section class="tour-study-section">
+                <!-- <div class="tour-study-dual"> -->
+                <!-- 红色旅游 -->
+                <!-- <div class="tour-item" @click="goToTour">
                         <div class="tour-banner" :style="{ backgroundImage: `url(${redTourBg})` }">
                             <div class="tour-overlay"></div>
                             <div class="tour-content">
-                                <h2 class="tour-title">
-                                    红色旅游
-                                </h2>
+                                <h2 class="tour-title">红色旅游</h2>
                                 <p class="tour-desc">
                                     {{ tourDesc || "传承红色精神，体验革命文化" }}
                                 </p>
@@ -138,20 +136,19 @@
                             </div>
                         </div>
                     </div> -->
-            <!-- 研学基地 -->
-            <!-- <div class="study-item" @click="goToStudy">
+                <!-- 研学基地 -->
+                <!-- <div class="study-item" @click="goToStudy">
                         <div class="study-banner" :style="{ backgroundImage: `url(${studyBg})` }">
                             <div class="study-overlay"></div>
                             <div class="study-content">
-                                <h2 class="study-title">
-                                    研学基地
-                                </h2>
+                                <h2 class="study-title">研学基地</h2>
                                 <p class="study-desc">{{ studyDesc || "探索知识，传承文化" }}</p>
                                 <div class="study-arrow">→</div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
+                <!-- 康养生活 -->
                 <div class="retirement-section">
                     <div
                         class="retirement-banner"
@@ -160,9 +157,7 @@
                     >
                         <div class="retirement-overlay"></div>
                         <div class="retirement-content">
-                            <h2 class="retirement-title">
-                                康养生活
-                            </h2>
+                            <h2 class="retirement-title">康养生活</h2>
                             <p class="retirement-desc">
                                 {{ retirementDesc || "健康生活，颐养天年" }}
                             </p>
@@ -170,7 +165,7 @@
                         </div>
                     </div>
                 </div>
-            </section> -->
+            </section>
 
             <!-- 5. 民宿 - 瀑布流 -->
             <section class="hotel-section">

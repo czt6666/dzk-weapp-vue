@@ -1,4 +1,5 @@
 export const STORAGE_TOKEN_KEY = "dzk-token";
+export const VERSION_REFRESHED_KEY = "dzk-version-refreshed";
 export const STORAGE_USER_INFO_KEY = "dzk-user-info";
 
 // 高德地图 API Key
